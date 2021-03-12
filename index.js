@@ -19,45 +19,69 @@ mongoose.connect('mongodb://localhost/pufferfish', () => console.log('Connected 
 
 let saveBenchmark = benchObject => {
     let idArray = []
-    for (const bench in benchObject){
+    for (let bench in benchObject){
         let benchmark = new Benchmark({
             name: bench,
-            min: benchmarkListCpu[bench].min,
-            max: benchmarkListCpu[bench].max,
-            median: benchmarkListCpu[bench].median,
-            average: benchmarkListCpu[bench].avg
+            min: Number(benchObject[bench].min),
+            max: Number(benchObject[bench].max),
+            median: Number(benchObject[bench].median),
+            average: Number(benchObject[bench].avg)
         })
-        benchmark.save((error, doc) => {
-            console.error(error)
+        benchmark.save((err, doc) => {
+            if (err) console.error(err)
             idArray.push(doc._id)
+            console.log(idArray)
         })
+        console.log('endfor')
     }
     return idArray
+}
+let saveCpu = (cpu_name, cpu_data) => {
+    let id = new mongoose.Types.ObjectId
+    let cpu = new Cpu({
+        name: cpu_name,
+        benchmarks: saveBenchmark(cpu_data.bench)
+    })
+    cpu.save((err, doc) => {
+        if (err) console.error(err)
+        id = doc._id
+    })
+    return id
+}
+let saveGpu = (gpu_name, gpu_data) => {
+    let id = new mongoose.Types.ObjectId
+    let gpu = new Gpu({
+        name: gpu_name,
+        benchmarks: saveBenchmark(gpu_data.bench)
+    })
+    gpu.save((err, doc) => {
+        if (err) console.error(err)
+        id = doc.id
+    })
+    return id
+}
+let saveLaptop = (laptop_data) => {
+    let laptop = new Laptop({
+        name: laptop_data.name,
+        price: laptop_data.price,
+        cpu: saveCpu(laptop_data.cpu, laptop_data.cpu_data),
+        gpu: saveGpu(laptop_data.gpu.model, laptop_data.gpu_data)
+    })
+    laptop.save((err, doc) => {
+        if (err) console.error(err)
+        console.log(doc.name)
+    })
 }
 let saveData = filename => {
     fs.readFile(filename, (err, data) => {
         if (err) console.error(err)
         let laptopList = JSON.parse(data)
         for (let laptop of laptopList){
-            // cpu data
-            let cpu = new Cpu({
-                name: laptop.cpu,
-                benchmarks: saveBenchmark(laptop.cpu_data.bench)
-            })
-            // laptop data
-            let laptopInstance = new Laptop({
-                name: laptop.name,
-                price: laptop.price
-            })
-            laptopInstance.save((error, doc) => {
-                if (error) console.error(error)
-                console.log(doc.name)
-            })
+            saveLaptop(laptop)
         }
     })
 }
 saveData('test.json')
-
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
