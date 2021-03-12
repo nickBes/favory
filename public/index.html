@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>Pufferfish</title>
+</head>
+<body>
+    <div class="text-center m-5">
+        <form id="main_form" action="/api" method="GET" style="max-width:600px;margin:auto;">
+            <h1 class="h4 mb-4">אנא דרגו את הקטגוריות על פי שימושכם</h1>
+            <h1 id="title" class="h6 mb-4">נותרו 7 נקודות</h1>
+            <div class="input-group mb-3">                
+                <button style="border: 1px solid lightgray;" class="btn btn-light plus" type="button">+</button>
+                <button style="border: 1px solid lightgray;" class="btn btn-light minus" type="button">-</button>
+                <input style="background-color: white;" type="number" min="0" max="7" value="0" readonly="readonly" name="gaming" class="form-control text-center category" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <span class="input-group-text" id="inputGroup-sizing-default">גיימינג</span>
+            </div>
+            <div class="input-group mb-3">
+                <button style="border: 1px solid lightgray;" class="btn btn-light plus" type="button">+</button>
+                <button style="border: 1px solid lightgray;" class="btn btn-light minus" type="button">-</button>
+                <input style="background-color: white;" readonly="readonly" type="number" min="0" max="7" value="0" name="study" class="form-control text-center category" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <span class="input-group-text" id="inputGroup-sizing-default">לימודים</span>
+            </div>
+            <div class="input-group mb-3">
+                <button style="border: 1px solid lightgray;" class="btn btn-light plus" type="button">+</button>
+                <button style="border: 1px solid lightgray;" class="btn btn-light minus" type="button">-</button>
+                <input style="background-color: white;" readonly="readonly" type="number" min="0" max="7" value="0" name="design" class="form-control text-center category" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <span class="input-group-text" id="inputGroup-sizing-default">עיצוב ועריכה</span>
+            </div>
+            <div class="input-group mb-3">
+                <button style="border: 1px solid lightgray;" class="btn btn-light plus" type="button">+</button>
+                <button style="border: 1px solid lightgray;" class="btn btn-light minus" type="button">-</button>
+                <input style="background-color: white;" readonly="readonly" type="number" min="0" max="7" value="0" name="dev" class="form-control text-center category" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <span class="input-group-text" id="inputGroup-sizing-default">תיכנות</span>
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary">הגש</button>
+            <div class="alert alert-danger mt-3" id="form_alert" role="alert" style="display: none;"></div>
+        </form>
+    </div>
+</body>
+    <script>
+        // score regulation
+        let points = 8
+        let sum = 0
+        let form = document.getElementById('main_form')
+        let title = document.getElementById('title')
+        let pluses = document.getElementsByClassName('plus')
+        let minuses = document.getElementsByClassName('minus')
+
+        // add points
+        for (let plus of pluses) {
+            let category = plus.parentElement.getElementsByTagName('input')[0]
+            plus.onclick = () => {
+                if (sum < points){
+                    category.value = Number(category.value) + 1
+                    sum += 1
+                    title.innerText = `נותרו ${points - sum} נקודות`
+                }
+            }
+        }
+
+        // remove points
+        for (let minus of minuses) {
+            let category = minus.parentElement.getElementsByTagName('input')[0]
+            minus.onclick = () => {
+                if (category.value > 0){
+                    category.value = Number(category.value) - 1
+                    sum -= 1
+                    title.innerText = `נותרו ${points - sum} נקודות`
+                }
+            }
+        }
+
+        // form submit validation
+        form.onsubmit = event => {
+            let catgeories = document.getElementsByClassName('category')
+            let amount = 0
+            for (let category of catgeories){
+                if (Number(category.value) == 0){
+                    amount++
+                }
+            }
+            if (catgeories.length == amount){
+                event.preventDefault()
+                let alert = document.getElementById('form_alert')
+                alert.style.display = 'block'
+                alert.innerText = 'אנא דרגו לפחות קטגוריה אחת לפני שאתם מגישים'
+            }
+        }
+
+        //on load stuff...
+        document.body.onload = () => {
+            //point title
+            title.innerText = `נותרו ${points - sum} נקודות`
+        }
+    </script>
+</html>
