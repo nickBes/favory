@@ -7,6 +7,7 @@ const Cpu = require('./models/Cpu')
 const Gpu = require('./models/Gpu')
 const benchmarks = require('./models/Benchmark')
 const Benchmark = require('./models/Benchmark')
+const { type } = require('os')
 //server
 const app = express()
 app.use(express.json())
@@ -27,38 +28,26 @@ let saveBenchmark = benchObject => {
             median: Number(benchObject[bench].median),
             average: Number(benchObject[bench].avg)
         })
-        benchmark.save((err, doc) => {
-            if (err) console.error(err)
-            idArray.push(doc._id)
-            console.log(idArray)
-        })
-        console.log('endfor')
+        benchmark.save()
+        idArray.push(benchmark._id)
     }
     return idArray
 }
 let saveCpu = (cpu_name, cpu_data) => {
-    let id = new mongoose.Types.ObjectId
     let cpu = new Cpu({
         name: cpu_name,
         benchmarks: saveBenchmark(cpu_data.bench)
     })
-    cpu.save((err, doc) => {
-        if (err) console.error(err)
-        id = doc._id
-    })
-    return id
+    cpu.save()
+    return cpu._id
 }
 let saveGpu = (gpu_name, gpu_data) => {
-    let id = new mongoose.Types.ObjectId
     let gpu = new Gpu({
         name: gpu_name,
         benchmarks: saveBenchmark(gpu_data.bench)
     })
-    gpu.save((err, doc) => {
-        if (err) console.error(err)
-        id = doc.id
-    })
-    return id
+    gpu.save()
+    return gpu._id
 }
 let saveLaptop = (laptop_data) => {
     let laptop = new Laptop({
@@ -81,7 +70,7 @@ let saveData = filename => {
         }
     })
 }
-saveData('test.json')
+//saveData('test.json')
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
