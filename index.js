@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
 const fs = require('fs')
-const {Laptop, Cpu, Gpu, Benchmark} = require('./models/Models')
+const {Laptop, Cpu, Gpu, Benchmark, Category, CategoryBenchmark} = require('./models/Models')
 
 //server
 const app = express()
