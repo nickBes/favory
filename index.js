@@ -5,6 +5,7 @@ const {loadLaptop} = require('./dataLoader')
 //server
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 app.set('views', './views')
 app.set('view engine', 'pug')
 app.listen(3000, () => console.log('Server started.'))
@@ -22,10 +23,10 @@ app.get('/', (req, res) => {
     })
 })
 
-app.get('/result', (req, res) => {   
+app.post('/result', (req, res) => {   
     console.log(req.body)
     res.render('result', {
         title: 'Pufferfish: Laptop Result',
-        score: req.query
+        score: req.body
     })
 })
