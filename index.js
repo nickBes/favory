@@ -1,7 +1,7 @@
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
-const {loadLaptop} = require('./dataLoader')
+const {loadLaptop,loadCategories} = require('./dataLoader')
 //server
 const app = express()
 app.use(express.json())
@@ -12,11 +12,15 @@ app.set('view engine', 'pug')
 app.listen(3000, () => console.log('Server has started.'))
 	
 //db
-mongoose.set('useNewUrlParser', true)
-mongoose.set('useUnifiedTopology', true);
-mongoose.connect('mongodb://localhost/pufferfish', () => console.log('Connected to DB'))
+mongoose.connect('mongodb://localhost/pufferfish', { useNewUrlParser: true, useUnifiedTopology: true })
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'DB error'));
+db.once('open', function () {
+	console.log('Opened DB')
+});
 
-//loadLaptop('test.json')
+// loadLaptop('test.json')
+// loadCategories('categories.json')
 
 app.get('/', (req, res) => {
     res.render('index', {

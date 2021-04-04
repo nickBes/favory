@@ -71,11 +71,11 @@ const saveCategoryBenchmarks = categoryBranchmarks => {
 	return ids
 }
 
-const saveCategory = (categoryName, category) => {
+const saveCategory = (categoryName, categoryData) => {
 	let category = new Category({
 		name: categoryName,
-		cpuBenchmarks: saveCategoryBenchmarks(category['cpu']),
-		gpuBenchmarks: saveCategoryBenchmarks(category['gpu'])
+		cpuBenchmarks: saveCategoryBenchmarks(categoryData['cpu']),
+		gpuBenchmarks: saveCategoryBenchmarks(categoryData['gpu'])
 	})
 	category.save()
 }
