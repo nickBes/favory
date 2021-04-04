@@ -1,0 +1,6 @@
+extends base.pug
+
+block content 
+    ul(class='list-group')
+        each val, key in score 
+            li(class='list-group-item')= key + ': ' + val

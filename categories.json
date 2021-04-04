@@ -1,0 +1,65 @@
+{
+	"dev": {
+		"cpu": {
+			"HWBOT": 0,
+			"Cinebench&&Multi": 5,
+			"Cinebench&&Single": 3,
+			"7-Zip": 8,
+			"Blender": 3,
+			"R Bench": 12,
+			"Geekbench": 7,
+			"Mozilla Kraken": 5,
+			"WebXPRT": 3,
+			"Power Consumption": 1,
+			"*": 1
+		},
+		"gpu": {
+			"*": 0.3
+		}
+	},
+	"study": {
+		"cpu": {
+			"HWBOT": 0,
+			"7-Zip": 3,
+			"Geekbench": 6,
+			"Mozzila Kraken": 10,
+			"WebXPRT": 10,
+			"Power Consumption": 7
+		},
+		"gpu": {
+			"*": 0.1
+		}
+	},
+	"design": {
+		"cpu": {
+			"HWBOT": 0,
+			"Cinebench&&Multi": 10,
+			"Cinebench&&Single": 8,
+			"7-Zip": 8,
+			"Blender": 8,
+			"3D Mark": 12,
+			"Geekbench": 4,
+			"Mozilla Kraken": 2,
+			"WebXPRT": 2,
+			"Power Consumption": 1
+		},
+		"gpu": {
+			"3DMark": 6
+		}
+	},
+	"gaming": {
+		"cpu": {
+			"Cinebench&&Single": 5,
+			"Blender": 5,
+			"3D Mark": 10,
+			"geekbench": 5,
+			"*": 3
+		},
+		"gpu": {
+			"3D Mark": 10,
+			"Cinebench": 3,
+			"Power Consumption": 3,
+			"*": 5
+		}
+	}
+}
