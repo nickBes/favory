@@ -1,7 +1,9 @@
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
-const {loadLaptop,loadCategories} = require('./dataLoader')
+const { loadLaptop, loadCategories } = require('./dataLoader')
+const { selectLaptop } = require('./selector')
+const { Laptop } = require('./models/Models')
 //server
 const app = express()
 app.use(express.json())
@@ -23,6 +25,15 @@ db.once('open', async () => {
 	console.log('loaded laptops')
 	await loadCategories('categories.json')
 	console.log('loaded categories')
+	const selectedLaptopId = await selectLaptop({
+		dev: 1,
+		study: 0,
+		design: 0,
+		gaming:5
+	})
+	console.log('selected laptop id: ',selectedLaptopId)
+	const selectedLaptop = await Laptop.findById(selectedLaptopId)
+	console.log(selectedLaptop)
 });
 
 

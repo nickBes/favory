@@ -17,6 +17,6 @@ const categorySchema = new mongoose.Schema({
 })
 
 module.exports = {
-	CategoryBenchmark: mongoose.model('CategoryBenchmarkBenchmark', categoryBenchmarkSchema),
+	CategoryBenchmark: mongoose.model('CategoryBenchmark', categoryBenchmarkSchema),
 	Category: mongoose.model('Category', categorySchema)
 }

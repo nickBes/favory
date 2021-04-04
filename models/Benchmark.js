@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const benchmarkSchema = new mongoose.Schema({
-    name: String,
+	name: String,
     min: Number,
     max: Number,
     median: Number,
