@@ -15,12 +15,16 @@ app.listen(3000, () => console.log('Server has started.'))
 mongoose.connect('mongodb://localhost/pufferfish', { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'DB error'));
-db.once('open', function () {
+db.once('open', async () => {
 	console.log('Opened DB')
+	await db.db.dropDatabase()
+	console.log('Dropped DB')
+	await loadLaptop('test.json')
+	console.log('loaded laptops')
+	await loadCategories('categories.json')
+	console.log('loaded categories')
 });
 
-// loadLaptop('test.json')
-// loadCategories('categories.json')
 
 app.get('/', (req, res) => {
     res.render('index', {

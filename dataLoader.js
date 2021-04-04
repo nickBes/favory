@@ -1,91 +1,104 @@
 const fs = require('fs')
-const {Laptop, Cpu, Gpu, Benchmark,Category,CategoryBenchmark} = require('./models/Models')
+const {Laptop, Cpu, Gpu, Benchmark,Category,CategoryBenchmark, MaxCpuBenchmarkScore, MaxGpuBenchmarkScore} = require('./models/Models')
 
 // saves benchmarks to the db and returns an array of their ids for each processor
-let saveBenchmark = benchObject => {
+let saveBenchmark = async (benchObject, maxBenchmarkScoreModel) => {
     let idArray = []
-    for (let bench in benchObject){
+	for (let bench in benchObject) {
+		let maxScore = Number(benchObject[bench].max)
         let benchmark = new Benchmark({
             name: bench,
             min: Number(benchObject[bench].min),
-            max: Number(benchObject[bench].max),
+            max: maxScore,
             median: Number(benchObject[bench].median),
             average: Number(benchObject[bench].avg)
         })
-        benchmark.save()
-        idArray.push(benchmark._id)
+        await benchmark.save()
+		idArray.push(benchmark._id)
+		let doc = await maxBenchmarkScoreModel.findOne({ name: bench })
+		if (doc == null) {
+			let maxBenchScoreDoc = new maxBenchmarkScoreModel({
+				name: bench,
+				maxScore
+			})
+			await maxBenchScoreDoc.save()
+		} else {
+			if (maxScore > doc.maxScore) {
+				await maxBenchmarkScoreModel.updateOne({ name: bench },{$set: {maxScore}})
+			}
+		}
     }
     return idArray
 }
 
 // saves processor document and returns it's id for the laptop
-let saveCpu = (cpu_name, cpu_data) => {
+let saveCpu = async (cpu_name, cpu_data) => {
     let cpu = new Cpu({
         name: cpu_name,
-        benchmarks: saveBenchmark(cpu_data.bench)
+        benchmarks: await saveBenchmark(cpu_data.bench, MaxCpuBenchmarkScore)
     })
-    cpu.save()
+    await cpu.save()
     return cpu._id
 }
-let saveGpu = (gpu_name, gpu_data) => {
+let saveGpu = async (gpu_name, gpu_data) => {
     let gpu = new Gpu({
         name: gpu_name,
-        benchmarks: saveBenchmark(gpu_data.bench)
+        benchmarks: await saveBenchmark(gpu_data.bench, MaxGpuBenchmarkScore)
     })
-    gpu.save()
+    await gpu.save()
     return gpu._id
 }
 
 // saves a laptop document from json data
-let saveLaptop = (laptop_data) => {
+let saveLaptop = async (laptop_data) => {
     let laptop = new Laptop({
         name: laptop_data.name,
         price: laptop_data.price,
-        cpu: saveCpu(laptop_data.cpu, laptop_data.cpu_data),
-        gpu: saveGpu(laptop_data.gpu.model, laptop_data.gpu_data)
+        cpu: await saveCpu(laptop_data.cpu, laptop_data.cpu_data),
+        gpu: await saveGpu(laptop_data.gpu.model, laptop_data.gpu_data)
     })
-    laptop.save()
+    await laptop.save()
 }
 
 // reads the json file and saves it
-let saveData = filename => {
-    fs.readFile(filename, (err, data) => {
+let saveData = async (filename) => {
+    await fs.readFile(filename, async (err, data) => {
         if (err) console.error(err)
         let laptopList = JSON.parse(data)
         for (let laptop of laptopList){
-            saveLaptop(laptop)
+            await saveLaptop(laptop)
         }
     })
 }
 
-const saveCategoryBenchmarks = categoryBranchmarks => {
+const saveCategoryBenchmarks = async (categoryBranchmarks) => {
 	let ids = []
 	for (let benchmarkName in categoryBranchmarks) {
 		let categoryBenchmark = new CategoryBenchmark({
 			name: benchmarkName,
 			score: categoryBranchmarks[benchmarkName]
 		})
-		categoryBenchmark.save()
+		await categoryBenchmark.save()
 		ids.push(categoryBenchmark._id)
 	}
 	return ids
 }
 
-const saveCategory = (categoryName, categoryData) => {
+const saveCategory = async (categoryName, categoryData) => {
 	let category = new Category({
 		name: categoryName,
-		cpuBenchmarks: saveCategoryBenchmarks(categoryData['cpu']),
-		gpuBenchmarks: saveCategoryBenchmarks(categoryData['gpu'])
+		cpuBenchmarks: await saveCategoryBenchmarks(categoryData['cpu']),
+		gpuBenchmarks: await saveCategoryBenchmarks(categoryData['gpu'])
 	})
-	category.save()
+	await category.save()
 }
 
-const saveCategories = filename => {
-	fs.readFile(filename, (err, data) => {
+const saveCategories = async (filename) => {
+	await fs.readFile(filename, async (err, data) => {
 		if (err) console.error(err)
 		let categories = JSON.parse(data)
 		for (let categoryName in categories) {
-			saveCategory(categoryName,categories[categoryName])
+			await saveCategory(categoryName,categories[categoryName])
 		}
 	})
 }
