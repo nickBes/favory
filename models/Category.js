@@ -5,6 +5,7 @@ const categoryBenchmarkSchema = new mongoose.Schema({
 	score: Number
 })
 const categorySchema = new mongoose.Schema({
+	name: String,
 	cpuBenchmarks: [{
 		type: mongoose.Types.ObjectId,
 		ref: 'CategoryBenchmark'

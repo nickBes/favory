@@ -1,5 +1,5 @@
 const fs = require('fs')
-const {Laptop, Cpu, Gpu, Benchmark} = require('./models/Models')
+const {Laptop, Cpu, Gpu, Benchmark,Category,CategoryBenchmark} = require('./models/Models')
 
 // saves benchmarks to the db and returns an array of their ids for each processor
 let saveBenchmark = benchObject => {
@@ -58,6 +58,39 @@ let saveData = filename => {
     })
 }
 
+const saveCategoryBenchmarks = categoryBranchmarks => {
+	let ids = []
+	for (let benchmarkName in categoryBranchmarks) {
+		let categoryBenchmark = new CategoryBenchmark({
+			name: benchmarkName,
+			score: categoryBranchmarks[benchmarkName]
+		})
+		categoryBenchmark.save()
+		ids.push(categoryBenchmark._id)
+	}
+	return ids
+}
+
+const saveCategory = (categoryName, category) => {
+	let category = new Category({
+		name: categoryName,
+		cpuBenchmarks: saveCategoryBenchmarks(category['cpu']),
+		gpuBenchmarks: saveCategoryBenchmarks(category['gpu'])
+	})
+	category.save()
+}
+
+const saveCategories = filename => {
+	fs.readFile(filename, (err, data) => {
+		if (err) console.error(err)
+		let categories = JSON.parse(data)
+		for (let categoryName in categories) {
+			saveCategory(categoryName,categories[categoryName])
+		}
+	})
+}
+
 module.exports = {
-    loadLaptop: saveData
+	loadLaptop: saveData,
+	loadCategories: saveCategories
 }
