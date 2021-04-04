@@ -6,16 +6,17 @@ const {loadLaptop} = require('./dataLoader')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use('/public', express.static(path.resolve(__dirname, 'public')));
 app.set('views', './views')
 app.set('view engine', 'pug')
-app.listen(3000, () => console.log('Server started.'))
+app.listen(3000, () => console.log('Server has started.'))
 
 //db
 mongoose.set('useNewUrlParser', true)
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect('mongodb://localhost/pufferfish', () => console.log('Connected to DB'))
 
-// loadLaptop('test.json')
+//loadLaptop('test.json')
 
 app.get('/', (req, res) => {
     res.render('index', {
