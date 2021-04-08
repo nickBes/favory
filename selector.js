@@ -1,4 +1,4 @@
-const {Laptop,Cpu,Gpu,Benchmark,Category,CategoryBenchmark,MaxCpuBenchmarkScore,MaxGpuBenchmarkScore} = require('./models/Models')
+const {Laptop,Cpu,Gpu,Benchmark,CategoryBenchmark,MaxCpuBenchmarkScore,MaxGpuBenchmarkScore} = require('./models/Models')
 
 const selectLaptop = async (scores) => {
 	let maxLaptopScore = -1;
@@ -10,14 +10,9 @@ const selectLaptop = async (scores) => {
 			let benchmark = await Benchmark.findById(benchmarkId)
 			let maxBenchmark = await MaxCpuBenchmarkScore.findOne({ name: benchmark.name })
 			let normalizedBenchmarkScore = benchmark.average / maxBenchmark.maxScore;
-			for (let categoryName in scores) {
-				let category = await Category.findOne({ name: categoryName })
-				for (let categoryBenchmarkId of category.cpuBenchmarks) {
-					let categoryBenchmark = await CategoryBenchmark.findById(categoryBenchmarkId)
-					if (benchmarkNameMathces(benchmark.name, categoryBenchmark.name)) {
-						totalCpuScore += categoryBenchmark.score*normalizedBenchmarkScore
-					}
-				}
+			let categoryBenchmarks = CategoryBenchmark.find({ name: benchmark.name, puType: 'c' })
+			for await (let categoryBenchmark of categoryBenchmarks) {
+				totalCpuScore += categoryBenchmark.score * normalizedBenchmarkScore
 			}
 		}
 		let gpu = await Gpu.findById(laptop.gpu)
@@ -26,14 +21,9 @@ const selectLaptop = async (scores) => {
 			let benchmark = await Benchmark.findById(benchmarkId)
 			let maxBenchmark = await MaxGpuBenchmarkScore.findOne({ name: benchmark.name })
 			let normalizedBenchmarkScore = benchmark.average / maxBenchmark.maxScore;
-			for (let categoryName in scores) {
-				let category = await Category.findOne({ name: categoryName })
-				for (let categoryBenchmarkId of category.gpuBenchmarks) {
-					let categoryBenchmark = await CategoryBenchmark.findById(categoryBenchmarkId)
-					if (benchmarkNameMathces(benchmark.name, categoryBenchmark.name)) {
-						totalGpuScore += categoryBenchmark.score * normalizedBenchmarkScore
-					}
-				}
+			let categoryBenchmarks = CategoryBenchmark.find({ name: benchmark.name, puType: 'g' })
+			for await (let categoryBenchmark of categoryBenchmarks) {
+				totalGpuScore += categoryBenchmark.score * normalizedBenchmarkScore
 			}
 		}
 		let totalLaptopScore = totalCpuScore + totalGpuScore
@@ -46,12 +36,6 @@ const selectLaptop = async (scores) => {
 	return maxLaptopId
 }
 
-const benchmarkNameMathces = (benchmarkName,benchPattern) => {
-	let requiredKeywords = benchPattern.split('&&')
-	return requiredKeywords.every(requiredKeyword => benchmarkName.indexOf(requiredKeyword) != -1)
-}
-
 module.exports = {
-	benchmarkNameMathces,
 	selectLaptop
 }

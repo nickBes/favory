@@ -25,12 +25,14 @@ db.once('open', async () => {
 	console.log('loaded laptops')
 	await loadCategories('categories.json')
 	console.log('loaded categories')
+	console.time('laptop selection')
 	const selectedLaptopId = await selectLaptop({
 		dev: 1,
 		study: 0,
 		design: 0,
 		gaming:5
 	})
+	console.timeEnd('laptop selection')
 	console.log('selected laptop id: ',selectedLaptopId)
 	const selectedLaptop = await Laptop.findById(selectedLaptopId)
 	console.log(selectedLaptop)

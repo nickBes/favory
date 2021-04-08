@@ -1,4 +1,4 @@
-const { CategoryBenchmark, Category } = require('./Category');
+const { CategoryBenchmark } = require('./Category');
 const {MaxCpuBenchmarkScore,MaxGpuBenchmarkScore} = require('./MaxBenchmarkScore')
 
 module.exports = {
@@ -7,7 +7,6 @@ module.exports = {
 	Gpu: require('./Gpu'),
 	Benchmark: require('./Benchmark'),
 	CategoryBenchmark,
-	Category,
 	MaxCpuBenchmarkScore,
 	MaxGpuBenchmarkScore
 }

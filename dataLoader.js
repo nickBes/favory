@@ -1,6 +1,10 @@
 const fs = require('fs')
 const {Laptop, Cpu, Gpu, Benchmark,Category,CategoryBenchmark, MaxCpuBenchmarkScore, MaxGpuBenchmarkScore} = require('./models/Models')
-const {benchmarkNameMathces} = require('./selector')
+
+const benchmarkNameMathces = (benchmarkName, benchPattern) => {
+	let requiredKeywords = benchPattern.split('&&')
+	return requiredKeywords.every(requiredKeyword => benchmarkName.indexOf(requiredKeyword) != -1)
+}
 
 // saves benchmarks to the db and returns an array of their ids for each processor
 let saveBenchmark = async (benchObject, puType) => {
@@ -89,8 +93,7 @@ const matchBenchmarkName = (benchmarkName, benchmarkScoresMap) => {
 	return defaultScore
 }
 
-const saveCategoryBenchmarks = async (categoryData, puType) => {
-	let ids = []
+const saveCategoryBenchmarks = async (categoryName, categoryData, puType) => {
 	const categoryAndPuTypeBranchmarkScoresMap = categoryData[puType + 'pu']
 	const categoryAndPuTypeEveryBenchmarkScore = {}
 	const maxBenchmarkScoreModel = puType=='c'?MaxCpuBenchmarkScore:MaxGpuBenchmarkScore
@@ -99,32 +102,29 @@ const saveCategoryBenchmarks = async (categoryData, puType) => {
 	}
 	// normalize the scores to values from 0 to 1 such that the sum of all scores is 1
 	const scoresSum = Object.values(categoryAndPuTypeEveryBenchmarkScore).reduce((total, cur) => total + cur, 0)
-	for (let benchmarkName in categoryAndPuTypeBranchmarkScoresMap) {
+	for (let benchmarkName in categoryAndPuTypeEveryBenchmarkScore) {
 		let categoryBenchmark = new CategoryBenchmark({
 			name: benchmarkName,
-			score: categoryAndPuTypeBranchmarkScoresMap[benchmarkName] / scoresSum
+			category: categoryName,
+			score: categoryAndPuTypeEveryBenchmarkScore[benchmarkName] / scoresSum,
+			puType
 		})
 		await categoryBenchmark.save()
-		ids.push(categoryBenchmark._id)
 	}
 	if (!categoryAndPuTypeBranchmarkScoresMap['*']) {
 		let categoryBenchmark = new CategoryBenchmark({
 			name: '*',
-			score: 1 / scoresSum
+			category: categoryName,
+			score: 1 / scoresSum,
+			puType
 		})
 		await categoryBenchmark.save()
-		ids.push(categoryBenchmark._id)
 	}
-	return ids
 }
 
 const saveCategory = async (categoryName, categoryData) => {
-	let category = new Category({
-		name: categoryName,
-		cpuBenchmarks: await saveCategoryBenchmarks(categoryData, 'c'),
-		gpuBenchmarks: await saveCategoryBenchmarks(categoryData, 'g')
-	})
-	await category.save()
+	await saveCategoryBenchmarks(categoryName, categoryData, 'c')
+	await saveCategoryBenchmarks(categoryName, categoryData, 'g')
 }
 
 const saveCategories = async (filename) => {
