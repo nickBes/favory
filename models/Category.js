@@ -6,6 +6,10 @@ const categoryBenchmarkSchema = new mongoose.Schema({
 	puType: String,
 	score: Number
 })
+categoryBenchmarkSchema.index({
+	name: 1,
+	puType: 1
+})
 
 // const categorySchema = new mongoose.Schema({
 // 	name: String,

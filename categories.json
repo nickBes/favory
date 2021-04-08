@@ -24,10 +24,11 @@
 			"Geekbench": 6,
 			"Mozzila Kraken": 10,
 			"WebXPRT": 10,
-			"Power Consumption": 7
+			"Power Consumption": 7,
+			"*": 0.001
 		},
 		"gpu": {
-			"*": 0.1
+			"*": 0
 		}
 	},
 	"design": {

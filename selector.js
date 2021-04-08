@@ -1,33 +1,70 @@
-const {Laptop,Cpu,Gpu,Benchmark,CategoryBenchmark,MaxCpuBenchmarkScore,MaxGpuBenchmarkScore} = require('./models/Models')
+const { Laptop, Cpu, Gpu, CpuBenchmark, GpuBenchmark, CategoryBenchmark, GlobalCpuBenchmarkScore,GlobalGpuBenchmarkScore} = require('./models/Models')
 
 const selectLaptop = async (scores) => {
 	let maxLaptopScore = -1;
 	let maxLaptopId = undefined
-	for (let laptop of await Laptop.find()) {
-		let cpu = await Cpu.findById(laptop.cpu)
+	let cachedCpus = {}
+	let cachedGpus = {}
+	let nonzeroCategories = []
+	for (let categoryName in scores) {
+		if (scores[categoryName] != 0) {
+			nonzeroCategories.push(categoryName)
+		}
+	}
+	for await (let laptop of Laptop.find()) {
 		let totalCpuScore = 0;
-		for (let benchmarkId of cpu.benchmarks) {
-			let benchmark = await Benchmark.findById(benchmarkId)
-			let maxBenchmark = await MaxCpuBenchmarkScore.findOne({ name: benchmark.name })
-			let normalizedBenchmarkScore = benchmark.average / maxBenchmark.maxScore;
-			let categoryBenchmarks = CategoryBenchmark.find({ name: benchmark.name, puType: 'c' })
-			for await (let categoryBenchmark of categoryBenchmarks) {
-				totalCpuScore += categoryBenchmark.score * normalizedBenchmarkScore
+		if (cachedCpus[laptop.cpu]) {
+			totalCpuScore = cachedCpus[laptop.cpu]
+		} else {
+			// const cpuBenchmarkScores = {}
+			for await (let benchmark of GlobalCpuBenchmarkScore.find({})) {
+				let cpuBenchmark = await CpuBenchmark.findOne({ name: benchmark.name, cpu: laptop.cpu })
+				let score = cpuBenchmark ? cpuBenchmark.average : (benchmark.scoresSum / benchmark.totalScores)
+				let normalizedBenchmarkScore = score / benchmark.maxScore;
+				// cpuBenchmarkScores[benchmark.name] = normalizedBenchmarkScore
+				for await (let categoryBenchmark of CategoryBenchmark.find({
+					name: benchmark.name,
+					puType: 'c',
+					category: { $in: nonzeroCategories }
+				})) {
+					totalCpuScore += categoryBenchmark.score * normalizedBenchmarkScore * scores[categoryBenchmark.category]
+				}
 			}
+			cachedCpus[laptop.cpu] = totalCpuScore
+			// console.log('cpu benchmark scores:')
+			// console.log(cpuBenchmarkScores)
 		}
-		let gpu = await Gpu.findById(laptop.gpu)
+		console.log('cpu score:')
+		console.log(totalCpuScore)
 		let totalGpuScore = 0;
-		for (let benchmarkId of gpu.benchmarks) {
-			let benchmark = await Benchmark.findById(benchmarkId)
-			let maxBenchmark = await MaxGpuBenchmarkScore.findOne({ name: benchmark.name })
-			let normalizedBenchmarkScore = benchmark.average / maxBenchmark.maxScore;
-			let categoryBenchmarks = CategoryBenchmark.find({ name: benchmark.name, puType: 'g' })
-			for await (let categoryBenchmark of categoryBenchmarks) {
-				totalGpuScore += categoryBenchmark.score * normalizedBenchmarkScore
+		if (cachedGpus[laptop.gpu]) {
+			totalGpuScore = cachedGpus[laptop.gpu]
+		} else {
+			// const gpuBenchmarkScores = {}
+			for await (let benchmark of GlobalGpuBenchmarkScore.find({})) {
+				let gpuBenchmark = await GpuBenchmark.findOne({ name: benchmark.name, gpu: laptop.gpu })
+				let score = gpuBenchmark ? gpuBenchmark.average : (benchmark.scoresSum / benchmark.totalScores)
+				let normalizedBenchmarkScore = score / benchmark.maxScore;
+				// gpuBenchmarkScores[benchmark.name] = normalizedBenchmarkScore;
+				for await (let categoryBenchmark of CategoryBenchmark.find({
+					name: benchmark.name,
+					puType: 'g',
+					category: { $in: nonzeroCategories }
+				})) {
+					totalGpuScore += categoryBenchmark.score * normalizedBenchmarkScore * scores[categoryBenchmark.category]
+				}
 			}
+			cachedGpus[laptop.gpu] = totalGpuScore
+			// console.log('gpu benchmarks scores:')
+			// console.log(gpuBenchmarkScores)
 		}
+		console.log('gpu score')
+		console.log(totalGpuScore)
 		let totalLaptopScore = totalCpuScore + totalGpuScore
-		console.log('total score: ',totalLaptopScore)
+		console.log('total score: ', totalLaptopScore)
+		console.log('')
+		console.log('')
+		console.log('')
 		if (totalLaptopScore > maxLaptopScore) {
 			maxLaptopScore = totalCpuScore;
 			maxLaptopId = laptop.id

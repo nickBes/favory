@@ -1,12 +1,14 @@
 const { CategoryBenchmark } = require('./Category');
-const {MaxCpuBenchmarkScore,MaxGpuBenchmarkScore} = require('./MaxBenchmarkScore')
+const { GlobalCpuBenchmarkScore, GlobalGpuBenchmarkScore } = require('./GlobalBenchmarkScore')
+const { GpuBenchmark,CpuBenchmark } = require('./Benchmark')
 
 module.exports = {
 	Laptop: require('./Laptop'),
 	Cpu: require('./Cpu'),
 	Gpu: require('./Gpu'),
-	Benchmark: require('./Benchmark'),
+	CpuBenchmark,
+	GpuBenchmark,
 	CategoryBenchmark,
-	MaxCpuBenchmarkScore,
-	MaxGpuBenchmarkScore
+	GlobalCpuBenchmarkScore,
+	GlobalGpuBenchmarkScore
 }
