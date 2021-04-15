@@ -79,7 +79,7 @@ let saveLaptop = async (laptop_data, requiredRecalculations) => {
 }
 
 // reads the json file and saves it
-let saveLaptops = async (filename) => {
+let saveLaptops = async (filename, isInitialSave) => {
 	let requiredRecalculations = {
 		benches: new Set(),
 		pus: {
@@ -90,11 +90,13 @@ let saveLaptops = async (filename) => {
 	const data = fs.readFileSync(filename)
 	let laptopList = JSON.parse(data)
 	await Promise.all(laptopList.map(laptop => saveLaptop(laptop, requiredRecalculations)))
-	await Promise.all([
-		calcAndCachePuScores('c', requiredRecalculations.pus.c),
-		calcAndCachePuScores('g', requiredRecalculations.pus.g)
-	])
-	await recalcBenchmarks(requiredRecalculations.benches)
+	if (!isInitialSave) {
+		await Promise.all([
+			calcAndCachePuScores('c', requiredRecalculations.pus.c),
+			calcAndCachePuScores('g', requiredRecalculations.pus.g)
+		])
+		await recalcBenchmarks(requiredRecalculations.benches)
+	}
 }
 
 const matchBenchmarkName = (benchmarkName, benchmarkScoresMap) => {

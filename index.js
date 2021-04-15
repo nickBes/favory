@@ -24,7 +24,7 @@ db.once('open', async () => {
 	await db.db.dropDatabase()
 	console.log('Dropped DB')
 	console.time('load laptops')
-	await loadLaptops('laptops.json')
+	await loadLaptops('laptops.json', true)
 	console.timeEnd('load laptops')
 	console.time('load categories')
 	await loadCategories('categories.json')
