@@ -2,6 +2,7 @@ const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
 const { loadLaptops, loadCategories } = require('./dataLoader')
+const {calcAndCacheAllPus} = require('./calculations')
 const { selectLaptop } = require('./selector')
 const { Laptop } = require('./models/Models')
 //server
@@ -20,25 +21,28 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'DB error'));
 db.once('open', async () => {
 	console.log('Opened DB')
-	// await db.db.dropDatabase()
-	// console.log('Dropped DB')
-	// console.time('load laptops')
-	// await loadLaptops('laptops.json')
-	// console.timeEnd('load laptops')
-	// console.time('load categories')
-	// await loadCategories('categories.json')
-	// console.timeEnd('load categories')
-	console.time('laptop selection')
-	const selectedLaptopId = await selectLaptop({
-		dev: 0,
-		study: 5,
-		design: 0,
-		gaming: 0
-	})
-	console.timeEnd('laptop selection')
-	console.log('selected laptop id: ',selectedLaptopId)
-	const selectedLaptop = await Laptop.findById(selectedLaptopId)
-	console.log(selectedLaptop)
+	await db.db.dropDatabase()
+	console.log('Dropped DB')
+	console.time('load laptops')
+	await loadLaptops('laptops.json')
+	console.timeEnd('load laptops')
+	console.time('load categories')
+	await loadCategories('categories.json')
+	console.timeEnd('load categories')
+	console.time('recalculating scores')
+	await Promise.all([calcAndCacheAllPus('c'), calcAndCacheAllPus('g')])
+	console.timeEnd('recalculating scores')
+	// console.time('laptop selection')
+	// const selectedLaptopId = await selectLaptop({
+	// 	dev: 0,
+	// 	study: 5,
+	// 	design: 0,
+	// 	gaming: 0
+	// })
+	// console.timeEnd('laptop selection')
+	// console.log('selected laptop id: ',selectedLaptopId)
+	// const selectedLaptop = await Laptop.findById(selectedLaptopId)
+	// console.log(selectedLaptop)
 });
 
 

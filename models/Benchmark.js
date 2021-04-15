@@ -9,7 +9,8 @@ const cpuBenchmarkSchema = new mongoose.Schema({
     min: Number,
     max: Number,
     median: Number,
-    average: Number
+	average: Number,
+	prevNormalizedScore: Number
 })
 
 const gpuBenchmarkSchema = new mongoose.Schema({
@@ -21,7 +22,8 @@ const gpuBenchmarkSchema = new mongoose.Schema({
 	min: Number,
 	max: Number,
 	median: Number,
-	average: Number
+	average: Number,
+	prevNormalizedScore: Number
 })
 
 module.exports = {
