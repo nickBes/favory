@@ -6,7 +6,8 @@ const {loadLaptop} = require('./dataLoader')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
-app.use('/public', express.static(path.resolve(__dirname, 'public')));
+app.use('/scripts', express.static(path.resolve(__dirname, 'scripts')));
+app.use('/scss', express.static(path.resolve(__dirname, 'scss')));
 app.set('views', './views')
 app.set('view engine', 'pug')
 app.listen(3000, () => console.log('Server has started.'))
