@@ -1,6 +1,12 @@
 const fs = require('fs')
+const Mutex = require('async-mutex').Mutex;
 const { Laptop, Cpu, Gpu, CpuBenchmark, GpuBenchmark, Category, CategoryBenchmark, GlobalCpuBenchmarkScore, GlobalGpuBenchmarkScore } = require('./models/Models')
 const { calcAndCachePuScores, recalcBenchmarks } = require('./calculations')
+
+const GlobalBenchmarkScoreMutexes = {
+	'c': new Mutex(),
+	'g': new Mutex()
+}
 
 const benchmarkNameMathces = (benchmarkName, benchPattern) => {
 	let requiredKeywords = benchPattern.split('&&')
@@ -36,30 +42,38 @@ let saveBenchmarks = async (benchObject, puId, puType, requiredRecalculations) =
 	for (let bench in benchObject) {
 		const globalBenchmarkScoreModel = puType == 'c' ? GlobalCpuBenchmarkScore : GlobalGpuBenchmarkScore
 		let avgScore = Number(benchObject[bench].avg)
-		let globalBenchmarkScoreDoc = await globalBenchmarkScoreModel.findOne({ name: bench })
-		let benchmarkData = {
-			name: bench,
-			min: Number(benchObject[bench].min),
-			max: Number(benchObject[bench].max),
-			median: Number(benchObject[bench].median),
-			average: avgScore
-		}
-		benchmarkData[puType + 'pu'] = puId;
-		let benchmark = puType == 'c' ? new CpuBenchmark(benchmarkData) : new GpuBenchmark(benchmarkData)
-		await benchmark.save()
-		await updateGlobalBenchmarkScore(globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations, puType)
+		await GlobalBenchmarkScoreMutexes[puType].runExclusive(async () => {
+			let globalBenchmarkScoreDoc = await globalBenchmarkScoreModel.findOne({ name: bench })
+			let benchmarkData = {
+				name: bench,
+				min: Number(benchObject[bench].min),
+				max: Number(benchObject[bench].max),
+				median: Number(benchObject[bench].median),
+				average: avgScore
+			}
+			benchmarkData[puType + 'pu'] = puId;
+			let benchmark = puType == 'c' ? new CpuBenchmark(benchmarkData) : new GpuBenchmark(benchmarkData)
+			await benchmark.save()
+			await updateGlobalBenchmarkScore(globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations, puType)
+		})
 	}
 }
 
 let savePu = async (puType, name, data, requiredRecalculations) => {
 	let puModel = puType == 'c' ? Cpu : Gpu;
+	let existingPu = await puModel.findOne({
+		name
+	})
+	if (existingPu != null) {
+		return existingPu.id;
+	}
 	let pu = new puModel({
 		name
 	})
 	await pu.save()
 	await saveBenchmarks(data.bench, pu.id, puType, requiredRecalculations)
 	requiredRecalculations['pus'][puType].add(pu.id)
-	return pu._id
+	return pu.id
 }
 
 // saves a laptop document from json data
@@ -89,6 +103,9 @@ let saveLaptops = async (filename, isInitialSave) => {
 	};
 	const data = fs.readFileSync(filename)
 	let laptopList = JSON.parse(data)
+	while (laptopList.length > 15) {
+		laptopList.pop()
+	}
 	await Promise.all(laptopList.map(laptop => saveLaptop(laptop, requiredRecalculations)))
 	if (!isInitialSave) {
 		await Promise.all([
