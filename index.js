@@ -1,7 +1,10 @@
 const express = require('express')
 const path = require('path')
 const mongoose = require('mongoose')
-const {loadLaptop} = require('./dataLoader')
+const { loadLaptops, loadCategories } = require('./dataLoader')
+const {calcAndCacheAllPus} = require('./calculations')
+const { selectLaptops } = require('./selector')
+const { Laptop, CpuBenchmark, GpuBenchmark, CachedPuScore } = require('./models/Models')
 //server
 const app = express()
 app.use(express.json())
@@ -10,13 +13,43 @@ app.use('/public', express.static(path.resolve(__dirname, 'public')));
 app.set('views', './views')
 app.set('view engine', 'pug')
 app.listen(3000, () => console.log('Server has started.'))
-
+	
 //db
-mongoose.set('useNewUrlParser', true)
-mongoose.set('useUnifiedTopology', true);
-mongoose.connect('mongodb://localhost/pufferfish', () => console.log('Connected to DB'))
+mongoose.set('useCreateIndex', true)
+mongoose.connect('mongodb://localhost/pufferfish', { useNewUrlParser: true, useUnifiedTopology: true })
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'DB error'));
+db.once('open', async () => {
+	console.log('Opened DB')
+	await db.db.dropDatabase()
+	console.log('Dropped DB')
+	console.time('load laptops')
+	await loadLaptops('laptops.json', true, 5)
+	console.timeEnd('load laptops')
+	console.time('load categories')
+	await loadCategories('categories.json')
+	console.timeEnd('load categories')
+	console.time('recalculating scores')
+	await Promise.all([calcAndCacheAllPus('c'), calcAndCacheAllPus('g')])
+	console.timeEnd('recalculating scores')
+	console.time('inserting more laptops')
+	await loadLaptops('laptops.json', false, 20)
+	console.timeEnd('inserting more laptops')
+	console.time('laptop selection')
+	const selectedLaptops = await selectLaptops({
+		dev: 0,
+		study: 0,
+		design: 1,
+		gaming: 0
+	}, 3)
+	console.timeEnd('laptop selection')
+	console.log('selected laptops: ',selectedLaptops)
+	for (let selectedLaptopInfo of selectedLaptops.topLaptops) {
+		const selectedLaptop = await Laptop.findById(selectedLaptopInfo.id)
+		console.log(selectedLaptop)
+	}
+});
 
-//loadLaptop('test.json')
 
 app.get('/', (req, res) => {
     res.render('index', {

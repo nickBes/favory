@@ -1,0 +1,19 @@
+calculate a pu score in a given category:
+
+	pu score in category = 0
+	for pu in pus:
+		for bench in pu:
+			pu score in category = bench.score * category.benchmark_scores[bench.name]
+
+recalculate a pu score in a given category when a benchmark's score changes:
+	new pu score in category = 
+		previous pu score in category 
+		- bench.previous_score * category.benchmark_scores[bench.name]
+		+ bench.new_score * category.benchmark_scores[bench.name]
+	= 
+		previous pu score in category
+		+ category.benchmark_scores[bench.name] * (bench.new_score - bench.previous_score)
+
+recalculate all pus:
+	for pu in pus
+	

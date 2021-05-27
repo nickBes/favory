@@ -1,11 +1,32 @@
 const mongoose = require('mongoose')
 
-const benchmarkSchema = new mongoose.Schema({
-    name: String,
+const cpuBenchmarkSchema = new mongoose.Schema({
+	cpu: {
+		type: mongoose.Types.ObjectId,
+		ref: 'Cpu'
+	},
+	name: String,
     min: Number,
     max: Number,
     median: Number,
-    average: Number
+	average: Number,
+	prevNormalizedScore: Number
 })
 
-module.exports = mongoose.model('Benchmark', benchmarkSchema)
+const gpuBenchmarkSchema = new mongoose.Schema({
+	gpu: {
+		type: mongoose.Types.ObjectId,
+		ref: 'Gpu'
+	},
+	name: String,
+	min: Number,
+	max: Number,
+	median: Number,
+	average: Number,
+	prevNormalizedScore: Number
+})
+
+module.exports = {
+	CpuBenchmark: mongoose.model('CpuBenchmark', cpuBenchmarkSchema),
+	GpuBenchmark: mongoose.model('GpuBenchmark', gpuBenchmarkSchema)
+}
