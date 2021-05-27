@@ -118,62 +118,62 @@ const calcAndCacheAllPus = async (puType) => {
 	await calcAndCachePuScores(puType, ids)
 }
 
-const recalcCachedScoreForPu = async (cachedPuScoreId, categoriesBenchmarks, prevNormalizedScore, normalizedBenchmarkScore) => {
-	let cachedPuScore = await CachedPuScore.findById(cachedPuScoreId);
-	let prevScoreInCategory = calcPuBenchmarkScoreInCategory(categoriesBenchmarks, cachedPuScore.category, prevNormalizedScore)
-	let scoreInCategory = calcPuBenchmarkScoreInCategory(categoriesBenchmarks, cachedPuScore.category, normalizedBenchmarkScore)
-	// subtract the previous score and add the new score, equivalent to adding (new score - prev score)
-	await CachedPuScore.updateOne(
-		{
-			'_id': cachedPuScoreId
-		},
-		{
-			$inc: {
-				score: scoreInCategory - prevScoreInCategory
-			}
-		})
-}
+// const recalcCachedScoreForPu = async (cachedPuScoreId, categoriesBenchmarks, prevNormalizedScore, normalizedBenchmarkScore) => {
+// 	let cachedPuScore = await CachedPuScore.findById(cachedPuScoreId);
+// 	let prevScoreInCategory = calcPuBenchmarkScoreInCategory(categoriesBenchmarks, cachedPuScore.category, prevNormalizedScore)
+// 	let scoreInCategory = calcPuBenchmarkScoreInCategory(categoriesBenchmarks, cachedPuScore.category, normalizedBenchmarkScore)
+// 	// subtract the previous score and add the new score, equivalent to adding (new score - prev score)
+// 	await CachedPuScore.updateOne(
+// 		{
+// 			'_id': cachedPuScoreId
+// 		},
+// 		{
+// 			$inc: {
+// 				score: scoreInCategory - prevScoreInCategory
+// 			}
+// 		})
+// }
 
-const recalcBenchmarkForPu = async (benchmarkName, puType, pu, categoriesBenchmarks) => {
-	let puBenchmarkModel = puType == 'c' ? CpuBenchmark : GpuBenchmark;
-	const globalBenchmarkScoreModel = puType == 'c' ? GlobalCpuBenchmarkScore : GlobalGpuBenchmarkScore
-	let query = {
-		name: benchmarkName
-	}
-	query[puType + 'pu'] = pu.id
-	let benchmark = await puBenchmarkModel.findOne(query)
-	let prevNormalizedScore = benchmark?.prevNormalizedScore;
-	if (prevNormalizedScore == null) {
-		return
-	}
-	let globalBenchmarkScoreDoc = await globalBenchmarkScoreModel.find({ name: benchmarkName })
-	let normalizedBenchmarkScore = await calcAndCacheNormalizedScore(globalBenchmarkScoreDoc, puType, pu.id, puBenchmarkModel, benchmark?.average)
-	let promises = []
-	for await (let cachedPuScoreId of CachedPuScore.find({ puId: pu.id, puType })) {
-		promises.push(recalcCachedScoreForPu(cachedPuScoreId, categoriesBenchmarks, prevNormalizedScore, normalizedBenchmarkScore))
-	}
-	await Promise.all(promises)
-}
+// const recalcBenchmarkForPu = async (benchmarkName, puType, pu, categoriesBenchmarks) => {
+// 	let puBenchmarkModel = puType == 'c' ? CpuBenchmark : GpuBenchmark;
+// 	const globalBenchmarkScoreModel = puType == 'c' ? GlobalCpuBenchmarkScore : GlobalGpuBenchmarkScore
+// 	let query = {
+// 		name: benchmarkName
+// 	}
+// 	query[puType + 'pu'] = pu.id
+// 	let benchmark = await puBenchmarkModel.findOne(query)
+// 	let prevNormalizedScore = benchmark?.prevNormalizedScore;
+// 	if (prevNormalizedScore == null) {
+// 		return
+// 	}
+// 	let globalBenchmarkScoreDoc = await globalBenchmarkScoreModel.find({ name: benchmarkName })
+// 	let normalizedBenchmarkScore = await calcAndCacheNormalizedScore(globalBenchmarkScoreDoc, puType, pu.id, puBenchmarkModel, benchmark?.average)
+// 	let promises = []
+// 	for await (let cachedPuScoreId of CachedPuScore.find({ puId: pu.id, puType })) {
+// 		promises.push(recalcCachedScoreForPu(cachedPuScoreId, categoriesBenchmarks, prevNormalizedScore, normalizedBenchmarkScore))
+// 	}
+// 	await Promise.all(promises)
+// }
 
-const recalcBenchmarks = async (benchmarkInfos) => {
-	// note that size is used here instead of length since benchmarkInfos is a set and not an array
-	if (benchmarkInfos.size == 0) {
-		return
-	}
-	let promises = []
-	let categoriesBenchmarks = {}
-	for await (let categoryBenchmark of CategoryBenchmark.find({})) {
-		categoriesBenchmarks[categoryBenchmark.category] = categoryBenchmark
-	}
-	for (let benchmarkInfo of benchmarkInfos) {
-		let puModel = benchmarkInfo.puType == 'c' ? Cpu : Gpu;
-		for await (let pu of puModel.find({})) {
-			promises.push(recalcBenchmarkForPu(benchmarkInfo.name, benchmarkInfo.puType, pu, categoriesBenchmarks))
-		}
-	}
-	await Promise.all(promises)
-}
+// const recalcBenchmarks = async (benchmarkInfos) => {
+// 	// note that size is used here instead of length since benchmarkInfos is a set and not an array
+// 	if (benchmarkInfos.size == 0) {
+// 		return
+// 	}
+// 	let promises = []
+// 	let categoriesBenchmarks = {}
+// 	for await (let categoryBenchmark of CategoryBenchmark.find({})) {
+// 		categoriesBenchmarks[categoryBenchmark.category] = categoryBenchmark
+// 	}
+// 	for (let benchmarkInfo of benchmarkInfos) {
+// 		let puModel = benchmarkInfo.puType == 'c' ? Cpu : Gpu;
+// 		for await (let pu of puModel.find({})) {
+// 			promises.push(recalcBenchmarkForPu(benchmarkInfo.name, benchmarkInfo.puType, pu, categoriesBenchmarks))
+// 		}
+// 	}
+// 	await Promise.all(promises)
+// }
 
 module.exports = {
-	calcAndCachePuScores, calcAndCacheAllPus, recalcBenchmarks
+	calcAndCachePuScores, calcAndCacheAllPus
 }

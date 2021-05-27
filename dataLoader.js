@@ -1,7 +1,9 @@
 const fs = require('fs')
 const Mutex = require('async-mutex').Mutex;
 const { Laptop, Cpu, Gpu, CpuBenchmark, GpuBenchmark, Category, CategoryBenchmark, GlobalCpuBenchmarkScore, GlobalGpuBenchmarkScore } = require('./models/Models')
-const { calcAndCachePuScores, recalcBenchmarks } = require('./calculations')
+const { calcAndCachePuScores } = require('./calculations')
+
+let categories;
 
 const GlobalBenchmarkScoreMutexes = {
 	'c': new Mutex(),
@@ -13,12 +15,7 @@ const benchmarkNameMathces = (benchmarkName, benchPattern) => {
 	return requiredKeywords.every(requiredKeyword => benchmarkName.indexOf(requiredKeyword) != -1)
 }
 
-const saveAndGetId = async (obj, ids) => {
-	await obj.save()
-	return obj.id
-}
-
-const updateGlobalBenchmarkScore = async (globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations, puType) => {
+const updateGlobalBenchmarkScore = async (globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations) => {
 	if (globalBenchmarkScoreDoc == null) {
 		let maxBenchScoreDoc = new globalBenchmarkScoreModel({
 			name: bench,
@@ -27,6 +24,7 @@ const updateGlobalBenchmarkScore = async (globalBenchmarkScoreModel, globalBench
 			totalScores: 1
 		})
 		await maxBenchScoreDoc.save()
+		requiredRecalculations.categoryBenchmarks = true;
 	} else {
 		if (avgScore > globalBenchmarkScoreDoc.maxScore) {
 			await globalBenchmarkScoreModel.updateOne({ name: bench }, { $set: { maxScore: avgScore }, $inc: { scoresSum: avgScore, totalScores: 1 } })
@@ -54,7 +52,7 @@ let saveBenchmarks = async (benchObject, puId, puType, requiredRecalculations) =
 			let benchmark = puType == 'c' ? new CpuBenchmark(benchmarkData) : new GpuBenchmark(benchmarkData)
 			await benchmark.save()
 			requiredRecalculations['benches'].add({ name: bench, puType });
-			await updateGlobalBenchmarkScore(globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations, puType)
+			await updateGlobalBenchmarkScore(globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations)
 		})
 	}
 }
@@ -89,27 +87,30 @@ let saveLaptop = async (laptop_data, requiredRecalculations) => {
 		gpu: results[1]
 	})
 	await laptop.save()
-	
+
 	// debug
 	console.log('saved laptop')
 }
 
 // reads the json file and saves it
-let saveLaptops = async (filename, isInitialSave) => {
+let saveLaptops = async (filename, isInitialSave, amount) => {
 	let requiredRecalculations = {
 		benches: new Set(),
 		pus: {
 			c: new Set(),
 			g: new Set()
-		}
+		},
+		// if this laptop introduced a new benchmark that was never seen before, 
+		// the category benchmark scores must be recalculated
+		categoryBenchmarks: false,
 	};
-	
+
 	// using readFileSync here because readFile which is an async version does not allow for an async callback, and we need to
 	// use await when processing the data, which is only available in an async function
 	const data = fs.readFileSync(filename)
 
-	let laptopList = JSON.parse(data).slice(0,20);
-	
+	let laptopList = JSON.parse(data).slice(0, amount);
+
 	// debug
 	console.log(`saving ${Object.keys(laptopList).length} laptops`)
 
@@ -119,7 +120,10 @@ let saveLaptops = async (filename, isInitialSave) => {
 			calcAndCachePuScores('c', requiredRecalculations.pus.c),
 			calcAndCachePuScores('g', requiredRecalculations.pus.g)
 		])
-		await recalcBenchmarks(requiredRecalculations.benches)
+		//await recalcBenchmarks(requiredRecalculations.benches)
+		if (requiredRecalculations.categoryBenchmarks) {
+			await calcCategories()
+		}
 	}
 }
 
@@ -140,6 +144,27 @@ const matchBenchmarkName = (benchmarkName, benchmarkScoresMap) => {
 	return defaultScore
 }
 
+const saveCategoryBenchmarkAndGetId = async (benchmarkName, categoryName, puType, score) => {
+	let result = await CategoryBenchmark.updateOne({
+		name: benchmarkName,
+		category: categoryName,
+		puType
+	},
+	{
+		$set: {
+			score
+		}
+	},
+	{
+		upsert: true
+	})
+	return result.upserted?.[0]._id ?? await CategoryBenchmark.findOne({
+		name: benchmarkName,
+		category: categoryName,
+		puType
+	}).id
+}
+
 const saveCategoryBenchmarks = async (categoryName, categoryData, puType) => {
 	const categoryAndPuTypeBranchmarkScoresMap = categoryData[puType + 'pu']
 	const categoryAndPuTypeEveryBenchmarkScore = {}
@@ -151,13 +176,7 @@ const saveCategoryBenchmarks = async (categoryName, categoryData, puType) => {
 	const scoresSum = Object.values(categoryAndPuTypeEveryBenchmarkScore).reduce((total, cur) => total + cur, 0)
 	let promises = []
 	for (let benchmarkName in categoryAndPuTypeEveryBenchmarkScore) {
-		let categoryBenchmark = new CategoryBenchmark({
-			name: benchmarkName,
-			category: categoryName,
-			score: scoresSum != 0 ? categoryAndPuTypeEveryBenchmarkScore[benchmarkName] / scoresSum : 0,
-			puType
-		})
-		promises.push(saveAndGetId(categoryBenchmark))
+		promises.push(saveCategoryBenchmarkAndGetId(benchmarkName,categoryName,puType,scoresSum != 0 ? categoryAndPuTypeEveryBenchmarkScore[benchmarkName] / scoresSum : 0))
 	}
 	return await Promise.all(promises);
 }
@@ -180,7 +199,11 @@ const saveCategories = async (filename) => {
 	// use await when processing the data, which is only available in an async function
 	const data = fs.readFileSync(filename)
 
-	let categories = JSON.parse(data)
+	categories = JSON.parse(data)
+	await calcCategories();
+}
+
+const calcCategories = async () => {
 	await Promise.all(Object.keys(categories).map(categoryName => saveCategory(categoryName, categories[categoryName])))
 }
 

@@ -24,7 +24,7 @@ db.once('open', async () => {
 	await db.db.dropDatabase()
 	console.log('Dropped DB')
 	console.time('load laptops')
-	await loadLaptops('laptops.json', true)
+	await loadLaptops('laptops.json', true, 5)
 	console.timeEnd('load laptops')
 	console.time('load categories')
 	await loadCategories('categories.json')
@@ -32,6 +32,9 @@ db.once('open', async () => {
 	console.time('recalculating scores')
 	await Promise.all([calcAndCacheAllPus('c'), calcAndCacheAllPus('g')])
 	console.timeEnd('recalculating scores')
+	console.time('inserting more laptops')
+	await loadLaptops('laptops.json', false, 20)
+	console.timeEnd('inserting more laptops')
 	console.time('laptop selection')
 	const selectedLaptops = await selectLaptops({
 		dev: 0,
