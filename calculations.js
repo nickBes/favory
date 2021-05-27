@@ -37,10 +37,6 @@ const calcAndCacheSinglePuInAllCategories = async (puId, puType, categoriesBench
 	let promises = []
 	for (let categoryName in categoriesBenchmarks) {
 		promises.push(calcAndCacheSinglePuInCategory(puId,puType,categoriesBenchmarks,categoryName,normalizedBenchmarkScores))
-		let benchmarkNames = []
-		for (let benchmark of categoriesBenchmarks[categoryName]) {
-			benchmarkNames.push(benchmark.name)
-		}
 	}
 	await Promise.all(promises)
 }
@@ -108,11 +104,9 @@ const calcAndCachePuScores = async (puType, puIds) => {
 		names.push(bench.name)
 	}
 	for (let puId of puIds) {
-		// console.log('CALCULATING PU: ', puId)
 		let normalizedBenchmarkScoresOfCurPu = {}
 		normalizedBenchmarkScoresOfEachPu.push(normalizedBenchmarkScoresOfCurPu)
 		for (let globalBenchmarkScoreDoc of allGlobalBenchmarkScoreDocs) {
-			// console.log('calculating: ======',[globalBenchmarkScoreDoc.name, puId],'======')
 			promises.push(calcAndCacheBenchmarkOfPu(globalBenchmarkScoreDoc, puBenchmarkModel, puId, puType, normalizedBenchmarkScoresOfCurPu))
 		}
 	}

@@ -19,7 +19,6 @@ const saveAndGetId = async (obj, ids) => {
 }
 
 const updateGlobalBenchmarkScore = async (globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations, puType) => {
-	requiredRecalculations['benches'].add({ name: bench, puType });
 	if (globalBenchmarkScoreDoc == null) {
 		let maxBenchScoreDoc = new globalBenchmarkScoreModel({
 			name: bench,
@@ -37,7 +36,7 @@ const updateGlobalBenchmarkScore = async (globalBenchmarkScoreModel, globalBench
 	}
 }
 
-// saves benchmarks to the db and returns an array of their ids for each processor
+// saves benchmarks of a pu to the db
 let saveBenchmarks = async (benchObject, puId, puType, requiredRecalculations) => {
 	for (let bench in benchObject) {
 		const globalBenchmarkScoreModel = puType == 'c' ? GlobalCpuBenchmarkScore : GlobalGpuBenchmarkScore
@@ -54,6 +53,7 @@ let saveBenchmarks = async (benchObject, puId, puType, requiredRecalculations) =
 			benchmarkData[puType + 'pu'] = puId;
 			let benchmark = puType == 'c' ? new CpuBenchmark(benchmarkData) : new GpuBenchmark(benchmarkData)
 			await benchmark.save()
+			requiredRecalculations['benches'].add({ name: bench, puType });
 			await updateGlobalBenchmarkScore(globalBenchmarkScoreModel, globalBenchmarkScoreDoc, bench, avgScore, requiredRecalculations, puType)
 		})
 	}
@@ -103,9 +103,10 @@ let saveLaptops = async (filename, isInitialSave) => {
 	};
 	const data = fs.readFileSync(filename)
 	let laptopList = JSON.parse(data)
-	while (laptopList.length > 15) {
-		laptopList.pop()
-	}
+	// while (laptopList.length > 100) {
+	// 	laptopList.pop()
+	// }
+	console.log(`saving ${Object.keys(laptopList).length} laptops`)
 	await Promise.all(laptopList.map(laptop => saveLaptop(laptop, requiredRecalculations)))
 	if (!isInitialSave) {
 		await Promise.all([

@@ -115,7 +115,7 @@ const selectLaptop = async (userScores) => {
 	let bestLaptopScore = -1;
 	for await (let laptop of Laptop.find({})) {
 		let score = scores['c'][laptop.cpu] / maxScores['c'] + scores['g'][laptop.gpu]/maxScores['g']
-		console.log('price: ', laptop.price, ', name: ',laptop.name, ', score: ', score, `cpu score: ${scores['c'][laptop.cpu]}, gpu score: ${scores['g'][laptop.gpu]}`);
+		// console.log('price: ', laptop.price, ', name: ',laptop.name, ', score: ', score, `cpu score: ${scores['c'][laptop.cpu]}, gpu score: ${scores['g'][laptop.gpu]}`);
 		if (score > bestLaptopScore) {
 			bestLaptopScore = score;
 			bestLaptopId = laptop.id
