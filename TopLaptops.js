@@ -10,15 +10,17 @@ class TopLaptops{
 			});
 		}
 	}
-	// this function receives a laptop id and its scores, and adds it to the top laptops if it is better
+	// this function receives a laptop id, score and price, and adds it to the top laptops if it is better
 	// than any of them. it starts from the best laptop and gradually goes down
-	insertLaptopIfBetter(id, score) {
+	insertLaptopIfBetter(id, score, price) {
 		console.log(`inserting laptop with id: ${id}, and score: ${score}`)
 		for (let i = 0; i < this.topLaptops.length; i++){
 			let curLaptop = this.topLaptops[i];
-			if (score > curLaptop.score) {
+			// if the new laptops score is better, or its score is the same but its price is lower
+			// replace the i'th laptop with the new one
+			if (score > curLaptop.score || (score == curLaptop && price > curLaptop.price)) {
 				this.topLaptops[i] = {
-					score,id
+					score, id, price
 				}
 				break;
 			}
