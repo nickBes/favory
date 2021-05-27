@@ -3,7 +3,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const { loadLaptops, loadCategories } = require('./dataLoader')
 const {calcAndCacheAllPus} = require('./calculations')
-const { selectLaptop } = require('./selector')
+const { selectLaptops } = require('./selector')
 const { Laptop, CpuBenchmark, GpuBenchmark, CachedPuScore } = require('./models/Models')
 //server
 const app = express()
@@ -33,20 +33,18 @@ db.once('open', async () => {
 	await Promise.all([calcAndCacheAllPus('c'), calcAndCacheAllPus('g')])
 	console.timeEnd('recalculating scores')
 	console.time('laptop selection')
-	const selectedLaptopId = await selectLaptop({
+	const selectedLaptops = await selectLaptops({
 		dev: 0,
 		study: 0,
 		design: 1,
 		gaming: 0
-	})
+	}, 3)
 	console.timeEnd('laptop selection')
-	console.log('selected laptop id: ',selectedLaptopId)
-	const selectedLaptop = await Laptop.findById(selectedLaptopId)
-	console.log(selectedLaptop)
-	// for await (let laptop of Laptop.find({})) {
-	// 	console.log(laptop)
-	// }
-	// console.log(selectLaptop)
+	console.log('selected laptops: ',selectedLaptops)
+	for (let selectedLaptopInfo of selectedLaptops.topLaptops) {
+		const selectedLaptop = await Laptop.findById(selectedLaptopInfo.id)
+		console.log(selectedLaptop)
+	}
 });
 
 
