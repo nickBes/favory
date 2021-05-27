@@ -19,9 +19,16 @@ class TopLaptops{
 			// if the new laptops score is better, or its score is the same but its price is lower
 			// replace the i'th laptop with the new one
 			if (score > curLaptop.score || (score == curLaptop && price > curLaptop.price)) {
+				// first push all the laptops below the i'th one by one
+				// to do that we go from the bottom of the list until the i+1th element
+				// and copy the previous element
+				for (let j = this.topLaptops.length-1; j > i; j--){
+					this.topLaptops[j] = this.topLaptops[j-1]
+				}
 				this.topLaptops[i] = {
 					score, id, price
 				}
+				console.log('after insertion: ',this.topLaptops)
 				break;
 			}
 		}

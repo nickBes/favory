@@ -108,7 +108,7 @@ let saveLaptops = async (filename, isInitialSave) => {
 	// use await when processing the data, which is only available in an async function
 	const data = fs.readFileSync(filename)
 
-	let laptopList = JSON.parse(data);
+	let laptopList = JSON.parse(data).slice(0,20);
 	
 	// debug
 	console.log(`saving ${Object.keys(laptopList).length} laptops`)
