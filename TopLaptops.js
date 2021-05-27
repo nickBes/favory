@@ -15,7 +15,7 @@ class TopLaptops{
 			let curLaptop = this.topLaptops[i];
 			// if the new laptops score is better, or its score is the same but its price is lower
 			// replace the i'th laptop with the new one
-			if (score > curLaptop.score || (score == curLaptop && price > curLaptop.price)) {
+			if (score > curLaptop.score || (score == curLaptop.score && price < curLaptop.price)) {
 				// first push all the laptops below the i'th one by one
 				// to do that we go from the bottom of the list until the i+1th element
 				// and copy the previous element
