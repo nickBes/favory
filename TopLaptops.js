@@ -3,12 +3,10 @@ class TopLaptops{
 	constructor(size) {
 		// this.topLaptops is an array in which the laptop in the 0th index represents the 
 		// best one of our top n laptops, and the nth index represents the worst one.
-		this.topLaptops = [];
-		for (let i = 0; i < size; i++){
-			this.topLaptops.push({
-				score: -1
-			});
-		}
+		this.topLaptops = new Array(size);
+		this.topLaptops.fill({
+			score: -1
+		})
 	}
 	// this function receives a laptop id, score and price, and adds it to the top laptops if it is better
 	// than any of them. it starts from the best laptop and gradually goes down
