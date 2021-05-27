@@ -116,14 +116,14 @@ let saveLaptops = async (filename, isInitialSave, amount) => {
 
 	await Promise.all(laptopList.map(laptop => saveLaptop(laptop, requiredRecalculations)))
 	if (!isInitialSave) {
+		if (requiredRecalculations.categoryBenchmarks) {
+			await updateCategories()
+		}
 		await Promise.all([
 			calcAndCachePuScores('c', requiredRecalculations.pus.c),
 			calcAndCachePuScores('g', requiredRecalculations.pus.g)
 		])
 		//await recalcBenchmarks(requiredRecalculations.benches)
-		if (requiredRecalculations.categoryBenchmarks) {
-			await calcCategories()
-		}
 	}
 }
 
@@ -144,20 +144,25 @@ const matchBenchmarkName = (benchmarkName, benchmarkScoresMap) => {
 	return defaultScore
 }
 
-const saveCategoryBenchmarkAndGetId = async (benchmarkName, categoryName, puType, score) => {
-	let result = await CategoryBenchmark.updateOne({
-		name: benchmarkName,
-		category: categoryName,
-		puType
-	},
-	{
-		$set: {
-			score
-		}
-	},
-	{
-		upsert: true
-	})
+// updates the category benchmark document and returns its id
+const updateCategoryBenchmarkAndGetId = async (benchmarkName, categoryName, puType, score) => {
+	let result = await CategoryBenchmark.updateOne(
+		{
+			name: benchmarkName,
+			category: categoryName,
+			puType
+		},
+		{
+			$set: {
+				score
+			}
+		},
+		{
+			upsert: true
+		})
+	// if the document did not exist before, then it will be upserted, and the id of the 
+	// upserted object will be returned in the result.upserted array, but if the document already
+	// existed and was only updated, we need to execute a findOne query to retrieve its id
 	return result.upserted?.[0]._id ?? await CategoryBenchmark.findOne({
 		name: benchmarkName,
 		category: categoryName,
@@ -165,7 +170,7 @@ const saveCategoryBenchmarkAndGetId = async (benchmarkName, categoryName, puType
 	}).id
 }
 
-const saveCategoryBenchmarks = async (categoryName, categoryData, puType) => {
+const updateCategoryBenchmarks = async (categoryName, categoryData, puType) => {
 	const categoryAndPuTypeBranchmarkScoresMap = categoryData[puType + 'pu']
 	const categoryAndPuTypeEveryBenchmarkScore = {}
 	const globalBenchmarkScoreModel = puType == 'c' ? GlobalCpuBenchmarkScore : GlobalGpuBenchmarkScore
@@ -176,35 +181,45 @@ const saveCategoryBenchmarks = async (categoryName, categoryData, puType) => {
 	const scoresSum = Object.values(categoryAndPuTypeEveryBenchmarkScore).reduce((total, cur) => total + cur, 0)
 	let promises = []
 	for (let benchmarkName in categoryAndPuTypeEveryBenchmarkScore) {
-		promises.push(saveCategoryBenchmarkAndGetId(benchmarkName,categoryName,puType,scoresSum != 0 ? categoryAndPuTypeEveryBenchmarkScore[benchmarkName] / scoresSum : 0))
+		promises.push(updateCategoryBenchmarkAndGetId(benchmarkName, categoryName, puType, scoresSum != 0 ? categoryAndPuTypeEveryBenchmarkScore[benchmarkName] / scoresSum : 0))
 	}
 	return await Promise.all(promises);
 }
 
-const saveCategory = async (categoryName, categoryData) => {
+const updateCategory = async (categoryName, categoryData) => {
 	let results = await Promise.all([
-		saveCategoryBenchmarks(categoryName, categoryData, 'c'),
-		saveCategoryBenchmarks(categoryName, categoryData, 'g')
+		updateCategoryBenchmarks(categoryName, categoryData, 'c'),
+		updateCategoryBenchmarks(categoryName, categoryData, 'g')
 	])
-	let category = new Category({
-		name: categoryName,
-		cpuBenchmarks: results[0],
-		gpuBenchmarks: results[1]
-	})
-	await category.save();
+	await Category.updateOne(
+		{
+			name: categoryName
+		},
+		{
+			$set: {
+				cpuBenchmarks: results[0],
+				gpuBenchmarks: results[1]
+			}
+		},
+		{
+			upsert = true
+		})
 }
 
+// saves the categories from the given categories file
 const saveCategories = async (filename) => {
 	// using readFileSync here because readFile which is an async version does not allow for an async callback, and we need to
 	// use await when processing the data, which is only available in an async function
 	const data = fs.readFileSync(filename)
 
+	// note that categories is a global variable and it is only set once
 	categories = JSON.parse(data)
-	await calcCategories();
+	await updateCategories();
 }
 
-const calcCategories = async () => {
-	await Promise.all(Object.keys(categories).map(categoryName => saveCategory(categoryName, categories[categoryName])))
+// updates the categories by recalculating their scores and updating the categorie documents
+const updateCategories = async () => {
+	await Promise.all(Object.keys(categories).map(categoryName => updateCategory(categoryName, categories[categoryName])))
 }
 
 module.exports = {
