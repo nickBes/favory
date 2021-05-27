@@ -41,7 +41,7 @@ const selectLaptops = async (userScores, retrievedLaptopsAmount) => {
 	// find the best laptops
 	let bestLaptops = new TopLaptops(retrievedLaptopsAmount);
 	for await (let laptop of Laptop.find({})) {
-		bestLaptops.insertLaptopIfBetter(laptop.id, scores['c'][laptop.cpu] / maxScores['c'] + scores['g'][laptop.gpu]/maxScores['g'])
+		bestLaptops.insertLaptopIfBetter(laptop.id, scores['c'][laptop.cpu] / maxScores['c'] + scores['g'][laptop.gpu] / maxScores['g'], laptop.price);
 	}
 	return bestLaptops;
 }

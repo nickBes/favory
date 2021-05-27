@@ -13,7 +13,6 @@ class TopLaptops{
 	// this function receives a laptop id, score and price, and adds it to the top laptops if it is better
 	// than any of them. it starts from the best laptop and gradually goes down
 	insertLaptopIfBetter(id, score, price) {
-		console.log(`inserting laptop with id: ${id}, and score: ${score}`)
 		for (let i = 0; i < this.topLaptops.length; i++){
 			let curLaptop = this.topLaptops[i];
 			// if the new laptops score is better, or its score is the same but its price is lower
@@ -28,7 +27,6 @@ class TopLaptops{
 				this.topLaptops[i] = {
 					score, id, price
 				}
-				console.log('after insertion: ',this.topLaptops)
 				break;
 			}
 		}
