@@ -89,6 +89,8 @@ let saveLaptop = async (laptop_data, requiredRecalculations) => {
 		gpu: results[1]
 	})
 	await laptop.save()
+	
+	// debug
 	console.log('saved laptop')
 }
 
@@ -101,12 +103,16 @@ let saveLaptops = async (filename, isInitialSave) => {
 			g: new Set()
 		}
 	};
+	
+	// using readFileSync here because readFile which is an async version does not allow for an async callback, and we need to
+	// use await when processing the data, which is only available in an async function
 	const data = fs.readFileSync(filename)
-	let laptopList = JSON.parse(data)
-	// while (laptopList.length > 100) {
-	// 	laptopList.pop()
-	// }
+
+	let laptopList = JSON.parse(data);
+	
+	// debug
 	console.log(`saving ${Object.keys(laptopList).length} laptops`)
+
 	await Promise.all(laptopList.map(laptop => saveLaptop(laptop, requiredRecalculations)))
 	if (!isInitialSave) {
 		await Promise.all([
@@ -170,7 +176,10 @@ const saveCategory = async (categoryName, categoryData) => {
 }
 
 const saveCategories = async (filename) => {
+	// using readFileSync here because readFile which is an async version does not allow for an async callback, and we need to
+	// use await when processing the data, which is only available in an async function
 	const data = fs.readFileSync(filename)
+
 	let categories = JSON.parse(data)
 	await Promise.all(Object.keys(categories).map(categoryName => saveCategory(categoryName, categories[categoryName])))
 }

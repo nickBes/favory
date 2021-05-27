@@ -1,20 +1,13 @@
 const { Cpu, Gpu, GlobalCpuBenchmarkScore, CachedPuScore, GlobalGpuBenchmarkScore, CpuBenchmark, GpuBenchmark, Category, CategoryBenchmark } = require('./models/Models');
 
-const DEFAULT_NORMALIZED_BENCHMARK_SCORE = 0.1;
-
 // calculate and cache the normalized score of a pu in a given benchmark
 // note: benchmarkAvg is the average score of the pu in that benchmark
-const calcAndCacheNormalizedScore = async (globalBenchmarkScoreDoc, puType, puId, puBenchmarkModel, becnhmarkAvg) => {
+const calcAndCacheNormalizedScore = async (globalBenchmarkScoreDoc, puType, puId, puBenchmarkModel, benchmarkAvg) => {
 	// if the benchmark is not yet inside of the global becnmark scores collection,
 	// than this is currently the only laptop with such benchmark but the benchmark was not inserted yet,
 	// so we can save the calculations for it because we know the normalized score will be 1
-	let normalizedScore
-	if (globalBenchmarkScoreDoc != null) {
-		let score = becnhmarkAvg !== null && becnhmarkAvg !== undefined ? becnhmarkAvg : (globalBenchmarkScoreDoc.scoresSum / globalBenchmarkScoreDoc.totalScores)
-		normalizedScore = score / globalBenchmarkScoreDoc.maxScore;
-	} else {
-		normalizedScore = 1;
-	}
+	let score = benchmarkAvg ?? (globalBenchmarkScoreDoc.scoresSum / globalBenchmarkScoreDoc.totalScores);
+	let normalizedScore = score / globalBenchmarkScoreDoc.maxScore;
 	let updateFilter = {
 		name: globalBenchmarkScoreDoc.name
 	}
@@ -99,10 +92,6 @@ const calcAndCachePuScores = async (puType, puIds) => {
 	let promises = []
 	let normalizedBenchmarkScoresOfEachPu = []
 	let allGlobalBenchmarkScoreDocs = await globalBenchmarkScoreModel.find()
-	let names = []
-	for (let bench of allGlobalBenchmarkScoreDocs) {
-		names.push(bench.name)
-	}
 	for (let puId of puIds) {
 		let normalizedBenchmarkScoresOfCurPu = {}
 		normalizedBenchmarkScoresOfEachPu.push(normalizedBenchmarkScoresOfCurPu)
