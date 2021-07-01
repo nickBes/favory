@@ -20,13 +20,14 @@ CREATE TABLE global_benchmark (
 CREATE TABLE benchmark (
 	id BIGSERIAL PRIMARY KEY,
 	score REAL NOT NULL,
-	laptop INTEGER REFERENCES laptop(id)
+	laptop_id INTEGER REFERENCES laptop(id),
+	global_benchmark_id INTEGER REFERENCES global_benchmark(id)
 );
 
 CREATE TABLE benchmark_score_in_category (
 	id SERIAL PRIMARY KEY,
 	score REAL NOT NULL,
-	category INTEGER REFERENCES category(id),
-	global_benchmark INTEGER REFERENCES global_benchmark(id)
+	category_id INTEGER REFERENCES category(id),
+	global_benchmark_id INTEGER REFERENCES global_benchmark(id)
 );
 
