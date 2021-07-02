@@ -2,8 +2,8 @@ table! {
     benchmark (id) {
         id -> Int8,
         score -> Float4,
-        laptop_id -> Nullable<Int4>,
-        global_benchmark_id -> Nullable<Int4>,
+        laptop_id -> Int4,
+        global_benchmark_id -> Int4,
     }
 }
 
@@ -11,8 +11,8 @@ table! {
     benchmark_score_in_category (id) {
         id -> Int4,
         score -> Float4,
-        category_id -> Nullable<Int4>,
-        global_benchmark_id -> Nullable<Int4>,
+        category_id -> Int4,
+        global_benchmark_id -> Int4,
     }
 }
 
@@ -36,6 +36,7 @@ table! {
 table! {
     laptop (id) {
         id -> Int4,
+        name -> Text,
         cpu -> Text,
         gpu -> Text,
     }

@@ -4,6 +4,8 @@ use std::error::Error;
 pub enum DataProcessorErrorKind{
     FailedToOpenCategoriesFile,
     FailedToDeserializeCategoriesFile,
+    FailedToOpenLaptopsFile,
+    FailedToDeserializeLaptopsFile,
     DatabaseError,
 }
 

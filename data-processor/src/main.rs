@@ -10,7 +10,7 @@ mod errors;
 
 use std::env;
 
-use commands::load_categories;
+use commands::{load_categories, load_laptops};
 use diesel::{Connection, PgConnection};
 
 use crate::cli::{DataProcessorCliCommand, create_data_processor_cli};
@@ -26,6 +26,7 @@ fn main() {
     loop{
         let result = match cli.get_next_command(){
             DataProcessorCliCommand::LoadCategories => load_categories(&db_connection),
+            DataProcessorCliCommand::LoadLaptops => load_laptops(&db_connection),
             DataProcessorCliCommand::Exit => break
         };
         if let Err(error) = result{

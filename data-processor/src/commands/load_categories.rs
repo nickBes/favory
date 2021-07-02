@@ -39,7 +39,7 @@ pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
 
     let categories_file = parse_categories_file()?;
 
-    let categories_id_by_name = insert_categories(&categories_file, db_connection)?;
+    let categories_id_by_name = insert_and_map_categories(&categories_file, db_connection)?;
 
     // we need the global benchmark since the categories.json file only contains patterns to match the benchmarks against,
     // not the actual names of the benchmarks, so we must loop through each benchmark and match it to a pattern.
@@ -50,8 +50,8 @@ pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
     // match each benchmark to a pattern and give him the pattern's score
     let mut scores = match_global_benchmarks_with_categories(
         global_benchmarks,
-        categories_file,
-        categories_id_by_name,
+        &categories_file,
+        &categories_id_by_name,
     );
 
     // normalize the matched scores
@@ -64,7 +64,7 @@ pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
 }
 
 /// inserts the categories to the database. returns a hashmap that maps a category name to its id in the database.
-fn insert_categories(
+fn insert_and_map_categories(
     categories_file: &CategoriesFile,
     db_connection: &PgConnection,
 ) -> Result<HashMap<String, i32>> {
@@ -102,8 +102,8 @@ fn insert_categories(
 /// matches to, and gives each benchmark a score according to the first matched pattern.
 fn match_global_benchmarks_with_categories(
     global_benchmarks: Vec<models::GlobalBenchmark>,
-    categories_file: CategoriesFile,
-    categories_id_by_name: HashMap<String, i32>,
+    categories_file: &CategoriesFile,
+    categories_id_by_name: &HashMap<String, i32>,
 ) -> BenchmarkScoresInEachCategory {
     let mut benchmark_scores_in_each_category = BenchmarkScoresInEachCategory::new();
     for (category_name, category_pattern_scores) in categories_file {
@@ -152,7 +152,7 @@ fn match_global_benchmarks_with_categories(
         // here we have found the score of each benchmark in the current cateogry, all that's left is to add it to the
         // results map. But the results map is mapped using each category's id, not name, so we must first find the
         // current category's id using the categories_id_by_name map.
-        let category_id = *categories_id_by_name.get(&category_name).unwrap();
+        let category_id = *categories_id_by_name.get(category_name).unwrap();
         benchmark_scores_in_each_category.insert(category_id, benchmark_scores_in_current_category);
     }
     benchmark_scores_in_each_category

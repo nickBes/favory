@@ -11,6 +11,7 @@ pub enum PuType{
 #[table_name = "laptop"]
 pub struct Laptop {
     pub id: i32,
+    pub name: String,
     pub cpu: String,
     pub gpu: String,
 }
@@ -18,9 +19,10 @@ pub struct Laptop {
 
 #[derive(Debug, Insertable)]
 #[table_name="laptop"]
-pub struct NewLaptop<'a, 'b> {
-    pub cpu: &'a str,
-    pub gpu: &'b str,
+pub struct NewLaptop<'a, 'b, 'c> {
+    pub name: &'a str,
+    pub cpu: &'b str,
+    pub gpu: &'c str,
 }
 
 #[derive(Debug, Queryable, Identifiable)]
@@ -48,10 +50,10 @@ impl GlobalBenchmark{
 
 #[derive(Debug, Insertable)]
 #[table_name="global_benchmark"]
-pub struct NewGlobalBenchmark<'a> {
+pub struct NewGlobalBenchmark<'a, 'b> {
     pub name: &'a str,
     pub max: f32,
-    pub sum: BigDecimal,
+    pub sum: &'b BigDecimal,
     pub amount: i64,
 }
 
