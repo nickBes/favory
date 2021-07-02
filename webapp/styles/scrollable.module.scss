@@ -1,0 +1,18 @@
+.scrollable {
+    scroll-snap-type: y none;
+    overflow-y: scroll;
+    height: 100vh;
+    overflow-x: hidden;
+
+    @media (max-width: 768px) {
+        scroll-snap-type: y mandatory;
+    }
+
+    section {
+        scroll-snap-align: start;
+    }
+}
+
+.wrap {
+    overflow-y: hidden;
+}
