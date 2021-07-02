@@ -6,9 +6,11 @@ mod schema;
 mod models;
 mod cli;
 mod commands;
+mod errors;
 
 use std::env;
 
+use commands::load_categories;
 use diesel::{Connection, PgConnection};
 
 use crate::cli::{DataProcessorCliCommand, create_data_processor_cli};
@@ -22,9 +24,12 @@ fn main() {
     let db_connection = PgConnection::establish(&db_url).unwrap();
 
     loop{
-        match cli.get_next_command(){
-            DataProcessorCliCommand::LoadCategories => println!("loading cats..."),
+        let result = match cli.get_next_command(){
+            DataProcessorCliCommand::LoadCategories => load_categories(&db_connection),
             DataProcessorCliCommand::Exit => break
+        };
+        if let Err(error) = result{
+            eprintln!("Error: {:?}", error);
         }
     }
 }

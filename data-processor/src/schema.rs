@@ -19,7 +19,7 @@ table! {
 table! {
     category (id) {
         id -> Int4,
-        name -> Nullable<Text>,
+        name -> Text,
     }
 }
 

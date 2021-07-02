@@ -11,4 +11,5 @@ diesel = { version = "1.4.4", features = ["postgres", "numeric"] }
 dotenv = "0.15.0"
 bigdecimal = "0.1.2"
 serde_json = {version = "1.0.64"}
-maplit = "1.0.2"
+serde = {version = "1.0.126", features = ["derive"]}
+maplit = {version = "1.0.2"}

@@ -6,7 +6,7 @@ CREATE TABLE laptop (
 
 CREATE TABLE category (
 	id SERIAL PRIMARY KEY,
-	name TEXT
+	name TEXT NOT NULL
 );
 
 CREATE TABLE global_benchmark (

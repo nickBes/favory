@@ -1,9 +1,13 @@
 use bigdecimal::BigDecimal;
-use diesel::types::Decimal;
 
 use crate::schema::*;
 
-#[derive(Queryable, Identifiable)]
+pub enum PuType{
+    Cpu,
+    Gpu,
+}
+
+#[derive(Debug, Queryable, Identifiable)]
 #[table_name = "laptop"]
 pub struct Laptop {
     pub id: i32,
@@ -12,46 +16,59 @@ pub struct Laptop {
 }
 
 
-#[derive(Insertable)]
+#[derive(Debug, Insertable)]
 #[table_name="laptop"]
 pub struct NewLaptop<'a, 'b> {
     pub cpu: &'a str,
     pub gpu: &'b str,
 }
 
-#[derive(Queryable, Identifiable)]
+#[derive(Debug, Queryable, Identifiable)]
 #[table_name = "global_benchmark"]
 pub struct GlobalBenchmark{
     pub id: i32,
+    pub name: String,
     pub max: f32,
     pub sum: BigDecimal,
     pub amount: i64,
-    pub name: String,
 }
 
-#[derive(Insertable)]
+impl GlobalBenchmark{
+    pub fn pu_type(&self)-> PuType{
+        if self.name.starts_with('c'){
+            PuType::Cpu
+        }else{
+            PuType::Gpu
+        }
+    }
+    pub fn name_without_prefix(&self) -> &str{
+        &self.name[1..]
+    }
+}
+
+#[derive(Debug, Insertable)]
 #[table_name="global_benchmark"]
 pub struct NewGlobalBenchmark<'a> {
+    pub name: &'a str,
     pub max: f32,
     pub sum: BigDecimal,
     pub amount: i64,
-    pub name: &'a str,
 }
 
-#[derive(Queryable, Identifiable)]
+#[derive(Debug, Queryable, Identifiable)]
 #[table_name = "category"]
 pub struct Category{
     pub id: i32,
     pub name: String,
 }
 
-#[derive(Insertable)]
-#[table_name="global_benchmark"]
+#[derive(Debug, Insertable)]
+#[table_name="category"]
 pub struct NewCategory<'a> {
     pub name: &'a str,
 }
 
-#[derive(Queryable, Associations)]
+#[derive(Debug, Queryable, Associations)]
 #[belongs_to(Laptop)]
 #[belongs_to(GlobalBenchmark)]
 #[table_name = "benchmark"]
@@ -62,7 +79,7 @@ pub struct Benchmark{
     pub global_benchmark_id: i32,
 }
 
-#[derive(Insertable)]
+#[derive(Debug, Insertable)]
 #[table_name="benchmark"]
 pub struct NewBenchmark {
     pub score: f32,
@@ -70,7 +87,7 @@ pub struct NewBenchmark {
     pub global_benchmark_id: i32,
 }
 
-#[derive(Queryable, Associations)]
+#[derive(Debug, Queryable, Associations)]
 #[belongs_to(Category)]
 #[belongs_to(GlobalBenchmark)]
 #[table_name = "benchmark_score_in_category"]
@@ -81,7 +98,7 @@ pub struct BenchmarkScoreInCategory{
     pub global_benchmark_id: i32,
 }
 
-#[derive(Insertable)]
+#[derive(Debug, Insertable)]
 #[table_name="benchmark_score_in_category"]
 pub struct NewBenchmarkScoreInCategory {
     pub score: f32,
