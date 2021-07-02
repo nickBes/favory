@@ -37,6 +37,13 @@ type BenchmarkScoresInCategory = HashMap<i32, f32>;
 pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
     use crate::schema::global_benchmark::dsl::*;
 
+    println!("deleting categories and benchmark scores in categories");
+    // first delete all categories and benchmark scores in categories from the table, so that
+    // we don't have duplicates
+    // note that no update mechanism is used here even though it could increase performance,
+    // because the data-processor currently only needs to run once, and performs no recalculations.
+    delete_categories_and_benchmark_scores_in_categories(db_connection)?;
+
     println!("loading the categories file...");
     let categories_file = parse_categories_file()?;
 
@@ -72,19 +79,26 @@ pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
     Ok(())
 }
 
+/// deletes all categories and benchmark scores in categories from the database
+fn delete_categories_and_benchmark_scores_in_categories(db_connection: &PgConnection)->Result<()>{
+    use crate::schema::category;
+    use crate::schema::benchmark_score_in_category;
+
+    diesel::delete(benchmark_score_in_category::table)
+        .execute(db_connection)
+        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
+    diesel::delete(category::table)
+        .execute(db_connection)
+        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
+    Ok(())
+}
+
 /// inserts the categories to the database. returns a hashmap that maps a category name to its id in the database.
 fn insert_and_map_categories(
     categories_file: &CategoriesFile,
     db_connection: &PgConnection,
 ) -> Result<HashMap<String, i32>> {
     use crate::schema::category;
-
-    // first delete all categories from the table, so that we don't have duplicates
-    // note that no update mechanism is used here even though it could increase performance,
-    // because the data-processor currently only needs to run once, and performs no recalculations.
-    diesel::delete(category::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
 
     let new_categories: Vec<models::NewCategory> = categories_file
         .keys()
@@ -186,13 +200,6 @@ fn insert_benchmark_scores_in_each_category(
     db_connection: &PgConnection,
 ) -> Result<()> {
     use crate::schema::benchmark_score_in_category;
-
-    // first delete all scores from the table, so that we don't have duplicates.
-    // note that no update mechanism is used here even though it could increase performance,
-    // because the data-processor currently only needs to run once, and performs no recalculations.
-    diesel::delete(benchmark_score_in_category::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
 
     // each item represents the score of a single benchmark in a single category
     // the pu types here are encoded into the name of the benchmark such that if the benchmark

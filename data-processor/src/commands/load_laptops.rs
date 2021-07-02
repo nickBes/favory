@@ -81,7 +81,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     // so that we don't have duplicates. note that no update mechanism is used here
     // even though it could increase performance, because the data-processor currently
     // only needs to run once, and performs no recalculations.
-    delete_all_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
+    delete_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
 
     println!("loading the laptops file...");
     let laptops_file = parse_laptops_file()?;
@@ -106,7 +106,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
 }
 
 /// deletes all laptops, benchmarks and global benchmarks from the database
-fn delete_all_laptops_and_benchmarks_and_global_benchmarks(
+fn delete_laptops_and_benchmarks_and_global_benchmarks(
     db_connection: &PgConnection,
 ) -> Result<()> {
     use crate::schema::benchmark;
