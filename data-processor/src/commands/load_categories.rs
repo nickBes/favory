@@ -37,16 +37,22 @@ type BenchmarkScoresInCategory = HashMap<i32, f32>;
 pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
     use crate::schema::global_benchmark::dsl::*;
 
+    println!("loading the categories file...");
     let categories_file = parse_categories_file()?;
 
+    println!("inserting and mapping categories...");
     let categories_id_by_name = insert_and_map_categories(&categories_file, db_connection)?;
+    println!("inserted {} categories", categories_id_by_name.len());
 
+    println!("loading global benchmarks...");
     // we need the global benchmark since the categories.json file only contains patterns to match the benchmarks against,
     // not the actual names of the benchmarks, so we must loop through each benchmark and match it to a pattern.
     let global_benchmarks: Vec<models::GlobalBenchmark> = global_benchmark
         .load(db_connection)
         .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
+    println!("loaded {} global benchmarks", global_benchmarks.len());
 
+    println!("matching global benchmarks with categories...");
     // match each benchmark to a pattern and give him the pattern's score
     let mut scores = match_global_benchmarks_with_categories(
         global_benchmarks,
@@ -54,12 +60,15 @@ pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
         &categories_id_by_name,
     );
 
+    println!("normalizing scores...");
     // normalize the matched scores
     normalize_bencmark_scores(&mut scores);
 
+    println!("inserting benchmark scores in each category...");
     // insert the normalized scores to the database
     insert_benchmark_scores_in_each_category(scores, db_connection)?;
 
+    println!("successfully loaded categories");
     Ok(())
 }
 

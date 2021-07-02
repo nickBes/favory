@@ -71,25 +71,38 @@ impl GlobalBenchmarkInfo {
 
 /// loads the laptops to the database and performs all required calculations
 pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
+    println!("deleting categories and benchmark scores in categories...");
     // the categories are not up to date anymore with the new benchmarks,
     // so we should delete them.
     delete_categories_and_benchmark_scores_in_categories(db_connection)?;
 
+    println!("deleting laptops, benchmarks and global benchmarks...");
     // delete all laptops, benchmarks and global benchmarks from the database,
     // so that we don't have duplicates. note that no update mechanism is used here
     // even though it could increase performance, because the data-processor currently
     // only needs to run once, and performs no recalculations.
     delete_all_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
 
+    println!("loading the laptops file...");
     let laptops_file = parse_laptops_file()?;
 
-    // calculate the global benchmarks, insert them, and map them, so we can get each global benchmark's id using its name
+    println!("calculating global benchmarks...");
+    // calculate the global benchmarks
     let global_benchmark_infos = calculate_global_benchmarks(&laptops_file);
+
+    // insert the global benchmarks, and map them, so we can get each global benchmark's id
+    // using its name
+    println!("inserting and mapping global benchmarks...");
     let global_benchmarks_id_by_name =
         insert_and_map_global_benchmarks(global_benchmark_infos, db_connection)?;
+    println!("inserted {} global benchmarks", global_benchmarks_id_by_name.len());
 
+    println!("inserting laptops and benchmarks...");
     // insert the laptops and benchmarks
-    insert_laptops_and_benchmarks(&laptops_file, &global_benchmarks_id_by_name, db_connection)
+    insert_laptops_and_benchmarks(&laptops_file, &global_benchmarks_id_by_name, db_connection)?;
+
+    println!("successfully loaded laptops");
+    Ok(())
 }
 
 /// deletes all laptops, benchmarks and global benchmarks from the database
