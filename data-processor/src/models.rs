@@ -75,7 +75,7 @@ pub struct NewCategory<'a> {
 #[belongs_to(GlobalBenchmark)]
 #[table_name = "benchmark"]
 pub struct Benchmark{
-    pub id: i32,
+    pub id: i64,
     pub score: f32,
     pub laptop_id: i32,
     pub global_benchmark_id: i32,

@@ -10,6 +10,7 @@ pub enum DataProcessorCliCommand{
     Exit,
     LoadCategories,
     LoadLaptops,
+    CalculateScores,
     ReloadAll,
 }
 
@@ -20,6 +21,7 @@ pub fn create_data_processor_cli()->Cli<DataProcessorCliCommand>{
         "exit".to_string() => DataProcessorCliCommand::Exit,
         "load categories".to_string() => DataProcessorCliCommand::LoadCategories,
         "load laptops".to_string() => DataProcessorCliCommand::LoadLaptops,
+        "calculate scores".to_string() => DataProcessorCliCommand::CalculateScores,
         "reload all".to_string() => DataProcessorCliCommand::ReloadAll,
     })
 }
