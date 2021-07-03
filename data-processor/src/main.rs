@@ -8,9 +8,9 @@ mod cli;
 mod commands;
 mod errors;
 
-use std::env;
+use std::{env, time::Instant};
 
-use commands::{load_categories, load_laptops, reload_all};
+use commands::{calculate_scores, load_categories, load_laptops, reload_all};
 use diesel::{Connection, PgConnection};
 
 use crate::cli::{DataProcessorCliCommand, create_data_processor_cli};
@@ -24,14 +24,22 @@ fn main() {
     let db_connection = PgConnection::establish(&db_url).unwrap();
 
     loop{
+        let start = Instant::now();
         let result = match cli.get_next_command(){
             DataProcessorCliCommand::LoadCategories => load_categories(&db_connection),
             DataProcessorCliCommand::LoadLaptops => load_laptops(&db_connection),
+            DataProcessorCliCommand::CalculateScores => calculate_scores(&db_connection),
             DataProcessorCliCommand::ReloadAll => reload_all(&db_connection),
             DataProcessorCliCommand::Exit => break
         };
-        if let Err(error) = result{
-            eprintln!("Error: {:?}", error);
+        match result{
+            Ok(())=>{
+                let elapsed = Instant::now() - start;
+                println!("elapsed: {:?}", elapsed);
+            },
+            Err(error) => {
+                eprintln!("Error: {:?}", error);
+            }
         }
     }
 }
