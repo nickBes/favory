@@ -37,12 +37,11 @@ type BenchmarkScoresInCategory = HashMap<i32, f32>;
 pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
     use crate::schema::global_benchmark::dsl::*;
 
-    println!("deleting categories and benchmark scores in categories");
-    // first delete all categories and benchmark scores in categories from the table, so that
-    // we don't have duplicates
+    println!("deleting categories and dependents...");
+    // first delete all categories and their dependents from the table, so that we don't have duplicates.
     // note that no update mechanism is used here even though it could increase performance,
     // because the data-processor currently only needs to run once, and performs no recalculations.
-    delete_categories_and_benchmark_scores_in_categories(db_connection)?;
+    super::delete_categories_and_dependents(db_connection)?;
 
     println!("loading the categories file...");
     let categories_file = parse_categories_file()?;
@@ -76,20 +75,6 @@ pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
     insert_benchmark_scores_in_each_category(scores, db_connection)?;
 
     println!("successfully loaded categories");
-    Ok(())
-}
-
-/// deletes all categories and benchmark scores in categories from the database
-fn delete_categories_and_benchmark_scores_in_categories(db_connection: &PgConnection)->Result<()>{
-    use crate::schema::category;
-    use crate::schema::benchmark_score_in_category;
-
-    diesel::delete(benchmark_score_in_category::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-    diesel::delete(category::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
     Ok(())
 }
 

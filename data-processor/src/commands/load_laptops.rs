@@ -71,10 +71,11 @@ impl GlobalBenchmarkInfo {
 
 /// loads the laptops to the database and performs all required calculations
 pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
-    println!("deleting categories and benchmark scores in categories...");
-    // the categories are not up to date anymore with the new benchmarks,
-    // so we should delete them.
-    delete_categories_and_benchmark_scores_in_categories(db_connection)?;
+    println!("deleting categories and dependents...");
+    // the categories and the benchmark scores in categories are not up to date anymore
+    // with the new benchmarks, so we should delete them, and to delete them 
+    // we must also delete their dependents.
+    super::delete_categories_and_dependents(db_connection)?;
 
     println!("deleting laptops, benchmarks and global benchmarks...");
     // delete all laptops, benchmarks and global benchmarks from the database,
@@ -122,22 +123,6 @@ fn delete_laptops_and_benchmarks_and_global_benchmarks(
     diesel::delete(global_benchmark::table)
         .execute(db_connection)
         .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-    Ok(())
-}
-
-fn delete_categories_and_benchmark_scores_in_categories(
-    db_connection: &PgConnection,
-) -> Result<()> {
-    use crate::schema::benchmark_score_in_category;
-    use crate::schema::category;
-
-    diesel::delete(benchmark_score_in_category::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-    diesel::delete(category::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-
     Ok(())
 }
 
