@@ -32,3 +32,9 @@ CREATE TABLE benchmark_score_in_category (
 	global_benchmark_id INTEGER REFERENCES global_benchmark(id) NOT NULL
 );
 
+CREATE TABLE laptop_score_in_category (
+	id SERIAL PRIMARY KEY,
+	score REAL NOT NULL,
+	laptop_id INTEGER REFERENCES laptop(id) NOT NULL,
+	category_id INTEGER REFERENCES category(id) NOT NULL
+);

@@ -107,3 +107,22 @@ pub struct NewBenchmarkScoreInCategory {
     pub category_id: i32,
     pub global_benchmark_id: i32,
 }
+
+#[derive(Debug, Queryable, Associations)]
+#[belongs_to(Laptop)]
+#[belongs_to(Category)]
+#[table_name = "laptop_score_in_category"]
+pub struct LaptopScoreInCategory{
+    pub id: i32,
+    pub score: f32,
+    pub laptop_id: i32,
+    pub category_id: i32,
+}
+
+#[derive(Debug, Insertable)]
+#[table_name="laptop_score_in_category"]
+pub struct NewLaptopScoreInCategory {
+    pub score: f32,
+    pub laptop_id: i32,
+    pub category_id: i32,
+}
