@@ -1,4 +1,4 @@
-use std::{collections::HashMap, hash::Hash, io::{Read, Stdin, Stdout, Write, stdin, stdout}};
+use std::{collections::HashMap, io::{Stdin, Stdout, Write, stdin, stdout}};
 
 pub trait CliCommandEnum : Copy {}
 pub struct Cli<T: CliCommandEnum>{
@@ -8,14 +8,6 @@ pub struct Cli<T: CliCommandEnum>{
     line: String,
 }
 impl<T:CliCommandEnum> Cli<T>{
-    pub fn new()->Self{
-        Self{
-            commands: HashMap::new(),
-            stdin: stdin(),
-            stdout: stdout(),
-            line: String::new(),
-        }
-    }
     pub fn with_commands(commands: HashMap<String, T>)->Self{
         Self{
             commands,

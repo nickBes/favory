@@ -23,7 +23,7 @@ pub trait IntoEmptyDataProcessorResult<T>{
 
 impl<T,E> IntoEmptyDataProcessorResult<T> for std::result::Result<T,E>{
     fn into_empty_data_processor_result(self, error_kind: DataProcessorErrorKind) ->Result<T> {
-        self.map_err(|err| DataProcessorError{
+        self.map_err(|_| DataProcessorError{
             kind: error_kind,
             inner: None,
         })
