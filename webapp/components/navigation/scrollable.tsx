@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../styles/scrollable.module.scss'
+import styles from '../../styles/navigation/scrollable.module.scss'
 
 const Scrollable : React.FC = ({children}) => {
     return (

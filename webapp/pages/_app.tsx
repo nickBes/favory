@@ -1,7 +1,6 @@
 import '../styles/global.scss'
 import Head from 'next/head'
-import Navbar from '../components/navbar'
-import Scrollable from '../components/scrollable'
+import Scrollable from '../components/navigation/scrollable'
 import type { AppProps } from 'next/app'
 
 function MyApp({ Component, pageProps }: AppProps) {

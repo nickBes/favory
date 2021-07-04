@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../styles/burger.module.scss'
+import styles from '../../styles/navbar/burger.module.scss'
 
 interface Props {
     isActive: boolean;

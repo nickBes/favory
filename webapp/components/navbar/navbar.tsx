@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import Burger from './burger'
 import Collapse from './collapse'
-import styles from '../styles/navbar.module.scss'
+import styles from '../../styles/navbar/navbar.module.scss'
 
 const Navbar : React.FC = () => {
     const [isActive, setActive] = useState(false)
