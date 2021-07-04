@@ -1,11 +1,11 @@
 import React from 'react'
 import styles from '../../styles/navbar/collapse.module.scss'
 
-interface Props {
+interface CollapseProps {
     isActive: boolean;
 }
 
-const Collapse : React.FC <Props> = ({isActive}) => {
+const Collapse : React.FC <CollapseProps> = ({isActive}) => {
     return (
         <div className={`${styles.collapse} ${isActive ? styles.isActive : undefined}`}>
             <ul>

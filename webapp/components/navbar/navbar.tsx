@@ -6,15 +6,15 @@ import styles from '../../styles/navbar/navbar.module.scss'
 const Navbar : React.FC = () => {
     const [isActive, setActive] = useState(false)
 
-    const toggleClass = () => {
+    const toggleIsActive = () => {
         setActive(!isActive)
     }
 
     return (
-        <div className={styles.wrap}>
+        <div className={styles.navbarWrap}>
             <nav className={styles.navbar}>
-                <h1 className={isActive ? 'isActive' : undefined}>Favory</h1>
-                <Burger toggleClass={toggleClass} isActive={isActive}></Burger>
+                <h1>Favory</h1>
+                <Burger toggleIsActive={toggleIsActive} isActive={isActive}></Burger>
             </nav>
             <Collapse isActive={isActive}></Collapse>
         </div>

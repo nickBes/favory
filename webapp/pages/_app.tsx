@@ -1,9 +1,10 @@
 import '../styles/global.scss'
+import React from 'react'
 import Head from 'next/head'
 import Scrollable from '../components/navigation/scrollable'
 import type { AppProps } from 'next/app'
 
-function MyApp({ Component, pageProps }: AppProps) {
+const App : React.FC <AppProps> = ({ Component, pageProps }) => {
   return (
       <>
         <Head>
@@ -17,4 +18,4 @@ function MyApp({ Component, pageProps }: AppProps) {
       </>
     )
 }
-export default MyApp
+export default App

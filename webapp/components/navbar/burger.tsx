@@ -1,14 +1,14 @@
 import React from 'react'
 import styles from '../../styles/navbar/burger.module.scss'
 
-interface Props {
+interface BurgerProps {
     isActive: boolean;
-    toggleClass: () => void;
+    toggleIsActive: () => void;
 }
 
-const Burger : React.FC <Props> = ({toggleClass, isActive}) => {
+const Burger : React.FC <BurgerProps> = ({toggleIsActive, isActive}) => {
     return (
-        <div onClick={toggleClass} className={styles.wrap}>
+        <div onClick={toggleIsActive} className={styles.burgerWrap}>
             <div className={`${styles.burger} ${isActive ? styles.isActive : undefined}`}></div>
         </div>
 
