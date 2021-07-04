@@ -1,0 +1,62 @@
+@use '../theme';
+
+@mixin bar() {
+    user-select: none;
+    position: absolute;
+    width: 30px;
+    height: 3px;
+    background-color: theme.$primary_text;
+}
+
+.burger {
+    @include bar;
+    display: block;
+    top: 50%;
+    margin-top: -2px;
+    transition-timing-function: cubic-bezier(.55,.055,.675,.19);
+    transition-duration: 75ms;
+    &::after {
+        @include bar;
+        transition: top 75ms ease .12s,opacity 75ms ease;
+        top: -8px;
+        content: "";
+    }
+    &::before {
+        @include bar;
+        transition: top 75ms ease .12s,opacity 75ms ease;
+        top: 8px;
+        content: "";
+    }
+}
+
+.isActive {
+    transition-timing-function: cubic-bezier(.215,.61,.355,1);
+    transform: rotate(45deg);
+    background-color: theme.$background;
+    &::before {
+
+        top: 0;
+        transition: top 75ms ease,transform 75ms cubic-bezier(.215,.61,.355,1);
+        transform: rotate(-90deg);
+        background-color: theme.$background;
+    }
+    &::after {
+        top: 0;
+        transition: top 75ms ease,opacity 75ms ease .5s;
+        background-color: theme.$background;
+        opacity: 0;
+    }
+}
+
+.burgerWrap {
+    margin: 0;
+    box-sizing: inherit;
+    position: relative;
+    display: inline-block;
+    height: 24px;
+    width: 30px;
+    z-index: 3;
+    @media (min-width: 768px) {
+        cursor: pointer;
+    }
+}

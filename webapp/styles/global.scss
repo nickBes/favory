@@ -1,0 +1,57 @@
+@use 'theme';
+
+body {
+    margin: 0;
+}
+
+section {
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    top: 0;
+    height: 100vh;
+
+    .main {
+        box-sizing: border-box;
+        margin: auto;
+        margin-top: 20vh;
+        padding: 0 5%;
+
+        @media (max-width: 768px) {
+            margin: auto;
+            margin-top: 10vh;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: theme.$big_text;
+        }
+    
+        p {
+            text-align: center;
+            font-size: theme.$medium_text;
+            color: theme.$secondary_text;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
+}
+
+.p {
+    background-color: theme.$background;
+}
+
+.s {
+    background-color: theme.$secondary_background;
+}
+
+::-webkit-scrollbar {
+    width: 0;
+}
