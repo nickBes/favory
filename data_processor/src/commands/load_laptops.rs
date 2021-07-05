@@ -17,6 +17,7 @@ type LaptopsFile = Vec<LaptopInformation>;
 #[derive(Debug, Deserialize)]
 struct LaptopInformation {
     name: String,
+    price: f32,
     cpu: String,
     cpu_data: LaptopPuData,
     gpu: Gpu,
@@ -167,6 +168,7 @@ fn insert_laptops_and_benchmarks(
         let inserted_laptop_id: i32 = diesel::insert_into(laptop::table)
             .values(models::NewLaptop {
                 name: &laptop_info.name,
+                price: laptop_info.price,
                 cpu: &laptop_info.cpu,
                 gpu: &laptop_info.gpu.model,
             })

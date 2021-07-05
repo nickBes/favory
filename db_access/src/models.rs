@@ -12,6 +12,7 @@ pub enum PuType{
 pub struct Laptop {
     pub id: i32,
     pub name: String,
+    pub price: f32,
     pub cpu: String,
     pub gpu: String,
 }
@@ -21,6 +22,7 @@ pub struct Laptop {
 #[table_name="laptop"]
 pub struct NewLaptop<'a, 'b, 'c> {
     pub name: &'a str,
+    pub price: f32,
     pub cpu: &'b str,
     pub gpu: &'c str,
 }
