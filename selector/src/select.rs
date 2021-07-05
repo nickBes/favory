@@ -1,4 +1,5 @@
 use crate::errors::*;
+use crate::top_laptops::TopLaptops;
 use db_access::models;
 use db_access::schema;
 use diesel::RunQueryDsl;
@@ -21,8 +22,9 @@ type ScoresInCategoriesOfLaptop = HashMap<i32, f32>;
 pub fn select(
     user_category_scores: &UserCategoryScores,
     optional_max_price: Option<f32>,
+    top_laptops_amount: usize,
     db_connection: &PgConnection,
-) -> Result<()> {
+) -> Result<TopLaptops> {
     if user_category_scores.is_empty() {
         return Err(SelectorErrorKind::NoScoresProvided.into_empty_selector_error());
     }
@@ -31,6 +33,7 @@ pub fn select(
         remap_user_category_scores(db_connection, user_category_scores)?;
     let mapped_laptop_scores_in_categories =
         load_and_map_laptop_scores_in_categories(optional_max_price, db_connection)?;
+    let mut top_laptops = TopLaptops::new(top_laptops_amount);
 
     for (laptop_id, scores_in_categories_of_laptop) in mapped_laptop_scores_in_categories {
         let mut total_score = 0.0;
@@ -53,9 +56,9 @@ pub fn select(
             // the user has chosen for this category
             total_score += laptop_score_in_category*user_category_score;
         }
-        println!("laptop id: {}, score: {}",laptop_id, total_score);
+        top_laptops.update(laptop_id, total_score);
     }
-    Ok(())
+    Ok(top_laptops)
 }
 
 /// remaps the user category scores to use the category id as the key instead of the categories name
