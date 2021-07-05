@@ -1,8 +1,17 @@
-import React from 'react'
+import React, {useState} from 'react'
+import { GetStaticProps } from 'next'
 import Navbar from '../components/navbar/navbar'
 import Form from '../components/form/form'
+import Tags from '../components/form/tags'
 
-const Home : React.FC = () => {
+interface HomeProps {
+  categories : string[]
+}
+
+const Home : React.FC <{homeProps : HomeProps}> = ({homeProps}) => {
+  const strArr : string[] = homeProps.categories
+  const [tags, setTags] = useState(strArr)
+
   return (
     <>  
       {/* sections have temporary class names in order to distinguish between them */}
@@ -17,8 +26,7 @@ const Home : React.FC = () => {
       <section className='s'>
         <h1>Hey, what's going on guys it's me jermey.</h1>
         <Form formAttr={{action: "./results", method: 'post'}}>
-          <input type="text" name="text"/>
-          <input type="text" name="text"/>
+          <Tags tagProps={{tags: tags, setTags: setTags, inputName: 'categories'}}></Tags>
           <input type="submit"/>
         </Form>
       </section>
@@ -30,3 +38,12 @@ const Home : React.FC = () => {
 }
 
 export default Home
+
+export const getStaticProps : GetStaticProps = async ctx => {
+    let homeProps : HomeProps = {
+      categories: []
+    }
+    // get categories from database
+    homeProps.categories = ['gaming', 'dev', 'design', 'study']
+    return {props: {homeProps: homeProps}}
+}

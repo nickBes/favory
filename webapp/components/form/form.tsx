@@ -13,4 +13,4 @@ const Form : React.FC<{formAttr: FormAttr}> = ({formAttr, children}) => {
     )
 }
 
-export default Form;
+export default Form
