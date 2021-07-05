@@ -1,5 +1,5 @@
 use crate::errors::*;
-use db_access::models;
+use db_access::{models,schema};
 use bigdecimal::BigDecimal;
 use bigdecimal::Zero;
 use diesel::prelude::*;
@@ -110,9 +110,9 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
 fn delete_laptops_and_benchmarks_and_global_benchmarks(
     db_connection: &PgConnection,
 ) -> Result<()> {
-    use db_access::schema::benchmark;
-    use db_access::schema::global_benchmark;
-    use db_access::schema::laptop;
+    use schema::benchmark;
+    use schema::global_benchmark;
+    use schema::laptop;
 
     diesel::delete(benchmark::table)
         .execute(db_connection)
@@ -133,8 +133,8 @@ fn insert_laptops_and_benchmarks(
     global_benchmarks_id_by_name: &HashMap<String, i32>,
     db_connection: &PgConnection,
 ) -> Result<()> {
-    use db_access::schema::benchmark;
-    use db_access::schema::laptop;
+    use schema::benchmark;
+    use schema::laptop;
 
     /// converts the given benchmarks to the insertable benchmark struct NewBenchmark,
     /// and inserts them into the insertable_structs vector.
@@ -243,8 +243,8 @@ fn insert_and_map_global_benchmarks(
     infos: HashMap<String, GlobalBenchmarkInfo>,
     db_connection: &PgConnection,
 ) -> Result<HashMap<String, i32>> {
-    use db_access::schema::global_benchmark;
-    use db_access::schema::global_benchmark::*;
+    use schema::global_benchmark;
+    use schema::global_benchmark::*;
 
     // first convert the global benchmarks to insertable structs
     let mut new_global_benchmarks = Vec::new();

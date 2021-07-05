@@ -4,8 +4,9 @@ mod calculate_scores;
 mod reload_all;
 
 use diesel::PgConnection;
-use crate::errors::*;
 use diesel::prelude::*;
+use crate::errors::*;
+use db_access::schema;
 
 pub use load_categories::*;
 pub use load_laptops::*;
@@ -17,9 +18,9 @@ pub use reload_all::*;
 /// the documents that depend on it are the benchmark scores in categories and the
 /// laptop scores in categories.
 fn delete_categories_and_dependents(db_connection: &PgConnection)->Result<()>{
-    use db_access::schema::category;
-    use db_access::schema::benchmark_score_in_category;
-    use db_access::schema::laptop_score_in_category;
+    use schema::category;
+    use schema::benchmark_score_in_category;
+    use schema::laptop_score_in_category;
 
     diesel::delete(benchmark_score_in_category::table)
         .execute(db_connection)

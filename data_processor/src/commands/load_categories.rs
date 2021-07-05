@@ -1,5 +1,5 @@
 use crate::errors::*;
-use db_access::models;
+use db_access::{models,schema};
 use diesel::prelude::*;
 
 use diesel::PgConnection;
@@ -35,7 +35,7 @@ type BenchmarkScoresInCategory = HashMap<i32, f32>;
 
 /// loads the categories to the database and performs all required calculations
 pub fn load_categories(db_connection: &PgConnection) -> Result<()> {
-    use db_access::schema::global_benchmark::dsl::*;
+    use schema::global_benchmark::dsl::*;
 
     println!("deleting categories and dependents...");
     // first delete all categories and their dependents from the table, so that we don't have duplicates.
@@ -83,7 +83,7 @@ fn insert_and_map_categories(
     categories_file: &CategoriesFile,
     db_connection: &PgConnection,
 ) -> Result<HashMap<String, i32>> {
-    use db_access::schema::category;
+    use schema::category;
 
     let new_categories: Vec<models::NewCategory> = categories_file
         .keys()
@@ -184,7 +184,7 @@ fn insert_benchmark_scores_in_each_category(
     scores: HashMap<i32, BenchmarkScoresInCategory>,
     db_connection: &PgConnection,
 ) -> Result<()> {
-    use db_access::schema::benchmark_score_in_category;
+    use schema::benchmark_score_in_category;
 
     // each item represents the score of a single benchmark in a single category
     // the pu types here are encoded into the name of the benchmark such that if the benchmark
