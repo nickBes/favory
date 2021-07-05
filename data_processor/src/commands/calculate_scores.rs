@@ -157,7 +157,13 @@ fn calculate_laptop_scores_in_each_category(
                         global_benchmark_info.average()
                     }
                 };
-                let normalized_score_in_benchmark = score_in_benchmark / global_benchmark_info.max;
+
+                // when calculating the normalized score, make sure we don't divide by zero
+                let normalized_score_in_benchmark = if global_benchmark_info.max == 0.0 {
+                    0.0
+                } else{
+                    score_in_benchmark / global_benchmark_info.max
+                };
                 score_in_category += normalized_score_in_benchmark * benchmark_score_in_category;
             }
             result.push(models::NewLaptopScoreInCategory {
