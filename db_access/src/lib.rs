@@ -3,6 +3,7 @@ extern crate diesel;
 
 pub mod models;
 pub mod schema;
+pub mod error_types_generator;
 
 use diesel::{Connection, PgConnection};
 

@@ -10,3 +10,4 @@ edition = "2018"
 diesel = { version = "1.4.4", features = ["postgres", "numeric"] }
 dotenv = "0.15.0"
 bigdecimal = "0.1.2"
+paste = "1.0.5"
