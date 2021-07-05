@@ -17,9 +17,9 @@ pub use reload_all::*;
 /// the documents that depend on it are the benchmark scores in categories and the
 /// laptop scores in categories.
 fn delete_categories_and_dependents(db_connection: &PgConnection)->Result<()>{
-    use crate::schema::category;
-    use crate::schema::benchmark_score_in_category;
-    use crate::schema::laptop_score_in_category;
+    use db_access::schema::category;
+    use db_access::schema::benchmark_score_in_category;
+    use db_access::schema::laptop_score_in_category;
 
     diesel::delete(benchmark_score_in_category::table)
         .execute(db_connection)

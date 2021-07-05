@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::errors::*;
-use crate::models;
+use db_access::models;
 use bigdecimal::{BigDecimal, ToPrimitive};
 use diesel::prelude::*;
 
@@ -67,7 +67,7 @@ pub fn calculate_scores(db_connection: &PgConnection) -> Result<()> {
 /// loads all benchmarks and maps them by global benchmark id and then by laptop id
 fn load_and_map_benchmarks(db_connection: &PgConnection) -> Result<MappedBenchmarks> {
     let benchmarks: Vec<models::Benchmark> = {
-        use crate::schema::benchmark::dsl::*;
+        use db_access::schema::benchmark::dsl::*;
         benchmark
             .load(db_connection)
             .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?
@@ -86,7 +86,7 @@ fn load_and_map_benchmarks(db_connection: &PgConnection) -> Result<MappedBenchma
 /// loads all global benchmarks and maps them by global benchmark id
 fn load_and_map_global_benchmarks(db_connection: &PgConnection) -> Result<MappedGlobalBenchmarks> {
     let global_benchmarks: Vec<models::GlobalBenchmark> = {
-        use crate::schema::global_benchmark::dsl::*;
+        use db_access::schema::global_benchmark::dsl::*;
 
         global_benchmark
             .load(db_connection)
@@ -112,7 +112,7 @@ fn load_and_map_benchmark_scores_in_categories(
     db_connection: &PgConnection,
 ) -> Result<MappedBenchmarkScoresInCategories> {
     let benchmark_scores_in_categories: Vec<models::BenchmarkScoreInCategory> = {
-        use crate::schema::benchmark_score_in_category::dsl::*;
+        use db_access::schema::benchmark_score_in_category::dsl::*;
         benchmark_score_in_category
             .load(db_connection)
             .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?
@@ -175,7 +175,7 @@ fn insert_scores(
     scores: &[models::NewLaptopScoreInCategory],
     db_connection: &PgConnection,
 ) -> Result<()> {
-    use crate::schema::laptop_score_in_category;
+    use db_access::schema::laptop_score_in_category;
 
     // before inserting we delete all previous laptop scores in categories from the table,
     // since they are now outdated.
