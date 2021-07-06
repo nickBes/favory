@@ -1,7 +1,4 @@
-use std::{
-    collections::HashMap,
-    net::{TcpListener, TcpStream},
-};
+use std::{collections::HashMap, net::{TcpListener, TcpStream}, time::Instant};
 
 use crate::errors::*;
 use crate::selection;
@@ -32,14 +29,24 @@ pub fn start_server(db_connection: &PgConnection) -> Result<()> {
 }
 
 fn handle_client(stream: TcpStream, db_connection: &PgConnection) -> Result<()> {
+    // receive the selection request from the client
     let request: SelectionRequest = serde_json::from_reader(&stream)
         .into_selector_result(SelectorErrorKind::FailedToReceiveRequestFromClient)?;
+
+    // perform the selection and measure the elapsed time
+    let start = Instant::now();
     let selection_results = selection::select(
         &request.category_scores,
         request.max_price,
         request.amount,
         db_connection,
     )?;
+    let elapsed = Instant::now() - start;
+
+    // send the response to the client
     serde_json::to_writer(&stream, selection_results.as_slice())
-        .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)
+        .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)?;
+
+    println!("selection elapsed time: {:?}",elapsed);
+    Ok(())
 }
