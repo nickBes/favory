@@ -1,7 +1,8 @@
+use super::MAX_TOP_LAPTOPS_AMOUNT;
 use super::{top_laptops::TopLaptops, SelectedLaptopInfo};
 use crate::errors::*;
-use db_access::{schema, models};
-use diesel::{RunQueryDsl};
+use db_access::{models, schema};
+use diesel::RunQueryDsl;
 use diesel::{ExpressionMethods, PgConnection, QueryDsl};
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -26,6 +27,12 @@ pub fn select(
 ) -> Result<Vec<SelectedLaptopInfo>> {
     if user_category_scores.is_empty() {
         return Err(SelectorErrorKind::NoScoresProvided.into_empty_selector_error());
+    }
+    if top_laptops_amount > MAX_TOP_LAPTOPS_AMOUNT {
+        return Err(SelectorErrorKind::TooManyTopLaptopsRequested {
+            max: MAX_TOP_LAPTOPS_AMOUNT,
+        }
+        .into_empty_selector_error());
     }
 
     // remap the user category scores to be mapped by category id instead of category name
