@@ -80,4 +80,8 @@ impl TopLaptops{
             laptop_id,score
         })
     }
+
+    pub fn get_ids(self)->Vec<i32>{
+        self.top_laptops.iter().map(|entry| entry.laptop_id).collect()
+    }
 }

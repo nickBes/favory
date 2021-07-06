@@ -1,8 +1,7 @@
+use super::{top_laptops::TopLaptops, SelectedLaptopInfo};
 use crate::errors::*;
-use crate::top_laptops::TopLaptops;
-use db_access::models;
-use db_access::schema;
-use diesel::RunQueryDsl;
+use db_access::{schema, models};
+use diesel::{RunQueryDsl};
 use diesel::{ExpressionMethods, PgConnection, QueryDsl};
 use std::collections::HashMap;
 use std::collections::HashSet;
@@ -24,41 +23,30 @@ pub fn select(
     optional_max_price: Option<f32>,
     top_laptops_amount: usize,
     db_connection: &PgConnection,
-) -> Result<TopLaptops> {
+) -> Result<Vec<SelectedLaptopInfo>> {
     if user_category_scores.is_empty() {
         return Err(SelectorErrorKind::NoScoresProvided.into_empty_selector_error());
     }
 
+    // remap the user category scores to be mapped by category id instead of category name
     let remapped_user_category_scores =
         remap_user_category_scores(db_connection, user_category_scores)?;
+
+    // load the laptop scores in categories and map them by laptop id, and then by category id
     let mapped_laptop_scores_in_categories =
         load_and_map_laptop_scores_in_categories(optional_max_price, db_connection)?;
-    let mut top_laptops = TopLaptops::new(top_laptops_amount);
 
-    for (laptop_id, scores_in_categories_of_laptop) in mapped_laptop_scores_in_categories {
-        let mut total_score = 0.0;
-        for (&category_id, &user_category_score) in &remapped_user_category_scores {
-            // get the laptop's score in the current category. if the laptop has no score for this category
-            // return an error, since after the data processor runs, all laptops should have scores
-            // for all categories, and it does not make sense for a laptop to not have a score for
-            // some category.
-            let laptop_score_in_category = match scores_in_categories_of_laptop.get(&category_id) {
-                Some(score) => score,
-                None => {
-                    return Err(SelectorErrorKind::LaptopHasNoScoreForCategory {
-                        laptop_id,
-                        category_id,
-                    }
-                    .into_empty_selector_error())
-                }
-            };
-            // the weighted score is the actual score of the laptop in the category, multiplied by the weight(score) that
-            // the user has chosen for this category
-            total_score += laptop_score_in_category*user_category_score;
-        }
-        top_laptops.update(laptop_id, total_score);
-    }
-    Ok(top_laptops)
+    // find the top laptops
+    let mut top_laptops = TopLaptops::new(top_laptops_amount);
+    find_top_laptops(
+        &mut top_laptops,
+        &remapped_user_category_scores,
+        &mapped_laptop_scores_in_categories,
+    )?;
+
+    // we have the ids of the top laptops, we now need to find the information about them
+    let top_laptop_ids = top_laptops.get_ids();
+    get_top_laptops_information(&top_laptop_ids, db_connection)
 }
 
 /// remaps the user category scores to use the category id as the key instead of the categories name
@@ -111,29 +99,25 @@ fn remap_user_category_scores(
 }
 
 /// loads all laptops under the given price, or if no price is given loads all laptops
-fn load_and_map_laptops_with_price_under(
-    optional_max_price: Option<f32>,
+fn get_top_laptops_information(
+    top_laptop_ids: &[i32],
     db_connection: &PgConnection,
-) -> Result<Vec<models::Laptop>> {
+) -> Result<Vec<SelectedLaptopInfo>> {
+    if top_laptop_ids.is_empty() {
+        return Ok(Vec::new());
+    }
+
     use schema::laptop::dsl::*;
 
-    match optional_max_price {
-        Some(max_price) => {
-            // a max price was selected, so load all laptops where the price is lower or equal to the given price
-            laptop
-                .filter(price.le(max_price))
-                .load(db_connection)
-                .into_selector_result(SelectorErrorKind::DatabaseError)
-        }
-        None => {
-            // if no max price is given, load all laptops
-            laptop
-                .load(db_connection)
-                .into_selector_result(SelectorErrorKind::DatabaseError)
-        }
-    }
+    laptop
+        .filter(id.eq_any(top_laptop_ids))
+        .select((name,))
+        .load(db_connection)
+        .into_selector_result(SelectorErrorKind::DatabaseError)
 }
 
+/// load the scores of all laptop unsert the given price, or of no price is given loads the scores
+/// of all laptops, and maps them by laptop id, and then by category id
 fn load_and_map_laptop_scores_in_categories(
     optional_max_price: Option<f32>,
     db_connection: &PgConnection,
@@ -189,4 +173,37 @@ fn load_and_map_laptop_scores_in_categories(
     }
 
     Ok(scores_in_categories_of_each_laptop)
+}
+
+/// find the top laptops, according to the user category scores and the scores in categories
+/// of each laptop
+fn find_top_laptops(
+    top_laptops: &mut TopLaptops,
+    remapped_user_category_scores: &RemappedUserCategoryScores,
+    mapped_laptop_scores_in_categories: &ScoresInCategoriesOfEachLaptop,
+) -> Result<()> {
+    for (&laptop_id, scores_in_categories_of_laptop) in mapped_laptop_scores_in_categories {
+        let mut total_score = 0.0;
+        for (&category_id, &user_category_score) in remapped_user_category_scores {
+            // get the laptop's score in the current category. if the laptop has no score for this category
+            // return an error, since after the data processor runs, all laptops should have scores
+            // for all categories, and it does not make sense for a laptop to not have a score for
+            // some category.
+            let laptop_score_in_category = match scores_in_categories_of_laptop.get(&category_id) {
+                Some(score) => score,
+                None => {
+                    return Err(SelectorErrorKind::LaptopHasNoScoreForCategory {
+                        laptop_id,
+                        category_id,
+                    }
+                    .into_empty_selector_error())
+                }
+            };
+            // the weighted score is the actual score of the laptop in the category, multiplied by the weight(score) that
+            // the user has chosen for this category
+            total_score += laptop_score_in_category * user_category_score;
+        }
+        top_laptops.update(laptop_id, total_score);
+    }
+    Ok(())
 }
