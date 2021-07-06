@@ -9,7 +9,9 @@ pub enum SelectorErrorKind{
     TooManyTopLaptopsRequested { max: usize},
     FailedToCreateListener,
     FailedToAcceptClient,
+    FailedToDeserializeClientRequest,
     FailedToReceiveRequestFromClient,
+    FailedToSerializeResponse,
     FailedToSendResponseToClient,
 }
 
