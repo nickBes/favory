@@ -16,7 +16,9 @@ const BUFFER_SIZE: usize = 16384;
 #[derive(Debug, Deserialize)]
 struct SelectionRequest {
     amount: usize,
+    #[serde(rename = "maxPrice")]
     max_price: Option<f32>,
+    #[serde(rename = "categoryScores")]
     category_scores: HashMap<String, f32>,
 }
 
@@ -83,10 +85,11 @@ fn handle_client(
     buffer: &mut [u8],
     db_connection: &PgConnection,
 ) -> Result<()> {
-    match try_handle_client(&mut stream, buffer, db_connection) {
-        Ok(()) => Ok(()),
-        Err(e) => {
-            // in case of an error, send a failure response to the client and return the error
+    loop {
+        if let Err(e) = try_handle_client(&mut stream, buffer, db_connection) {
+            println!("error while handling client: {:?}", e);
+
+            // in case of an error, send a failure response to the client
             let response = SelectionResponse {
                 success: false,
                 laptops: None,
@@ -96,7 +99,6 @@ fn handle_client(
             stream
                 .write_all(&serialized_response)
                 .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)?;
-            Err(e)
         }
     }
 }
