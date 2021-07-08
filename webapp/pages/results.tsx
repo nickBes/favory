@@ -5,26 +5,44 @@ import getRawBody from 'raw-body'
 import qs from 'querystring'
 import { SelectedLaptopInfo, SelectionRequest, select } from '../selector'
 
+type ResultsPageInvalidFieldError = {
+    type: "invalidField",
+    fieldName: string,
+}
 
-type SelectionResultSuccess = {
-    status: "success",
+type ResultsPageMissingFieldError = {
+    type: "missingField",
+    fieldName: string,
+}
+
+type ResultsPageSelectionError = {
+    type: "selectionError",
+    errorMessage: string,
+}
+
+type ResultsPageInvalidMethodError = {
+    type: "invalidMethod"
+}
+
+type ResultsPageError = 
+    | ResultsPageInvalidFieldError 
+    | ResultsPageMissingFieldError 
+    | ResultsPageSelectionError
+    | ResultsPageInvalidMethodError
+
+type ResultsPagePropsSuccess = {
+    success: true,
     laptops: SelectedLaptopInfo[]
 }
 
-type SelectionResultInvalidField = {
-    status: "invalidField",
-    fieldName: string
+type ResultsPagePropsFailure = {
+    success: false,
+    error: ResultsPageError
 }
 
-type SelectionResultFailure = {
-    status: "failure",
-    error: string,
-}
-
-type SelectionResult =
-    | SelectionResultSuccess
-    | SelectionResultInvalidField
-    | SelectionResultFailure
+type ResultsPageProps =
+    | ResultsPagePropsSuccess
+    | ResultsPagePropsFailure
 
 // hardcoding the categories is a temporary solution to allow for checking,
 // the categories should be fetched in _app.tsx using getStaticServerProps
@@ -32,19 +50,14 @@ const AVAILABLE_CATEGORIES = new Set([
     "dev", "study", "design", "gaming"
 ])
 
-const Results: React.FC<{ selectionResult: SelectionResult }> = ({ selectionResult }) => {
-    console.log('selection result:',selectionResult)
-    if(selectionResult.status == "success"){
+const Results: React.FC<{ pageProps: ResultsPageProps }> = ({ pageProps }) => {
+    console.log('selection result:',pageProps)
+    if(pageProps.success){
         return (
-            <div>{JSON.stringify(selectionResult.laptops)}</div>
-        )
-    }else if(selectionResult.status == "invalidField"){
-        // somehow include information about the invalid field (selectionResult.fieldName)
-        return (
-            <Error></Error>
+            <div>{JSON.stringify(pageProps.laptops)}</div>
         )
     }else {
-        // somehow include information about the error (selectionResult.error)
+        // somehow include information about the error
         return (
             <Error></Error>
         )
@@ -58,14 +71,14 @@ type SelectionRequestExtractionResultSuccess = {
     selectionRequest: SelectionRequest,
 }
 
-type SelectionRequestExtractionResultInvalidField = {
+type SelectionRequestExtractionResultFailure = {
     success: false,
-    fieldName: string,
+    error: ResultsPageError,
 }
 
 type SelectionRequestExtractionResult =
-    | SelectionRequestExtractionResultInvalidField
     | SelectionRequestExtractionResultSuccess
+    | SelectionRequestExtractionResultFailure
 
 // extracts the selection request from the query
 function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRequestExtractionResult {
@@ -77,7 +90,10 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
         if (typeof value != 'string') {
             return {
                 success: false,
-                fieldName
+                error: {
+                    type: "invalidField",
+                    fieldName
+                }
             }
         }
         let parsedValue = Number.parseFloat(value);
@@ -85,7 +101,10 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
         if (isNaN(parsedValue)) {
             return {
                 success: false,
-                fieldName
+                error: {
+                    type: "invalidField",
+                    fieldName
+                }
             }
         }
 
@@ -93,6 +112,16 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
     }
 
     // extract the amount
+    // if there is no amount field
+    if (!('amount' in parsedFields)){
+        return {
+            success: false,
+            error: {
+                type: 'missingField',
+                fieldName: "amount"
+            }
+        }
+    }
     let amount = parsedFields.amount;
     // we must delete the property since after extracting the pre-known
     // properties (the properties that we know the name of in advance),
@@ -116,7 +145,10 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
         if (!AVAILABLE_CATEGORIES.has(fieldName)) {
             return {
                 success: false,
-                fieldName
+                error: {
+                    type: 'invalidField',
+                    fieldName
+                }
             }
         }
     }
@@ -131,43 +163,48 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
 
 // extracts the selection request from the query, performs the selection,
 // and returns the result
-async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<SelectionResult> {
+async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<ResultsPageProps> {
     let selectionRequestExtractionResult = extractSelectionRequestFromQuery(query)
     if (selectionRequestExtractionResult.success) {
         try {
             let laptops = await select(selectionRequestExtractionResult.selectionRequest)
             return {
-                status: "success",
+                success: true,
                 laptops
             }
         } catch (e) {
             return {
-                status: "failure",
-                error: (e as Error).message
+                success: false,
+                error: {
+                    type: 'selectionError',
+                    errorMessage: (e as Error).message,
+                }
             }
         }
     } else {
         return {
-            status: "invalidField",
-            fieldName: selectionRequestExtractionResult.fieldName,
+            success: false,
+            error: selectionRequestExtractionResult.error
         }
     }
 }
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-    let result: SelectionResult;
+    let result: ResultsPageProps;
     if (ctx.req.method == 'POST') {
         let query = qs.parse(await getRawBody(ctx.req, { encoding: 'utf-8' }))
         result = await performRequestedSelection(query);
     } else {
         result = {
-            status: "failure",
-            error: 'only POST is allowed'
+            success: false,
+            error: {
+                type: 'invalidMethod'
+            }
         }
     }
     return {
         props: {
-            selectionResult: result
+            pageProps: result
         }
     }
 }

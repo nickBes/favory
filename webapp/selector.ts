@@ -39,13 +39,13 @@ export async function select(request: SelectionRequest): Promise<SelectedLaptopI
     let response: SelectionResponse|undefined;
     await mutex.runExclusive(async ()=>{
         await socket.write(JSON.stringify(request))
-        const raw_response = await socket.readAll();
-        if (typeof raw_response == 'string'){
-            response = JSON.parse(raw_response)
-        } else if(raw_response instanceof Buffer){
-            response = JSON.parse(raw_response.toString())
+        const rawResponse = await socket.read();
+        if (typeof rawResponse == 'string'){
+            response = JSON.parse(rawResponse)
+        } else if(rawResponse instanceof Buffer){
+            response = JSON.parse(rawResponse.toString())
         }else{
-            throw new Error('failed to perform selection: the selector did not response')
+            throw new Error('the selector did not response')
         }
     })
     // this should never happed, since the callback in mutex.runExclusive should
@@ -53,10 +53,10 @@ export async function select(request: SelectionRequest): Promise<SelectedLaptopI
     // should never happen, but this check is added to resolve the type errors
     // of using response without checking if its undefined.
     if(response === undefined){
-        throw new Error('failed to perform selection: an unknown error has occured')
+        throw new Error('an unknown error has occured')
     }
     if(!response.success || response.laptops === null){
-        throw new Error('failed to perform selection: the selector returned a failure response')
+        throw new Error('the selector returned a failure response')
     }
     return response.laptops
 }
