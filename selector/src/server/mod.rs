@@ -1,9 +1,4 @@
-use std::{
-    collections::HashMap,
-    io::{Read, Write},
-    net::{TcpListener, TcpStream},
-    time::Instant,
-};
+use std::{collections::HashMap, io::{Read, Write}, net::{TcpListener, TcpStream}, time::Instant};
 
 use crate::selection;
 use crate::{errors::*, selection::SelectedLaptopInfo};
@@ -43,7 +38,7 @@ pub fn start_server(db_connection: &PgConnection) -> Result<()> {
     Ok(())
 }
 
-fn try_handle_client(
+fn handle_clients_request(
     stream: &mut TcpStream,
     buffer: &mut [u8],
     db_connection: &PgConnection,
@@ -51,7 +46,11 @@ fn try_handle_client(
     // receive and deserialize the selection request from the client
     let length = stream
         .read(buffer)
-        .into_selector_result(SelectorErrorKind::FailedToReceiveRequestFromClient)?;
+        .into_selector_result(SelectorErrorKind::TcpStreamError)?;
+    // a length of 0 means that the stream has closed
+    if length == 0{
+        return Err(SelectorErrorKind::TcpStreamError.into_empty_selector_error())
+    }
     let request: SelectionRequest = serde_json::from_slice(&buffer[..length])
         .into_selector_result(SelectorErrorKind::FailedToDeserializeClientRequest)?;
 
@@ -74,7 +73,7 @@ fn try_handle_client(
         .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)?;
     stream
         .write_all(&serialized_response)
-        .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)?;
+        .into_selector_result(SelectorErrorKind::TcpStreamError)?;
 
     println!("selection elapsed time: {:?}", elapsed);
     Ok(())
@@ -86,7 +85,13 @@ fn handle_client(
     db_connection: &PgConnection,
 ) -> Result<()> {
     loop {
-        if let Err(e) = try_handle_client(&mut stream, buffer, db_connection) {
+        if let Err(e) = handle_clients_request(&mut stream, buffer, db_connection) {
+            // in case the error that occured is a tcp stream error,
+            // the tcp stream has broke, so we should stop handling the client
+            // and move on to the next client
+            if e.kind == SelectorErrorKind::TcpStreamError{
+                return Err(e)
+            }
             println!("error while handling client: {:?}", e);
 
             // in case of an error, send a failure response to the client
@@ -98,7 +103,7 @@ fn handle_client(
                 .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)?;
             stream
                 .write_all(&serialized_response)
-                .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)?;
+                .into_selector_result(SelectorErrorKind::TcpStreamError)?;
         }
     }
 }

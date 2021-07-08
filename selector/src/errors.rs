@@ -10,9 +10,8 @@ pub enum SelectorErrorKind{
     FailedToCreateListener,
     FailedToAcceptClient,
     FailedToDeserializeClientRequest,
-    FailedToReceiveRequestFromClient,
     FailedToSerializeResponse,
-    FailedToSendResponseToClient,
+    TcpStreamError,
 }
 
 generate_error_types!{selector}
