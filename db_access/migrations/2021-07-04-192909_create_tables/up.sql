@@ -1,6 +1,7 @@
 CREATE TABLE laptop (
 	id SERIAL PRIMARY KEY,
 	name TEXT NOT NULL,
+	price REAL NOT NULL,
 	cpu TEXT NOT NULL,
 	gpu TEXT NOT NULL
 );

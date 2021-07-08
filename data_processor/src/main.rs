@@ -1,27 +1,16 @@
-#[macro_use]
-extern crate diesel;
-extern crate dotenv;
-
-mod schema;
-mod models;
 mod cli;
 mod commands;
 mod errors;
 
-use std::{env, time::Instant};
+use std::{time::Instant};
 
 use commands::{calculate_scores, load_categories, load_laptops, reload_all};
-use diesel::{Connection, PgConnection};
 
 use crate::cli::{DataProcessorCliCommand, create_data_processor_cli};
 
 fn main() {
-    dotenv::dotenv().unwrap();
-
     let mut cli = create_data_processor_cli();
-
-    let db_url = env::var("DATABASE_URL").unwrap();
-    let db_connection = PgConnection::establish(&db_url).unwrap();
+    let db_connection = db_access::get_db_connection();
 
     loop{
         let start = Instant::now();
