@@ -91,7 +91,10 @@ fn handle_client(
                 success: false,
                 laptops: None,
             };
-            serde_json::to_writer(stream, &response)
+            let serialized_response = serde_json::to_vec(&response)
+                .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)?;
+            stream
+                .write_all(&serialized_response)
                 .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)?;
             Err(e)
         }
