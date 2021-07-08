@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@esfx/async-autoresetevent": "^1.0.0-pre.19",
     "async-mutex": "^0.3.1",
     "next": "11.0.1",
-    "promise-socket": "^7.0.0",
     "raw-body": "^2.4.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
