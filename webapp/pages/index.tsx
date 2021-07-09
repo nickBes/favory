@@ -3,14 +3,25 @@ import { GetStaticProps } from 'next'
 import Navbar from '../components/navbar/navbar'
 import Form from '../components/form/form'
 import Tags from '../components/form/tags'
+import SearchBar from '../components/form/searchbar'
 
 interface HomeProps {
   categories : string[]
 }
 
 const Home : React.FC <{homeProps : HomeProps}> = ({homeProps}) => {
-  const strArr : string[] = homeProps.categories
-  const [tags, setTags] = useState(strArr)
+  const [tags, setTags] = useState(new Set<string>())
+  const [suggestions, setSuggestions] = useState(new Set(homeProps.categories))
+
+  const addSuggestionByTagRemove = (suggestion : string) => {
+    setTags(new Set(Array.from(tags).filter(value => value != suggestion)))
+    setSuggestions(new Set([...suggestions, suggestion]))
+  }
+
+  const removeSuggestion = (suggestion : string) => {
+    setSuggestions(new Set(Array.from(suggestions).filter(value => value != suggestion)))
+    setTags(new Set([...tags, suggestion]))
+  }
 
   return (
     <>  
@@ -26,7 +37,8 @@ const Home : React.FC <{homeProps : HomeProps}> = ({homeProps}) => {
       <section className='s'>
         <h1>Hey, what's going on guys it's me jermey.</h1>
         <Form formAttr={{action: "./results", method: 'post'}}>
-          <Tags tagProps={{tags: tags, setTags: setTags, inputName: 'categories'}}></Tags>
+          <Tags tagProps={{tags: tags, onClick:addSuggestionByTagRemove}}></Tags>
+          <SearchBar searchBarProps={{suggestions:suggestions, onClick:removeSuggestion}}></SearchBar>
           <input type="submit"/>
         </Form>
       </section>
