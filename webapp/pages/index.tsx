@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { GetStaticProps } from 'next'
 import Navbar from '../components/navbar/navbar'
 import Form from '../components/form/form'
+import Slider from '../components/form/slider'
 import Tags from '../components/form/tags'
 import SearchBar from '../components/form/searchbar'
 
@@ -36,6 +37,13 @@ const Home : React.FC <{homeProps : HomeProps}> = ({homeProps}) => {
         <Form formAttr={{action: "./results", method: 'post'}}>
           <Tags tagProps={{tags: tags, onClick:removeTag}}></Tags>
           <SearchBar searchBarProps={{suggestions: new Set(homeProps.categories), onClick:addTag, maxListSize:5}}></SearchBar>
+          <hr/>
+          {Array.from(tags).map(tag => {
+            return (
+              <Slider sliderProps={{inputName: tag, max: 100, min: 0, defaultValue: 50}}></Slider>
+            )
+          })}
+          <br/>
           <input type="submit"/>
         </Form>
       </section>
