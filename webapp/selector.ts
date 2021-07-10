@@ -4,6 +4,7 @@ import {Mutex} from 'async-mutex'
 
 const SELECTOR_SERVER_PORT = 4741
 const RECONNECTION_TIMEOUT = 1000
+const env = process.env.NODE_ENV
 
 export type SelectionRequest = {
     amount: number,
@@ -43,12 +44,17 @@ function reconnect(){
     }, RECONNECTION_TIMEOUT);
 }
 
+// sets handlers for the the sockets events (connect, data, etc)
 function setSocketEvents(){
-    // only set the reconnection event when not in development mode, since it keeps 
-    // the socket alive after recompile, whcih is very annoying
-    socket.on('close', reconnect)
-    socket.on('error', ()=>socket.destroy())
-    socket.on('timeout', ()=>socket.destroy())
+    // only set the reconnection events when in production mode, since in dev mode it keeps 
+    // the socket alive after recompile, which prevents the server from accepting the socket
+    // of the new recompiled version, and it forces you to completely rerun the app, and it
+    // is very annoying
+    if (env == "production"){
+        socket.on('close', reconnect)
+        socket.on('error', ()=>socket.destroy())
+        socket.on('timeout', ()=>socket.destroy())
+    }
     socket.on('connect', ()=>{
         onConnectedEvent.set();
         connected = true
@@ -59,9 +65,7 @@ function setSocketEvents(){
     })
 }
 
-let socket = createConnectionToSelector();
-setSocketEvents();
-
+let socket: net.Socket;
 let connected = false;
 let socketData:undefined|Buffer;
 const onDataEvent = new AsyncAutoResetEvent(false)
@@ -69,9 +73,37 @@ const onConnectedEvent = new AsyncAutoResetEvent(false);
 // a mutex over the socket and the connected variables
 const mutex = new Mutex();
 
+// sets up the permanent socket, which is used in production 
+async function setupSocket(){
+    // when modifying the socket, lock the mutex to prevent us from modifying it
+    // while is is being used elsewhere
+    await mutex.runExclusive(async () =>{
+        socket = createConnectionToSelector();
+        setSocketEvents();
+    })
+}
+
+// in production we setup the socket on strartup, since only one socket is used throughout
+// the whole time the server is up. on devevelopment on the other hand, we create a new socket
+// for each selection request. for more information about why this is neccessary, #25.
+if (env == "production"){
+    setupSocket();
+}
+
 // sends the selection request to the selector and returns the selection results
 export async function select(request: SelectionRequest): Promise<SelectedLaptopInfo[]> {
     let response: SelectionResponse | undefined;
+    // in development mode, create a new socket for each selection request, and then close
+    // it when we're done. This is neccessary since when nextjs recompiles our project
+    // it doesn't close the socket from the previous version of the webapp, and thus it blocks
+    // the server from accepting the new socket of the new webapp. So instead we use a new socket
+    // for each selection request, so we can make sure it is closed when we're done selecting.
+    // for more info see #25.
+    // note that we dont setup the socket inisde of the mutex's runExclusive method since
+    // setupSocket internally locks the mutex.
+    if (env == "development"){
+        await setupSocket();
+    }
     await mutex.runExclusive(async ()=>{
         // make sure we reset the on data event before sending,
         // so that we won't accidentally reset it after receiving the mesage
@@ -96,6 +128,13 @@ export async function select(request: SelectionRequest): Promise<SelectedLaptopI
 
         // parse the data
         response = JSON.parse(responseString)
+        
+        // if we're in development mode, we close the socket when we're done,
+        // since in development mode a new socket is created for each selection request.
+        // for more information about this see #25.
+        if (env == "development"){
+            socket.destroy();
+        }
     })
 
     // this should never happed, since the callback in mutex.runExclusive should
