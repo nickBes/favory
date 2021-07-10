@@ -6,20 +6,17 @@ import Tags from '../components/form/tags'
 import SearchBar from '../components/form/searchbar'
 
 interface HomeProps {
-  categories : string[]
+  categories : Array<string>
 }
 
 const Home : React.FC <{homeProps : HomeProps}> = ({homeProps}) => {
   const [tags, setTags] = useState(new Set<string>())
-  const [suggestions, setSuggestions] = useState(new Set(homeProps.categories))
 
-  const addSuggestionByTagRemove = (suggestion : string) => {
-    setTags(new Set(Array.from(tags).filter(value => value != suggestion)))
-    setSuggestions(new Set([...suggestions, suggestion]))
+  const removeTag = (tag : string) => {
+    setTags(new Set(Array.from(tags).filter(value => value != tag)))
   }
 
-  const removeSuggestion = (suggestion : string) => {
-    setSuggestions(new Set(Array.from(suggestions).filter(value => value != suggestion)))
+  const addTag = (suggestion : string) => {
     setTags(new Set([...tags, suggestion]))
   }
 
@@ -37,8 +34,8 @@ const Home : React.FC <{homeProps : HomeProps}> = ({homeProps}) => {
       <section className='s'>
         <h1>Hey, what's going on guys it's me jermey.</h1>
         <Form formAttr={{action: "./results", method: 'post'}}>
-          <Tags tagProps={{tags: tags, onClick:addSuggestionByTagRemove}}></Tags>
-          <SearchBar searchBarProps={{suggestions:suggestions, onClick:removeSuggestion}}></SearchBar>
+          <Tags tagProps={{tags: tags, onClick:removeTag}}></Tags>
+          <SearchBar searchBarProps={{suggestions: new Set(homeProps.categories), onClick:addTag, maxListSize:5}}></SearchBar>
           <input type="submit"/>
         </Form>
       </section>
@@ -53,7 +50,7 @@ export default Home
 
 export const getStaticProps : GetStaticProps = async ctx => {
     let homeProps : HomeProps = {
-      categories: []
+      categories: new Array<string>()
     }
     // get categories from database
     homeProps.categories = ['gaming', 'dev', 'design', 'study']
