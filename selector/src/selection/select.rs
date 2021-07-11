@@ -1,4 +1,4 @@
-use super::MAX_TOP_LAPTOPS_AMOUNT;
+use super::TOP_LAPTOPS_AMOUNT;
 use super::{top_laptops::TopLaptops, SelectedLaptopInfo};
 use crate::errors::*;
 use db_access::{models, schema};
@@ -22,17 +22,10 @@ type ScoresInCategoriesOfLaptop = HashMap<i32, f32>;
 pub fn select(
     user_category_scores: &UserCategoryScores,
     optional_max_price: Option<f32>,
-    top_laptops_amount: usize,
     db_connection: &PgConnection,
 ) -> Result<Vec<SelectedLaptopInfo>> {
     if user_category_scores.is_empty() {
         return Err(SelectorErrorKind::NoScoresProvided.into_empty_selector_error());
-    }
-    if top_laptops_amount > MAX_TOP_LAPTOPS_AMOUNT {
-        return Err(SelectorErrorKind::TooManyTopLaptopsRequested {
-            max: MAX_TOP_LAPTOPS_AMOUNT,
-        }
-        .into_empty_selector_error());
     }
 
     // remap the user category scores to be mapped by category id instead of category name
@@ -44,7 +37,7 @@ pub fn select(
         load_and_map_laptop_scores_in_categories(optional_max_price, db_connection)?;
 
     // find the top laptops
-    let mut top_laptops = TopLaptops::new(top_laptops_amount);
+    let mut top_laptops = TopLaptops::new(TOP_LAPTOPS_AMOUNT);
     find_top_laptops(
         &mut top_laptops,
         &remapped_user_category_scores,

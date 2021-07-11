@@ -111,25 +111,8 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
         parsedFields[fieldName] = parsedValue;
     }
 
-    // extract the amount
-    // if there is no amount field
-    if (!('amount' in parsedFields)){
-        return {
-            success: false,
-            error: {
-                type: 'missingField',
-                fieldName: "amount"
-            }
-        }
-    }
-    let amount = parsedFields.amount;
-    // we must delete the property since after extracting the pre-known
-    // properties (the properties that we know the name of in advance),
-    // we iterate over the rest of the properties, which should
-    // represents the category scores.
-    delete parsedFields.amount;
-
-    // extract the max price, note that it is an optional field
+    // extract the max price from the query, note that it is an optional field,
+    // thus the type is number | undefined
     let maxPrice: number | undefined;
     if ('maxPrice' in parsedFields) {
         maxPrice = parsedFields.maxPrice
@@ -156,7 +139,7 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
     return {
         success: true,
         selectionRequest: {
-            amount, maxPrice, categoryScores: parsedFields,
+            maxPrice, categoryScores: parsedFields,
         }
     }
 }

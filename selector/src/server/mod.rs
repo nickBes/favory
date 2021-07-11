@@ -10,7 +10,6 @@ const BUFFER_SIZE: usize = 16384;
 
 #[derive(Debug, Deserialize)]
 struct SelectionRequest {
-    amount: usize,
     #[serde(rename = "maxPrice")]
     max_price: Option<f32>,
     #[serde(rename = "categoryScores")]
@@ -59,7 +58,6 @@ fn handle_clients_request(
     let selection_results = selection::select(
         &request.category_scores,
         request.max_price,
-        request.amount,
         db_connection,
     )?;
     let elapsed = Instant::now() - start;
