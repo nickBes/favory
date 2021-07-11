@@ -40,7 +40,7 @@ const Home : React.FC <{homeProps : HomeProps}> = ({homeProps}) => {
           <hr/>
           {Array.from(tags).map(tag => {
             return (
-              <Slider sliderProps={{inputName: tag, max: 100, min: 0, defaultValue: 50}}></Slider>
+              <Slider key={tag} sliderProps={{inputName: tag, max: 100, min: 0, defaultValue: 50}}></Slider>
             )
           })}
           <br/>
