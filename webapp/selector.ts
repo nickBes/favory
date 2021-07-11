@@ -4,7 +4,7 @@ import {Mutex} from 'async-mutex'
 
 const SELECTOR_SERVER_PORT = 4741
 const RECONNECTION_TIMEOUT = 1000
-const env = process.env.NODE_ENV
+const env = "production"//process.env.NODE_ENV
 
 export type SelectionRequest = {
     amount: number,
@@ -28,19 +28,29 @@ function createConnectionToSelector(){
     return net.createConnection(SELECTOR_SERVER_PORT, "127.0.0.1")
 }
 
-// note: does not require locking the mutex
-function reconnect(){
-    console.log('reconnecting to selector...')
-    mutex.runExclusive(async ()=>{
-        // disconnected from server, set the connected flag accordingly
-        connected = false;
+// safely fetches the value of the `_connected` flag using the mutex
+async function isConnected(){
+    let result = false;
+    await mutex.runExclusive(async ()=>{
+        result = _connected
     })
+    return result;
+}
+
+// safely sets the value of the `_connected` flag using the mutex
+async function setIsConnected(isConnected: boolean){
+    await mutex.runExclusive(async ()=>{
+        _connected = isConnected;
+    })
+}
+
+// note: does not require locking the mutex
+async function reconnect(){
+    console.log('reconnecting to selector...')
+    // disconnected from server, set the isConnected flag accordingly
+    setIsConnected(false);
     setTimeout(() => {
-        mutex.runExclusive(async ()=>{
-            socket.destroy();
-            socket = createConnectionToSelector();
-            setSocketEvents();
-        })
+        setupSocket();
     }, RECONNECTION_TIMEOUT);
 }
 
@@ -56,8 +66,8 @@ function setSocketEvents(){
         socket.on('timeout', ()=>socket.destroy())
     }
     socket.on('connect', ()=>{
+        setIsConnected(true);
         onConnectedEvent.set();
-        connected = true
     })
     socket.on('data', (data)=>{
         socketData = data;
@@ -66,7 +76,7 @@ function setSocketEvents(){
 }
 
 let socket: net.Socket;
-let connected = false;
+let _connected = false;
 let socketData:undefined|Buffer;
 const onDataEvent = new AsyncAutoResetEvent(false)
 const onConnectedEvent = new AsyncAutoResetEvent(false);
@@ -104,15 +114,20 @@ export async function select(request: SelectionRequest): Promise<SelectedLaptopI
     if (env == "development"){
         await setupSocket();
     }
+
+    // if we're not yet connected, wait until we are
+    // note that this is done outside the mutex to prevent a deadlock, since waiting
+    // for the connected event while the mutex is locked, will block the reconnection process,
+    // since reconnection requires locking the mutex for accessing the socket.
+    if(!await isConnected()){
+        await onConnectedEvent.wait();
+    }
+
+
     await mutex.runExclusive(async ()=>{
         // make sure we reset the on data event before sending,
         // so that we won't accidentally reset it after receiving the mesage
         onDataEvent.reset();
-
-        // if we're not yet connected, wait until we are
-        if(!connected){
-            await onConnectedEvent.wait();
-        }
 
         // send the message
         await socket.write(JSON.stringify(request))
