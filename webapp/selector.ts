@@ -4,7 +4,7 @@ import {Mutex} from 'async-mutex'
 
 const SELECTOR_SERVER_PORT = 4741
 const RECONNECTION_TIMEOUT = 1000
-const env = "production"//process.env.NODE_ENV
+const env = process.env.NODE_ENV
 
 export type SelectionRequest = {
     amount: number,
