@@ -13,12 +13,13 @@ type UserCategoryScores = HashMap<String, f32>;
 /// the user's remapped category scores, using each category's id as the key instead of its name
 type RemappedUserCategoryScores = HashMap<i32, f32>;
 
-/// the scores in categories of each laptop, mapped by the laptop's id
-type ScoresInCategoriesOfEachLaptop = HashMap<i32, ScoresInCategoriesOfLaptop>;
+/// the scores in categories of all laptops, mapped by the laptop's id, and then by category id
+type ScoresInCategoriesOfAllLaptops = HashMap<i32, ScoresInCategoriesOfLaptop>;
 
 /// the scores in categories of a single laptop, mapped by the category id
 type ScoresInCategoriesOfLaptop = HashMap<i32, f32>;
 
+/// selects the top laptops given the user category scores and optional max price.
 pub fn select(
     user_category_scores: &UserCategoryScores,
     optional_max_price: Option<f32>,
@@ -98,7 +99,7 @@ fn remap_user_category_scores(
     Ok(mapped_user_category_scores)
 }
 
-/// loads all laptops under the given price, or if no price is given loads all laptops
+/// returns information about the top laptops given their ids
 fn get_top_laptops_information(
     top_laptop_ids: &[i32],
     db_connection: &PgConnection,
@@ -116,12 +117,12 @@ fn get_top_laptops_information(
         .into_selector_result(SelectorErrorKind::DatabaseError)
 }
 
-/// load the scores of all laptop unsert the given price, or of no price is given loads the scores
-/// of all laptops, and maps them by laptop id, and then by category id
+/// load the scores of all laptop under the given price, or if no price is given loads the scores
+/// of all laptops. After loading the scores it maps them by laptop id, and then by category id
 fn load_and_map_laptop_scores_in_categories(
     optional_max_price: Option<f32>,
     db_connection: &PgConnection,
-) -> Result<ScoresInCategoriesOfEachLaptop> {
+) -> Result<ScoresInCategoriesOfAllLaptops> {
     /// the info about the laptop score in category required for mapping the scores
     #[derive(Debug, Queryable)]
     struct LaptopScoreInCategoryInfo {
@@ -161,9 +162,9 @@ fn load_and_map_laptop_scores_in_categories(
     };
 
     // map the laptop scores in categories by laptop id, and then by category id
-    let mut scores_in_categories_of_each_laptop = ScoresInCategoriesOfEachLaptop::new();
+    let mut scores_in_categories_of_all_laptops = ScoresInCategoriesOfAllLaptops::new();
     for laptop_score_in_category in laptop_scores_in_categories {
-        scores_in_categories_of_each_laptop
+        scores_in_categories_of_all_laptops
             .entry(laptop_score_in_category.laptop_id)
             .or_insert_with(ScoresInCategoriesOfLaptop::new)
             .insert(
@@ -172,15 +173,15 @@ fn load_and_map_laptop_scores_in_categories(
             );
     }
 
-    Ok(scores_in_categories_of_each_laptop)
+    Ok(scores_in_categories_of_all_laptops)
 }
 
 /// find the top laptops, according to the user category scores and the scores in categories
-/// of each laptop
+/// of all laptops, and stores the result in `top_laptops`.
 fn find_top_laptops(
     top_laptops: &mut TopLaptops,
     remapped_user_category_scores: &RemappedUserCategoryScores,
-    mapped_laptop_scores_in_categories: &ScoresInCategoriesOfEachLaptop,
+    mapped_laptop_scores_in_categories: &ScoresInCategoriesOfAllLaptops,
 ) -> Result<()> {
     for (&laptop_id, scores_in_categories_of_laptop) in mapped_laptop_scores_in_categories {
         let mut total_score = 0.0;
