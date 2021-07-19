@@ -1,4 +1,4 @@
-.scrollable {
+.scrollable_v {
     scroll-snap-type: y none;
     overflow-y: scroll;
     height: 100vh;
@@ -13,6 +13,29 @@
     }
 }
 
-.scrollableWrap {
+.scrollableWrap_v {
     overflow-y: hidden;
+}
+
+.scrollable_h {
+    scroll-snap-type: x none;
+    overflow-x: scroll;
+    height: 20vh;
+    width: fit-content;
+    overflow-y: hidden;
+    display: flex;
+
+    @media (max-width: 768px) {
+        scroll-snap-type: x mandatory;
+    }
+
+    section {
+        scroll-snap-align: start;
+    }
+}
+
+.scrollableWrap_h {
+    width: auto;
+    height: auto;
+    overflow-x: hidden;
 }

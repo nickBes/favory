@@ -12,7 +12,7 @@ const App : React.FC <AppProps> = ({ Component, pageProps }) => {
             niceeeeeeee
           </title>
         </Head>
-        <Scrollable>
+        <Scrollable direction='vertical'>
           <Component {...pageProps}/>
         </Scrollable>
       </>
