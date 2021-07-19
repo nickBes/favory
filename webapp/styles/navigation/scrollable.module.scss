@@ -9,19 +9,25 @@
     }
 
     section {
+        height: 100vh;
+        display: flex;
+        position: relative;
+        box-sizing: border-box;
+        top: 0;
         scroll-snap-align: start;
     }
 }
 
 .scrollableWrap_v {
     overflow-y: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .scrollable_h {
     scroll-snap-type: x none;
     overflow-x: scroll;
-    height: 20vh;
-    width: fit-content;
+    width: 100vw;
     overflow-y: hidden;
     display: flex;
 
@@ -30,12 +36,13 @@
     }
 
     section {
+        flex: none;
+        width: 100vw;
         scroll-snap-align: start;
     }
 }
 
 .scrollableWrap_h {
-    width: auto;
-    height: auto;
+
     overflow-x: hidden;
 }
