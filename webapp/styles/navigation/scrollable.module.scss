@@ -7,15 +7,15 @@
     @media (max-width: 768px) {
         scroll-snap-type: y mandatory;
     }
+}
 
-    section {
-        height: 100vh;
-        display: flex;
-        position: relative;
-        box-sizing: border-box;
-        top: 0;
-        scroll-snap-align: start;
-    }
+.scrollable_v > section {
+    height: 100vh;
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    top: 0;
+    scroll-snap-align: start;
 }
 
 .scrollableWrap_v {
@@ -34,12 +34,12 @@
     @media (max-width: 768px) {
         scroll-snap-type: x mandatory;
     }
+}
 
-    section {
-        flex: none;
-        width: 100vw;
-        scroll-snap-align: start;
-    }
+.scrollable_h > section {
+    flex: none;
+    width: 100vw;
+    scroll-snap-align: start;
 }
 
 .scrollableWrap_h {

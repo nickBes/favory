@@ -8,16 +8,16 @@ interface SliderProps {
     onChange? : (value : number) => void
 }
 
-const Slider : React.FC<{sliderProps : SliderProps}> = ({sliderProps}) => {
-    const [inputValue, setInputValue] = useState(sliderProps.defaultValue)
+const Slider : React.FC<SliderProps> = ({inputName, defaultValue, min, max, onChange}) => {
+    const [inputValue, setInputValue] = useState(defaultValue)
     const updateInputValue = (value : string) => {
         let convertedValue = parseFloat(value)
         if (convertedValue === NaN) {
-            convertedValue = sliderProps.defaultValue
+            convertedValue = defaultValue
             console.warn('Wrong value has been passed to the slider.')
         }
-        if (sliderProps.onChange !== undefined) {
-            sliderProps.onChange(convertedValue)
+        if (onChange !== undefined) {
+            onChange(convertedValue)
         }
         setInputValue(convertedValue)
     }
@@ -25,8 +25,8 @@ const Slider : React.FC<{sliderProps : SliderProps}> = ({sliderProps}) => {
     return (
         <>
             {/* This headline is for debug. */}
-            <h1>{sliderProps.inputName}: {inputValue}</h1>
-            <input name={sliderProps.inputName} type='range' min={sliderProps.min} max={sliderProps.max} value={inputValue} onChange={event => updateInputValue(event.target.value)}/>
+            <h1>{inputName}: {inputValue}</h1>
+            <input name={inputName} type='range' min={min} max={max} value={inputValue} onChange={event => updateInputValue(event.target.value)}/>
         </>
     )
 }

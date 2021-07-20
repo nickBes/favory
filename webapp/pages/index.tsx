@@ -16,6 +16,7 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
   const formRef = useRef<null | HTMLElement>(null)
   const ratingRef = useRef<null | HTMLElement>(null)
   const tagRef = useRef<null | HTMLElement>(null)
+  const priceRef = useRef<null | HTMLElement>(null)
 
   const scrollToRef = (ref : MutableRefObject<null | HTMLElement> ) => {
     return () => ref.current?.scrollIntoView({ behavior: 'smooth' })
@@ -45,6 +46,7 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
           <Scrollable direction='horizontal'>
             <section ref={tagRef}>
               <div>
+                <h1>Choose your categories</h1>
                 <Tags tagProps={{ tags: tags, onClick: removeTag }}></Tags>
                 <SearchBar searchBarProps={{ suggestions: new Set(homeProps.categories), onClick: addTag, maxListSize: 5 }}></SearchBar>
                 <a onClick={scrollToRef(ratingRef)}>Next</a>
@@ -52,16 +54,21 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
             </section>
             <section ref={ratingRef}>
               <div>
+                <h1>Rate the categories</h1>
                 {Array.from(tags).map(tag => {
                   return (
-                    <Slider key={tag} sliderProps={{ inputName: tag, max: 100, min: 0, defaultValue: 50 }}></Slider>
+                    <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
                   )
                 })}
-                <br />
-                <a onClick={() => {
-                  tagRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
-                }}>Prev</a>
-                <br />
+                <a onClick={scrollToRef(tagRef)}>Prev</a>
+                <a onClick={scrollToRef(priceRef)}>Next</a>
+              </div>
+            </section>
+            <section ref={priceRef}>
+              <div>
+                <h1>Choose maximum price</h1>
+                <Slider inputName='price' max={2000} min={200} defaultValue={500}></Slider>
+                <a onClick={scrollToRef(ratingRef)}>Prev</a>
                 <input type="submit" />
               </div>
             </section>
