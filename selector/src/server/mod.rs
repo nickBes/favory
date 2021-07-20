@@ -11,7 +11,7 @@ const BUFFER_SIZE: usize = 16384;
 #[derive(Debug, Deserialize)]
 struct SelectionRequest {
     #[serde(rename = "maxPrice")]
-    max_price: Option<f32>,
+    max_price: f32,
     #[serde(rename = "categoryScores")]
     category_scores: HashMap<String, f32>,
 }

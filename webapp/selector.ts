@@ -7,7 +7,7 @@ const RECONNECTION_TIMEOUT = 1000
 const env = process.env.NODE_ENV
 
 export type SelectionRequest = {
-    maxPrice?: number,
+    maxPrice: number,
     categoryScores: {
         [category_name: string]: number,
     }

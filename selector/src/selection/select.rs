@@ -19,10 +19,10 @@ type ScoresInCategoriesOfAllLaptops = HashMap<i32, ScoresInCategoriesOfLaptop>;
 /// the scores in categories of a single laptop, mapped by the category id
 type ScoresInCategoriesOfLaptop = HashMap<i32, f32>;
 
-/// selects the top laptops given the user category scores and optional max price.
+/// selects the top laptops given the user category scores and max price.
 pub fn select(
     user_category_scores: &UserCategoryScores,
-    optional_max_price: Option<f32>,
+    max_price: f32,
     db_connection: &PgConnection,
 ) -> Result<Vec<SelectedLaptopInfo>> {
     if user_category_scores.is_empty() {
@@ -35,7 +35,7 @@ pub fn select(
 
     // load the laptop scores in categories and map them by laptop id, and then by category id
     let mapped_laptop_scores_in_categories =
-        load_and_map_laptop_scores_in_categories(optional_max_price, db_connection)?;
+        load_and_map_laptop_scores_in_categories(max_price, db_connection)?;
 
     // find the top laptops
     let mut top_laptops = TopLaptops::new(TOP_LAPTOPS_AMOUNT);
@@ -120,7 +120,7 @@ fn get_top_laptops_information(
 /// load the scores of all laptop under the given price, or if no price is given loads the scores
 /// of all laptops. After loading the scores it maps them by laptop id, and then by category id
 fn load_and_map_laptop_scores_in_categories(
-    optional_max_price: Option<f32>,
+    max_price: f32,
     db_connection: &PgConnection,
 ) -> Result<ScoresInCategoriesOfAllLaptops> {
     /// the info about the laptop score in category required for mapping the scores
@@ -132,33 +132,21 @@ fn load_and_map_laptop_scores_in_categories(
     }
 
     // load the required info about the laptop scores in categories according to the max price bound
-    let laptop_scores_in_categories: Vec<LaptopScoreInCategoryInfo> = match optional_max_price {
-        Some(max_price) => {
-            use schema::laptop;
-            use schema::laptop_score_in_category;
+    let laptop_scores_in_categories: Vec<LaptopScoreInCategoryInfo> = {
+        use schema::laptop;
+        use schema::laptop_score_in_category;
 
-            // a max price was selected, so load the scores of all laptops where the price is
-            // lower or equal to the given price
-            laptop_score_in_category::table
-                .inner_join(laptop::table)
-                .filter(laptop::price.le(max_price))
-                .select((
-                    laptop_score_in_category::score,
-                    laptop_score_in_category::laptop_id,
-                    laptop_score_in_category::category_id,
-                ))
-                .load(db_connection)
-                .into_selector_result(SelectorErrorKind::DatabaseError)?
-        }
-        None => {
-            use schema::laptop_score_in_category::dsl::*;
-
-            // if no max price is given, load the scores of all laptops
-            laptop_score_in_category
-                .select((score, laptop_id, category_id))
-                .load(db_connection)
-                .into_selector_result(SelectorErrorKind::DatabaseError)?
-        }
+        // load the scores of all laptops where the price is lower or equal to the given max price
+        laptop_score_in_category::table
+            .inner_join(laptop::table)
+            .filter(laptop::price.le(max_price))
+            .select((
+                laptop_score_in_category::score,
+                laptop_score_in_category::laptop_id,
+                laptop_score_in_category::category_id,
+            ))
+            .load(db_connection)
+            .into_selector_result(SelectorErrorKind::DatabaseError)?
     };
 
     // map the laptop scores in categories by laptop id, and then by category id
