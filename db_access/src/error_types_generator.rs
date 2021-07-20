@@ -8,8 +8,8 @@ macro_rules! generate_error_types {
 
             #[derive(Debug)]
             pub struct [<$snake_case_name:camel Error>]{
-                kind: [<$snake_case_name:camel ErrorKind>],
-                inner: Option<Box<dyn Error>>,
+                pub kind: [<$snake_case_name:camel ErrorKind>],
+                pub inner: Option<Box<dyn Error>>,
             }
 
             pub type Result<T> = std::result::Result<T, [<$snake_case_name:camel Error>]>;

@@ -3,7 +3,7 @@ mod top_laptops;
 
 pub use select::select;
 
-pub const MAX_TOP_LAPTOPS_AMOUNT:usize = 20;
+pub const TOP_LAPTOPS_AMOUNT:usize = 5;
 
 use serde::Serialize;
 

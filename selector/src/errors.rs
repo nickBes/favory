@@ -6,13 +6,11 @@ pub enum SelectorErrorKind{
     NoScoresProvided,
     NonExistentCategoryName(String),
     LaptopHasNoScoreForCategory { laptop_id: i32, category_id: i32},
-    TooManyTopLaptopsRequested { max: usize},
     FailedToCreateListener,
     FailedToAcceptClient,
     FailedToDeserializeClientRequest,
-    FailedToReceiveRequestFromClient,
     FailedToSerializeResponse,
-    FailedToSendResponseToClient,
+    TcpStreamError,
 }
 
 generate_error_types!{selector}

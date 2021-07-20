@@ -1,9 +1,4 @@
-use std::{
-    collections::HashMap,
-    io::{Read, Write},
-    net::{TcpListener, TcpStream},
-    time::Instant,
-};
+use std::{collections::HashMap, io::{Read, Write}, net::{TcpListener, TcpStream}, time::Instant};
 
 use crate::selection;
 use crate::{errors::*, selection::SelectedLaptopInfo};
@@ -15,8 +10,9 @@ const BUFFER_SIZE: usize = 16384;
 
 #[derive(Debug, Deserialize)]
 struct SelectionRequest {
-    amount: usize,
-    max_price: Option<f32>,
+    #[serde(rename = "maxPrice")]
+    max_price: f32,
+    #[serde(rename = "categoryScores")]
     category_scores: HashMap<String, f32>,
 }
 
@@ -41,7 +37,7 @@ pub fn start_server(db_connection: &PgConnection) -> Result<()> {
     Ok(())
 }
 
-fn try_handle_client(
+fn handle_clients_request(
     stream: &mut TcpStream,
     buffer: &mut [u8],
     db_connection: &PgConnection,
@@ -49,7 +45,11 @@ fn try_handle_client(
     // receive and deserialize the selection request from the client
     let length = stream
         .read(buffer)
-        .into_selector_result(SelectorErrorKind::FailedToReceiveRequestFromClient)?;
+        .into_selector_result(SelectorErrorKind::TcpStreamError)?;
+    // a length of 0 means that the stream has closed
+    if length == 0{
+        return Err(SelectorErrorKind::TcpStreamError.into_empty_selector_error())
+    }
     let request: SelectionRequest = serde_json::from_slice(&buffer[..length])
         .into_selector_result(SelectorErrorKind::FailedToDeserializeClientRequest)?;
 
@@ -58,7 +58,6 @@ fn try_handle_client(
     let selection_results = selection::select(
         &request.category_scores,
         request.max_price,
-        request.amount,
         db_connection,
     )?;
     let elapsed = Instant::now() - start;
@@ -72,7 +71,7 @@ fn try_handle_client(
         .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)?;
     stream
         .write_all(&serialized_response)
-        .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)?;
+        .into_selector_result(SelectorErrorKind::TcpStreamError)?;
 
     println!("selection elapsed time: {:?}", elapsed);
     Ok(())
@@ -83,17 +82,26 @@ fn handle_client(
     buffer: &mut [u8],
     db_connection: &PgConnection,
 ) -> Result<()> {
-    match try_handle_client(&mut stream, buffer, db_connection) {
-        Ok(()) => Ok(()),
-        Err(e) => {
-            // in case of an error, send a failure response to the client and return the error
+    loop {
+        if let Err(e) = handle_clients_request(&mut stream, buffer, db_connection) {
+            // in case the error that occured is a tcp stream error,
+            // the tcp stream has broke, so we should stop handling the client
+            // and move on to the next client
+            if e.kind == SelectorErrorKind::TcpStreamError{
+                return Err(e)
+            }
+            println!("error while handling client: {:?}", e);
+
+            // in case of an error, send a failure response to the client
             let response = SelectionResponse {
                 success: false,
                 laptops: None,
             };
-            serde_json::to_writer(stream, &response)
-                .into_selector_result(SelectorErrorKind::FailedToSendResponseToClient)?;
-            Err(e)
+            let serialized_response = serde_json::to_vec(&response)
+                .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)?;
+            stream
+                .write_all(&serialized_response)
+                .into_selector_result(SelectorErrorKind::TcpStreamError)?;
         }
     }
 }
