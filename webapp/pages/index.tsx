@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, MutableRefObject } from 'react'
 import { GetStaticProps } from 'next'
 import Navbar from '../components/navbar/navbar'
 import Form from '../components/form/form'
@@ -17,6 +17,10 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
   const ratingRef = useRef<null | HTMLElement>(null)
   const tagRef = useRef<null | HTMLElement>(null)
 
+  const scrollToRef = (ref : MutableRefObject<null | HTMLElement> ) => {
+    return () => ref.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   const removeTag = (tag: string) => {
     setTags(new Set(Array.from(tags).filter(value => value != tag)))
   }
@@ -32,9 +36,7 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
         <div className='main'>
           <h1>Hey, what's going on guys it's me jermey.</h1>
           <p>Did you know that kndred was actually jin?</p>
-          <button onClick={() => {
-            formRef.current?.scrollIntoView({ behavior: 'smooth' })
-          }}>Scroll to form.</button>
+          <button onClick={scrollToRef(formRef)}>Scroll to form.</button>
           <img src="https://wallpaperaccess.com/full/1369012.jpg"></img>
         </div>
       </section>
@@ -45,9 +47,7 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
               <div>
                 <Tags tagProps={{ tags: tags, onClick: removeTag }}></Tags>
                 <SearchBar searchBarProps={{ suggestions: new Set(homeProps.categories), onClick: addTag, maxListSize: 5 }}></SearchBar>
-                <a onClick={() => {
-                  ratingRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
-                }}>Next</a>
+                <a onClick={scrollToRef(ratingRef)}>Next</a>
               </div>
             </section>
             <section ref={ratingRef}>
