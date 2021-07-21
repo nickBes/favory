@@ -98,7 +98,7 @@ const SearchBar : React.FC<SearchBarProps> = ({suggestions, onSuggestionClick, m
     return (
         <>
             {/* Converting the input's value to lower case to make the filtering algorithm case insensitive*/}
-            <input key={suggestions.length} type='text' onChange={event => filterSuggestions(event.target.value.toLowerCase())}></input>
+            <input type='text' onChange={event => filterSuggestions(event.target.value.toLowerCase())}></input>
             {createSuggestionsList(filteredSuggestions)}
         </>
     )
