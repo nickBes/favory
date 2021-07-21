@@ -2,33 +2,17 @@ import React from 'react'
 import styles from '../../styles/navigation/scrollable.module.scss'
 
 interface ScrollableProps {
-    direction? : string
+    direction : 'horizontal' | 'vertical'
 }
 
 const Scrollable : React.FC <ScrollableProps> = ({children, direction}) => {
-    const scrollClassByDirection = () => {
-        let className = styles.scrollable_v
-        if (direction) {
-            if (direction.toLowerCase() === 'horizontal') {
-                className = styles.scrollable_h
-            }
-        }
-        return className
-    }
+    const getScrollClassByDirection = () => styles['scrollable_' + direction[0]]
 
-    const wrapClassByDirection = () => {
-        let className = styles.scrollableWrap_v
-        if (direction) {
-            if (direction.toLowerCase() === 'horizontal') {
-                className = styles.scrollableWrap_h
-            }
-        }
-        return className
-    }
+    const getWrapClassByDirection = () => styles['scrollableWrap_' + direction[0]]
 
     return (
-        <div className={wrapClassByDirection()}>
-            <div className={scrollClassByDirection()}>
+        <div className={getWrapClassByDirection()}>
+            <div className={getScrollClassByDirection()}>
                 {children}
             </div>
         </div>

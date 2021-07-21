@@ -8,11 +8,11 @@ import SearchBar from '../components/form/searchbar'
 import Scrollable from '../components/navigation/scrollable'
 
 interface HomeProps {
-  categories: Array<string>
+  categories: string[]
 }
 
-const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
-  const [tags, setTags] = useState(new Set<string>())
+const Home: React.FC<HomeProps> = ({ categories }) => {
+  const [tags, setTags] = useState<string[]>([])
   const formRef = useRef<null | HTMLElement>(null)
   const ratingRef = useRef<null | HTMLElement>(null)
   const tagRef = useRef<null | HTMLElement>(null)
@@ -23,11 +23,11 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
   }
 
   const removeTag = (tag: string) => {
-    setTags(new Set(Array.from(tags).filter(value => value != tag)))
+    setTags(prevTags => prevTags.filter(value => value != tag))
   }
 
   const addTag = (suggestion: string) => {
-    setTags(new Set([...tags, suggestion]))
+    setTags(prevTags => prevTags.includes(suggestion) ? prevTags : [...prevTags, suggestion])
   }
 
   return (
@@ -47,8 +47,8 @@ const Home: React.FC<{ homeProps: HomeProps }> = ({ homeProps }) => {
             <section ref={tagRef}>
               <div>
                 <h1>Choose your categories</h1>
-                <Tags tagProps={{ tags: tags, onClick: removeTag }}></Tags>
-                <SearchBar searchBarProps={{ suggestions: new Set(homeProps.categories), onClick: addTag, maxListSize: 5 }}></SearchBar>
+                <Tags tags={tags} onTagClick={removeTag}></Tags>
+                <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar>
                 <a onClick={scrollToRef(ratingRef)}>Next</a>
               </div>
             </section>
@@ -87,5 +87,5 @@ export const getStaticProps: GetStaticProps = async ctx => {
   }
   // get categories from database
   homeProps.categories = ['gaming', 'dev', 'design', 'study']
-  return { props: { homeProps: homeProps } }
+  return { props:  homeProps  }
 }

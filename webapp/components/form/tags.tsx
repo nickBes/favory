@@ -2,17 +2,17 @@ import React, { useState } from 'react'
 import styles from '../../styles/form/tags.module.scss'
 
 interface TagProps {
-    tags : Set<string>
-    onClick : (value : string) => void
+    tags : string[]
+    onTagClick : (value : string) => void
 }
 
-const Tags : React.FC <{tagProps : TagProps}> = ({tagProps}) => {
+const Tags : React.FC <TagProps> = ({tags, onTagClick}) => {
     return (
         <div>
             <ul>
-                {Array.from(tagProps.tags).map((tag, index) => (
+                {Array.from(tags).map((tag, index) => (
                     <li key={index}>
-                        <span onClick={() => tagProps.onClick(tag)}>{tag}</span>
+                        <span onClick={() => onTagClick(tag)}>{tag}</span>
                     </li>
                 ))}
             </ul>

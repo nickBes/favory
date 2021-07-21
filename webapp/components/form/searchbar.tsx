@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 
 interface SearchBarProps {
-    suggestions : Set<string>
-    onClick : (value : string) => void
-    maxListSize : number
+    suggestions : string[]
+    onSuggestionClick : (value : string) => void
+    maxDisplayedSuggestions : number
 }
 
-const SearchBar : React.FC<{searchBarProps : SearchBarProps}> = ({searchBarProps}) => {
-    const [filteredData, setFilteredData] = useState(new Set<string>())
+const SearchBar : React.FC<SearchBarProps> = ({suggestions, onSuggestionClick, maxDisplayedSuggestions}) => {
+    const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([])
 
+    // will return the maximum string occurance length of the other's string
+    // in the base string as there can be multiple string occurances
     const maxStringOccuranceLength =  (base : string, other : string) => {
         // searching for the indexes of the first char of the other string
         // in the base string and storing them in an array 
@@ -31,6 +33,9 @@ const SearchBar : React.FC<{searchBarProps : SearchBarProps}> = ({searchBarProps
         })
         return Math.max(...nums)
     }
+
+    // return the string occurance length of the other string from the given index
+    // in the base string
     const stringOccuranceLengthAtIndex = (base : string, other : string, index : number) => {
         // iteratates over the base string from the index parameter till the end of
         // the base/other string and if the char of the base string matches the char
@@ -47,48 +52,54 @@ const SearchBar : React.FC<{searchBarProps : SearchBarProps}> = ({searchBarProps
         return num
     }
 
-    const filterData = (value : string) => {
-        let tmpFilteredData = new Set<string>()
-        // if the input value 
-        if (value) {
-            // create a new set from the existing suggestion and remove 
-            // all of the items that don't include the input value
-            tmpFilteredData = new Set(searchBarProps.suggestions)
-            tmpFilteredData.forEach(suggestion => {
-                if (!suggestion.includes(value)) {
-                    tmpFilteredData.delete(suggestion)
-                }
-            })
-
-            // sort the set by longest string occurence of the input value
-            tmpFilteredData = new Set(Array.from(tmpFilteredData).sort((left, right) => {
-                let [r, l] = [maxStringOccuranceLength(right, value), maxStringOccuranceLength(left, value)]
-                return r - l
-            }))
-        }
-        setFilteredData(tmpFilteredData)
+    // for a given input string filter the suggestions by thes tring occurance 
+    // of the input field in each suggestion, from the longest to the shortest
+    const filterSuggestions = (value : string) => {
+        setFilteredSuggestions(() => {
+            // check that the input string isn't empty
+            if (value) {
+                // remove all of the items that don't include the input value and sort 
+                // the suggestions by the longest occurance of the input value
+                return suggestions.filter(suggestion => suggestion.includes(value))
+                                    .sort((left, right) => {
+                                        let [rightSuggestionOccuranceLength, leftSuggestionOccuranceLength] = [maxStringOccuranceLength(right, value), 
+                                                                                                                maxStringOccuranceLength(left, value)]
+                                        // if the the input value's occurance is longer in the right suggestion it will return
+                                        // a positive number and the right and left suggestions will switch in places, else
+                                        // it will return either 0 or a negative number and the locations won't changes
+                                        return rightSuggestionOccuranceLength - leftSuggestionOccuranceLength
+                                    })
+            }
+            return []
+        })
     }
 
-    const createList = (filteredData : Set<string>) => {
-        return Array.from(filteredData).splice(0, searchBarProps.maxListSize).map(suggestion => {
+    // return an array of <li> that represent each suggestion in the filtered order 
+    const createSuggestionsItems = (filteredSuggestion : string[]) => {
+        return filteredSuggestion.slice(0, maxDisplayedSuggestions).map(suggestion => {
             return (
-                <li key={suggestion} onClick={() => searchBarProps.onClick(suggestion)}>{suggestion}</li>
+                <li key={suggestion} onClick={() => onSuggestionClick(suggestion)}>{suggestion}</li>
             )
         })
     }
 
+    // if the there are suggestions returns a list of suggestions
+    const createSuggestionsList = (filteredSuggestions : string[]) => {
+        if (filterSuggestions.length != 0) {
+            return (
+                <ul>
+                    {createSuggestionsItems(filteredSuggestions)}
+                </ul>
+            )
+        }
+        return <></>
+    }
+
     return (
         <>
-            <input key={searchBarProps.suggestions.size} type='text' onChange={event => filterData(event.target.value.toLowerCase())}></input>
-            {(() => {
-                if (filterData.length != 0) {
-                    return (
-                        <ul>
-                            {createList(filteredData)}
-                        </ul>
-                    )
-                }
-            })()}
+            {/* Converting the input's value to lower case to make the filtering algorithm case insensitive*/}
+            <input key={suggestions.length} type='text' onChange={event => filterSuggestions(event.target.value.toLowerCase())}></input>
+            {createSuggestionsList(filteredSuggestions)}
         </>
     )
 }
