@@ -3,7 +3,7 @@ import Error from '../components/error/error'
 import { GetServerSideProps } from 'next'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
-import { SelectedLaptopInfo, SelectionRequest, select } from '../selector'
+import { SelectedLaptopInfo, SelectionRequestParameters, select } from '../selector'
 
 type ResultsPageInvalidFieldError = {
     type: "invalidField",
@@ -68,7 +68,7 @@ export default Results
 
 type SelectionRequestExtractionResultSuccess = {
     success: true,
-    selectionRequest: SelectionRequest,
+    selectionRequest: SelectionRequestParameters,
 }
 
 type SelectionRequestExtractionResultFailure = {
