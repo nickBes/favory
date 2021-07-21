@@ -5,9 +5,12 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct CategoryNamesAndPriceLimitsData {
-    category_names: Vec<String>,
-    max_price: f32,
-    min_price: f32,
+    #[serde(rename = "categoryNames")]
+    pub category_names: Vec<String>,
+    #[serde(rename = "maxPrice")]
+    pub max_price: f32,
+    #[serde(rename = "minPrice")]
+    pub min_price: f32,
 }
 
 pub fn fetch_category_names_and_price_limits(
