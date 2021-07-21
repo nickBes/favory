@@ -4,6 +4,7 @@ import { GetServerSideProps } from 'next'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
 import { SelectedLaptopInfo, SelectionRequest, select } from '../selector'
+import cookie from 'cookie'
 
 type ResultsPageInvalidFieldError = {
     type: "invalidField",
@@ -177,11 +178,37 @@ async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<Resu
     }
 }
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+export const getServerSideProps : GetServerSideProps = async ({req, res}) => {
     let result: ResultsPageProps;
-    if (ctx.req.method == 'POST') {
-        let query = qs.parse(await getRawBody(ctx.req, { encoding: 'utf-8' }))
+    if (req.method == 'POST') {
+        let query = qs.parse(await getRawBody(req, { encoding: 'utf-8' }))
+
         result = await performRequestedSelection(query);
+
+        // when the user sends a new selection request, we should cache the results of the 
+        // request, so that if he returns to the page using a GET request, we can present him
+        // with his previous results.
+        const cookie_data = cookie.serialize('previousResults', JSON.stringify(result), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 60 * 60 * 24,
+            sameSite: 'strict',
+            path: '/results'
+        })
+        res.setHeader('set-cookie', cookie_data)
+    } else if (req.method == 'GET') {
+        let query = qs.parse(await getRawBody(req, { encoding: 'utf-8' }))
+        const previousResults : string | undefined = cookie.parse(req.headers.cookie || '').previousResults
+        if (previousResults) {
+            result = JSON.parse(previousResults)
+        }else{
+            result = {
+                success: false,
+                error: {
+                    type: 'invalidMethod'
+                }
+            }
+        }
     } else {
         result = {
             success: false,

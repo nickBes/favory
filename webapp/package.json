@@ -11,6 +11,7 @@
   "dependencies": {
     "@esfx/async-autoresetevent": "^1.0.0-pre.19",
     "async-mutex": "^0.3.1",
+    "cookie": "^0.4.1",
     "next": "11.0.1",
     "raw-body": "^2.4.1",
     "react": "17.0.2",
@@ -18,6 +19,7 @@
     "sass": "^1.35.1"
   },
   "devDependencies": {
+    "@types/cookie": "^0.4.1",
     "@types/react": "17.0.11",
     "eslint": "7.29.0",
     "eslint-config-next": "11.0.1",

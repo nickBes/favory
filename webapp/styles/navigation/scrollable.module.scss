@@ -1,4 +1,4 @@
-.scrollable {
+.scrollable_v {
     scroll-snap-type: y none;
     overflow-y: scroll;
     height: 100vh;
@@ -7,12 +7,42 @@
     @media (max-width: 768px) {
         scroll-snap-type: y mandatory;
     }
+}
 
-    section {
-        scroll-snap-align: start;
+.scrollable_v > section {
+    height: 100vh;
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    top: 0;
+    scroll-snap-align: start;
+}
+
+.scrollableWrap_v {
+    overflow-y: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.scrollable_h {
+    scroll-snap-type: x none;
+    overflow-x: scroll;
+    width: 100vw;
+    overflow-y: hidden;
+    display: flex;
+
+    @media (max-width: 768px) {
+        scroll-snap-type: x mandatory;
     }
 }
 
-.scrollableWrap {
-    overflow-y: hidden;
+.scrollable_h > section {
+    flex: none;
+    width: 100vw;
+    scroll-snap-align: start;
+}
+
+.scrollableWrap_h {
+
+    overflow-x: hidden;
 }
