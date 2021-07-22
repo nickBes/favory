@@ -3,6 +3,7 @@ extern crate diesel;
 
 mod errors;
 mod selection;
+mod fetch_data;
 mod server;
 
 fn main() {

@@ -128,3 +128,19 @@ pub struct NewLaptopScoreInCategory {
     pub laptop_id: i32,
     pub category_id: i32,
 }
+
+#[derive(Debug, Queryable, Identifiable)]
+#[table_name = "price_limits"]
+pub struct PriceLimits {
+    pub id: i32,
+    pub max_price: f32,
+    pub min_price: f32,
+}
+
+#[derive(Debug, Insertable)]
+#[table_name = "price_limits"]
+pub struct NewPriceLimits {
+    pub id: i32,
+    pub max_price: f32,
+    pub min_price: f32,
+}

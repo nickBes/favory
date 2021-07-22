@@ -52,6 +52,14 @@ table! {
     }
 }
 
+table! {
+    price_limits (id) {
+        id -> Int4,
+        max_price -> Float4,
+        min_price -> Float4,
+    }
+}
+
 joinable!(benchmark -> global_benchmark (global_benchmark_id));
 joinable!(benchmark -> laptop (laptop_id));
 joinable!(benchmark_score_in_category -> category (category_id));
@@ -66,4 +74,5 @@ allow_tables_to_appear_in_same_query!(
     global_benchmark,
     laptop,
     laptop_score_in_category,
+    price_limits,
 );

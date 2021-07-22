@@ -6,20 +6,35 @@ const SELECTOR_SERVER_PORT = 4741
 const RECONNECTION_TIMEOUT = 1000
 const env = process.env.NODE_ENV
 
-export type SelectionRequest = {
+export type SelectionRequestParameters = {
     maxPrice: number,
     categoryScores: {
         [category_name: string]: number,
     }
 }
 
+export type SelectorRequest = 
+    | {
+        type: "selection",
+        parameters: SelectionRequestParameters
+    }
+    | {
+        type: "fetchCategoryNamesAndPriceLimits",
+    }
+
 export type SelectedLaptopInfo = {
     name: string,
 }
 
-type SelectionResponse = {
+type SelectorResponse<T> = {
     success: boolean,
-    laptops: SelectedLaptopInfo[] | null,
+    content: T | null,
+}
+
+export type CategoryNamesAndPriceLimits = {
+    categoryNames: string[],
+    maxPrice: number,
+    minPrice: number,
 }
 
 // note: requires locking the mutex
@@ -99,9 +114,10 @@ if (env == "production"){
     setupSocket();
 }
 
-// sends the selection request to the selector and returns the selection results
-export async function select(request: SelectionRequest): Promise<SelectedLaptopInfo[]> {
-    let response: SelectionResponse | undefined;
+// sends a request object to the selector server, receives his response, and deserializes it
+// into the R type (where R stands for the response content type).
+async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): Promise<R>{
+    let response: SelectorResponse<R> | undefined;
     // in development mode, create a new socket for each selection request, and then close
     // it when we're done. This is neccessary since when nextjs recompiles our project
     // it doesn't close the socket from the previous version of the webapp, and thus it blocks
@@ -152,14 +168,28 @@ export async function select(request: SelectionRequest): Promise<SelectedLaptopI
     })
 
     // this should never happed, since the callback in mutex.runExclusive should
-    // either set the response and throw the exceptions, and in both cases this 
+    // either set the response or throw an exception, and in both cases this 
     // should never happen, but this check is added to resolve the type errors
     // of using response without checking if its undefined.
     if(response === undefined){
         throw new Error('an unknown error has occured')
     }
-    if(!response.success || response.laptops === null){
+    if(!response.success || response.content === null){
         throw new Error('the selector returned a failure response')
     }
-    return response.laptops
+    return response.content;
+}
+
+// sends the selection request to the selector and returns the selection results
+export async function select(requestParameters: SelectionRequestParameters): Promise<SelectedLaptopInfo[]> {
+    return await sendRequestaAndGetResponseContent({
+        type: "selection",
+        parameters: requestParameters
+    });
+}
+
+export async function fetchCategoryNamesAndPriceLimits(): Promise<CategoryNamesAndPriceLimits>{
+    return await sendRequestaAndGetResponseContent({
+        type: "fetchCategoryNamesAndPriceLimits"
+    })
 }

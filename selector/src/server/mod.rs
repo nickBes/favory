@@ -1,7 +1,12 @@
-use std::{collections::HashMap, io::{Read, Write}, net::{TcpListener, TcpStream}, time::Instant};
+use std::{
+    collections::HashMap,
+    io::{Read, Write},
+    net::{TcpListener, TcpStream},
+    time::Instant,
+};
 
-use crate::selection;
-use crate::{errors::*, selection::SelectedLaptopInfo};
+use crate::{fetch_data::{fetch_category_names_and_price_limits}, selection};
+use crate::{errors::*};
 use diesel::PgConnection;
 use serde::{Deserialize, Serialize};
 
@@ -9,17 +14,58 @@ const SERVER_ENDPOINT: &str = "127.0.0.1:4741";
 const BUFFER_SIZE: usize = 16384;
 
 #[derive(Debug, Deserialize)]
-struct SelectionRequest {
-    #[serde(rename = "maxPrice")]
-    max_price: f32,
-    #[serde(rename = "categoryScores")]
-    category_scores: HashMap<String, f32>,
+#[serde(tag = "type", content = "parameters")]
+enum SelectorRequest {
+    #[serde(rename = "selection")]
+    Selection {
+        #[serde(rename = "maxPrice")]
+        max_price: f32,
+        #[serde(rename = "categoryScores")]
+        category_scores: HashMap<String, f32>,
+    },
+    #[serde(rename = "fetchCategoryNamesAndPriceLimits")]
+    FetchCategoryNamesAndPriceLimits,
+}
+impl SelectorRequest {
+    /// handles a request, produces a response, and serializes it.
+    /// note that it would seem more reasonable to just return a response here and
+    /// serialize it somewhere else, but the serde Serialize trait is not object safe,
+    /// so we can't just return a boxed serialiable object.
+    fn handle_request_and_serialize_response(&self, db_connection: &PgConnection) -> Result<Vec<u8>> {
+        match self {
+            SelectorRequest::Selection {
+                max_price,
+                category_scores,
+            } => {
+                // perform the selection and measure the elapsed time
+                let start = Instant::now();
+                let selection_results =
+                    selection::select(category_scores, *max_price, db_connection)?;
+                let elapsed = Instant::now() - start;
+
+                println!("selection elapsed time: {:?}", elapsed);
+
+                serde_json::to_vec(&SelectorResponse {
+                    success: true,
+                    content: Some(selection_results),
+                })
+            }
+            SelectorRequest::FetchCategoryNamesAndPriceLimits => {
+                let category_names_and_price_limits = fetch_category_names_and_price_limits(db_connection)?;
+                serde_json::to_vec(&SelectorResponse{
+                    success: true,
+                    content: Some(category_names_and_price_limits)
+                })
+            }
+        }
+        .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)
+    }
 }
 
 #[derive(Debug, Serialize)]
-struct SelectionResponse {
+struct SelectorResponse<T: Serialize>{
     success: bool,
-    laptops: Option<Vec<SelectedLaptopInfo>>,
+    content: Option<T>,
 }
 
 pub fn start_server(db_connection: &PgConnection) -> Result<()> {
@@ -47,33 +93,17 @@ fn handle_clients_request(
         .read(buffer)
         .into_selector_result(SelectorErrorKind::TcpStreamError)?;
     // a length of 0 means that the stream has closed
-    if length == 0{
-        return Err(SelectorErrorKind::TcpStreamError.into_empty_selector_error())
+    if length == 0 {
+        return Err(SelectorErrorKind::TcpStreamError.into_empty_selector_error());
     }
-    let request: SelectionRequest = serde_json::from_slice(&buffer[..length])
+    let request: SelectorRequest = serde_json::from_slice(&buffer[..length])
         .into_selector_result(SelectorErrorKind::FailedToDeserializeClientRequest)?;
 
-    // perform the selection and measure the elapsed time
-    let start = Instant::now();
-    let selection_results = selection::select(
-        &request.category_scores,
-        request.max_price,
-        db_connection,
-    )?;
-    let elapsed = Instant::now() - start;
-
     // serialize and send the response to the client
-    let response = SelectionResponse {
-        success: true,
-        laptops: Some(selection_results),
-    };
-    let serialized_response = serde_json::to_vec(&response)
-        .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)?;
+    let serialized_response = request.handle_request_and_serialize_response(db_connection)?;
     stream
         .write_all(&serialized_response)
         .into_selector_result(SelectorErrorKind::TcpStreamError)?;
-
-    println!("selection elapsed time: {:?}", elapsed);
     Ok(())
 }
 
@@ -87,15 +117,15 @@ fn handle_client(
             // in case the error that occured is a tcp stream error,
             // the tcp stream has broke, so we should stop handling the client
             // and move on to the next client
-            if e.kind == SelectorErrorKind::TcpStreamError{
-                return Err(e)
+            if e.kind == SelectorErrorKind::TcpStreamError {
+                return Err(e);
             }
             println!("error while handling client: {:?}", e);
 
             // in case of an error, send a failure response to the client
-            let response = SelectionResponse {
+            let response:SelectorResponse<()> = SelectorResponse {
                 success: false,
-                laptops: None,
+                content: None,
             };
             let serialized_response = serde_json::to_vec(&response)
                 .into_selector_result(SelectorErrorKind::FailedToSerializeResponse)?;
