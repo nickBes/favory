@@ -3,7 +3,7 @@ import Error from '../components/error/error'
 import { GetServerSideProps } from 'next'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
-import { SelectedLaptopInfo, SelectionRequestParameters, select } from '../selector'
+import { SelectedLaptopInfo, SelectionRequestParameters, select, getCategoryNames } from '../selector'
 import cookie from 'cookie'
 
 type ResultsPageInvalidFieldError = {
@@ -45,12 +45,6 @@ type ResultsPageProps =
     | ResultsPagePropsSuccess
     | ResultsPagePropsFailure
 
-// hardcoding the categories is a temporary solution to allow for checking,
-// the categories should be fetched in _app.tsx using getStaticServerProps
-const AVAILABLE_CATEGORIES = new Set([
-    "dev", "study", "design", "gaming"
-])
-
 const Results: React.FC<{ pageProps: ResultsPageProps }> = ({ pageProps }) => {
     console.log('selection result:',pageProps)
     if(pageProps.success){
@@ -82,7 +76,7 @@ type SelectionRequestExtractionResult =
     | SelectionRequestExtractionResultFailure
 
 // extracts the selection request from the query
-function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRequestExtractionResult {
+async function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): Promise<SelectionRequestExtractionResult> {
     // first parse all the fields into numbers
     let parsedFields: { [fieldName: string]: number } = {}
     for (const fieldName in query) {
@@ -128,10 +122,13 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
     // represents the category scores
     delete parsedFields.maxPrice;
 
+    // load the available categories (these were loaded from the selector and cached when the webapp has started)
+    // and convert them to a set so that we can check if it contains each user provided category name.
+    let available_categories = new Set(await getCategoryNames());
     // the rest of the field should represent the category scores,
     // make sure all field names correspond to category names
     for (const fieldName in parsedFields) {
-        if (!AVAILABLE_CATEGORIES.has(fieldName)) {
+        if (!available_categories.has(fieldName)) {
             return {
                 success: false,
                 error: {
@@ -153,7 +150,7 @@ function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): SelectionRe
 // extracts the selection request from the query, performs the selection,
 // and returns the result
 async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<ResultsPageProps> {
-    let selectionRequestExtractionResult = extractSelectionRequestFromQuery(query)
+    let selectionRequestExtractionResult = await extractSelectionRequestFromQuery(query)
     if (selectionRequestExtractionResult.success) {
         try {
             let laptops = await select(selectionRequestExtractionResult.selectionRequest)

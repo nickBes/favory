@@ -31,10 +31,15 @@ type SelectorResponse<T> = {
     content: T | null,
 }
 
-export type CategoryNamesAndPriceLimits = {
+type CategoryNamesAndPriceLimits = {
     categoryNames: string[],
     maxPrice: number,
     minPrice: number,
+}
+
+export type PriceLimits = {
+    max: number,
+    min: number
 }
 
 // note: requires locking the mutex
@@ -88,14 +93,6 @@ function setSocketEvents(){
         onDataEvent.set();
     })
 }
-
-let socket: net.Socket;
-let _connected = false;
-let socketData:undefined|Buffer;
-const onDataEvent = new AsyncAutoResetEvent(false)
-const onConnectedEvent = new AsyncAutoResetEvent(false);
-// a mutex over the socket and the connected variables
-const mutex = new Mutex();
 
 // sets up the permanent socket, which is used in production 
 async function setupSocket(){
@@ -188,8 +185,74 @@ export async function select(requestParameters: SelectionRequestParameters): Pro
     });
 }
 
-export async function fetchCategoryNamesAndPriceLimits(): Promise<CategoryNamesAndPriceLimits>{
-    return await sendRequestaAndGetResponseContent({
-        type: "fetchCategoryNamesAndPriceLimits"
+// fetches the category names and price limits from the selector and caches them in the
+// global variable `categoryNamesAndPriceLimits`. the cached data can be accessed
+// using the `getCategoryNames` and `getPriceLimits` functions.
+export async function fetchCategoryNamesAndPriceLimits(){
+    await categoryNamesAndPriceLimitsMutex.runExclusive(async ()=>{
+        categoryNamesAndPriceLimits =  await sendRequestaAndGetResponseContent({
+            type: "fetchCategoryNamesAndPriceLimits"
+        })
     })
+    onCategoryNamesAndPriceLimitsFetched.set();
 }
+
+// this function tries to get the category names and price limits from the 
+// `categoryNamesAndPriceLimits` variable. if it does not contain any data, it
+// waits for the data to be fetched and then returns the data.
+async function getCachedCategoryNamesAndPriceLimits(): Promise<CategoryNamesAndPriceLimits>{
+    let cachedData: CategoryNamesAndPriceLimits|undefined;
+    // read the cached data safely
+    await categoryNamesAndPriceLimitsMutex.runExclusive(async ()=>{
+        cachedData = categoryNamesAndPriceLimits
+    })
+    // while the cached data is currently undefined, wait for it to be fetched, and
+    // then try to read it once again. 
+    while (cachedData === undefined){
+        await onCategoryNamesAndPriceLimitsFetched.wait();
+        await categoryNamesAndPriceLimitsMutex.runExclusive(async ()=>{
+            cachedData = categoryNamesAndPriceLimits
+        })
+    }
+    return cachedData;
+}
+
+// returns the cached category names, which were fetched from the selector using
+// the `fetchCategoryNamesAndPriceLimits` function.
+export async function getCategoryNames(): Promise<string[]>{
+    return await (await getCachedCategoryNamesAndPriceLimits()).categoryNames
+}
+
+// returns the cached price limits, which were fetched from the selector using
+// the `fetchCategoryNamesAndPriceLimits` function.
+export async function getPriceLimits(): Promise<PriceLimits>{
+    let cachedData = await getCachedCategoryNamesAndPriceLimits();
+    return {
+        max: cachedData.maxPrice,
+        min: cachedData.minPrice
+    }
+}
+
+let socket: net.Socket;
+let _connected = false;
+let socketData:undefined|Buffer;
+const onDataEvent = new AsyncAutoResetEvent(false)
+const onConnectedEvent = new AsyncAutoResetEvent(false);
+// a mutex over the socket and the connected variables
+const mutex = new Mutex();
+
+// the cached category names and price limits, fetched from the selector using
+// the `fetchCategoryNamesAndPriceLimits` function.
+let categoryNamesAndPriceLimits: CategoryNamesAndPriceLimits|undefined;
+// a mutex over the `categoryNamesAndPriceLimits` global variable.
+let categoryNamesAndPriceLimitsMutex = new Mutex();
+// an event that is fired when the category names and price limits are fetched and
+// written to the `categoryNamesAndPriceLimits` global variable. it is called by 
+// the `fetchCategoryNamesAndPriceLimits` function.
+let onCategoryNamesAndPriceLimitsFetched = new AsyncAutoResetEvent(false);
+// on startup, fetch the category names and price limits and cache them. we only need to fetch 
+// this data once since it is cached in the global variable `categoryNamesAndPriceLimits`, 
+// and it can be accessed from everywhere in the code using the `getCategoryNames`
+// and `getPriceLimits` functions. if the cached info needs to be updated, the 
+// `fetchCategoryNamesAndPriceLimits` can be used.
+fetchCategoryNamesAndPriceLimits();

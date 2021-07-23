@@ -6,19 +6,21 @@ import Slider from '../components/form/slider'
 import Tags from '../components/form/tags'
 import SearchBar from '../components/form/searchbar'
 import Scrollable from '../components/navigation/scrollable'
+import { PriceLimits, getCategoryNames, getPriceLimits } from '../selector'
 
 interface HomeProps {
   categories: string[]
+  priceLimits: PriceLimits
 }
 
-const Home: React.FC<HomeProps> = ({ categories }) => {
+const Home: React.FC<HomeProps> = ({ categories, priceLimits }) => {
   const [tags, setTags] = useState<string[]>([])
   const formRef = useRef<null | HTMLElement>(null)
   const ratingRef = useRef<null | HTMLElement>(null)
   const tagRef = useRef<null | HTMLElement>(null)
   const priceRef = useRef<null | HTMLElement>(null)
 
-  const scrollToRef = (ref : MutableRefObject<null | HTMLElement> ) => {
+  const scrollToRef = (ref: MutableRefObject<null | HTMLElement>) => {
     return () => ref.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
@@ -67,7 +69,7 @@ const Home: React.FC<HomeProps> = ({ categories }) => {
             <section ref={priceRef}>
               <div>
                 <h1>Choose maximum price</h1>
-                <Slider inputName='maxPrice' max={2000} min={200} defaultValue={500}></Slider>
+                <Slider inputName='maxPrice' max={priceLimits.max} min={priceLimits.min} defaultValue={500}></Slider>
                 <a onClick={scrollToRef(ratingRef)}>Prev</a>
                 <input type="submit" />
               </div>
@@ -82,10 +84,12 @@ const Home: React.FC<HomeProps> = ({ categories }) => {
 export default Home
 
 export const getStaticProps: GetStaticProps = async ctx => {
-  let homeProps: HomeProps = {
-    categories: new Array<string>()
+  // load the available categories and the price limits.
+  // these were loaded from the selector and cached when the webapp has started.
+  return {
+    props: {
+      categories: await getCategoryNames(),
+      priceLimits: await getPriceLimits()
+    }
   }
-  // get categories from database
-  homeProps.categories = ['gaming', 'dev', 'design', 'study']
-  return { props:  homeProps  }
 }
