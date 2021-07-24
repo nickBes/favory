@@ -3,7 +3,7 @@ import Error from '../components/error/error'
 import { GetServerSideProps } from 'next'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
-import { SelectedLaptopInfo, SelectionRequestParameters, select, getCategoryNames } from '../selector'
+import { SelectedLaptopInfo, SelectionRequestParameters, select, getCategoryNames, getPriceLimits } from '../selector'
 import cookie from 'cookie'
 
 type ResultsPageInvalidFieldError = {
@@ -117,9 +117,22 @@ async function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): Promi
         }
     }
     let maxPrice: number = parsedFields.maxPrice;
-    // we must delete the property since after extracting the pre-known
-    // properties, we iterate over the rest of the properties, which should
-    // represents the category scores
+
+    // make sure that `maxPrice` is within the selector's price limits
+    let priceLimits = await getPriceLimits();
+    if(maxPrice > priceLimits.max || maxPrice < priceLimits.min){
+        return {
+            success: false,
+            error: {
+                type: "invalidField",
+                fieldName: "maxPrice"
+            }
+        }
+    }
+
+    // we must delete the `maxPrice` property since after extracing it's value
+    // we want iterate over all of the other properties other than the `maxPrice` property,
+    // which represent the user's category scores
     delete parsedFields.maxPrice;
 
     // load the available categories (these were loaded from the selector and cached when the webapp has started)
