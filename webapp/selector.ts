@@ -4,6 +4,7 @@ import {Mutex} from 'async-mutex'
 
 const SELECTOR_SERVER_PORT = 4741
 const RECONNECTION_TIMEOUT = 1000
+const RELOAD_CATEGORY_NAMES_AND_PRICE_LIMITS_TIMEOUT = 30000
 const env = process.env.NODE_ENV
 
 export type SelectionRequestParameters = {
@@ -256,3 +257,6 @@ let onCategoryNamesAndPriceLimitsFetched = new AsyncAutoResetEvent(false);
 // and `getPriceLimits` functions. if the cached info needs to be updated, the 
 // `fetchCategoryNamesAndPriceLimits` can be used.
 fetchCategoryNamesAndPriceLimits();
+// we also want to periodically reload the category names and price limits from the selector
+// to make sure that the information on the webapp is up to date
+setTimeout(fetchCategoryNamesAndPriceLimits, RELOAD_CATEGORY_NAMES_AND_PRICE_LIMITS_TIMEOUT);
