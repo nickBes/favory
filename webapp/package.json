@@ -11,6 +11,7 @@
   "dependencies": {
     "@esfx/async-autoresetevent": "^1.0.0-pre.19",
     "async-mutex": "^0.3.1",
+    "async-rwlock": "^1.1.1",
     "cookie": "^0.4.1",
     "next": "11.0.1",
     "raw-body": "^2.4.1",
