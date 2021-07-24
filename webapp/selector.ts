@@ -1,6 +1,7 @@
 import * as net from 'net'
 import {AsyncAutoResetEvent} from '@esfx/async-autoresetevent'
 import {Mutex} from 'async-mutex'
+import {RWProtected} from './rwprotected'
 
 const SELECTOR_SERVER_PORT = 4741
 const RECONNECTION_TIMEOUT = 1000
@@ -190,11 +191,9 @@ export async function select(requestParameters: SelectionRequestParameters): Pro
 // global variable `categoryNamesAndPriceLimits`. the cached data can be accessed
 // using the `getCategoryNames` and `getPriceLimits` functions.
 export async function fetchCategoryNamesAndPriceLimits(){
-    await categoryNamesAndPriceLimitsMutex.runExclusive(async ()=>{
-        categoryNamesAndPriceLimits =  await sendRequestaAndGetResponseContent({
-            type: "fetchCategoryNamesAndPriceLimits"
-        })
-    })
+    await categoryNamesAndPriceLimits.set(await sendRequestaAndGetResponseContent({
+        type: "fetchCategoryNamesAndPriceLimits"
+    }))
     onCategoryNamesAndPriceLimitsFetched.set();
 }
 
@@ -202,18 +201,12 @@ export async function fetchCategoryNamesAndPriceLimits(){
 // `categoryNamesAndPriceLimits` variable. if it does not contain any data, it
 // waits for the data to be fetched and then returns the data.
 async function getCachedCategoryNamesAndPriceLimits(): Promise<CategoryNamesAndPriceLimits>{
-    let cachedData: CategoryNamesAndPriceLimits|undefined;
-    // read the cached data safely
-    await categoryNamesAndPriceLimitsMutex.runExclusive(async ()=>{
-        cachedData = categoryNamesAndPriceLimits
-    })
+    let cachedData: CategoryNamesAndPriceLimits|undefined = await categoryNamesAndPriceLimits.get();
     // while the cached data is currently undefined, wait for it to be fetched, and
     // then try to read it once again. 
     while (cachedData === undefined){
         await onCategoryNamesAndPriceLimitsFetched.wait();
-        await categoryNamesAndPriceLimitsMutex.runExclusive(async ()=>{
-            cachedData = categoryNamesAndPriceLimits
-        })
+        cachedData = await categoryNamesAndPriceLimits.get();
     }
     return cachedData;
 }
@@ -244,9 +237,8 @@ const mutex = new Mutex();
 
 // the cached category names and price limits, fetched from the selector using
 // the `fetchCategoryNamesAndPriceLimits` function.
-let categoryNamesAndPriceLimits: CategoryNamesAndPriceLimits|undefined;
-// a mutex over the `categoryNamesAndPriceLimits` global variable.
-let categoryNamesAndPriceLimitsMutex = new Mutex();
+let categoryNamesAndPriceLimits: RWProtected<CategoryNamesAndPriceLimits|undefined> = 
+    new RWProtected(undefined);
 // an event that is fired when the category names and price limits are fetched and
 // written to the `categoryNamesAndPriceLimits` global variable. it is called by 
 // the `fetchCategoryNamesAndPriceLimits` function.
