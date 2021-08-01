@@ -13,14 +13,21 @@ fn main() {
     let db_connection = db_access::get_db_connection();
 
     loop{
+        // read the command from the user
+        let command = cli.get_next_command();
+
+        // start measuring the time that takes to execute the command
         let start = Instant::now();
-        let result = match cli.get_next_command(){
+
+        // execute the command
+        let result = match command {
             DataProcessorCliCommand::LoadCategories => load_categories(&db_connection),
             DataProcessorCliCommand::LoadLaptops => load_laptops(&db_connection),
             DataProcessorCliCommand::CalculateScores => calculate_scores(&db_connection),
             DataProcessorCliCommand::ReloadAll => reload_all(&db_connection),
             DataProcessorCliCommand::Exit => break
         };
+
         match result{
             Ok(())=>{
                 let elapsed = Instant::now() - start;
