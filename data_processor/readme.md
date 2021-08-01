@@ -11,6 +11,7 @@ Once the diesel cli is installed, navigate to the db_access directory using your
 
 If this is the first time you are setting up the database, execute the following:
 
+`diesel setup`
 `diesel migration run`
 
 Otherwise use the following to make sure the database's structure is up to date:
