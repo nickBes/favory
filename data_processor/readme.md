@@ -1,3 +1,23 @@
+# Before starting the data processor
+
+Before starting the data processor you need to make sure that all the required tables
+were created and initialized. To do that we need to run the `db_access`'s diesel migrations.
+
+First of all, if you don't already have the diesel cli installed, execute the following:
+
+`cargo install diesel_cli`
+
+Once the diesel cli is installed, navigate to the db_access directory using your favorite shell.
+
+If this is the first time you are setting up the database, execute the following:
+
+`diesel migration run`
+
+Otherwise use the following to make sure the database's structure is up to date:
+
+`diesel migration redo`
+
+
 # Starting the data processor
 
 To start the data processor navigate to the data processor's directory using your favorite shell
