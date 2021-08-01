@@ -227,7 +227,7 @@ class KspLaptopResult:
 			else:
 				matches = re.findall(r'([a-z]+):\s([0-9]+(?:.[0-9]+)?)',str(benchmark_time.text))
 				for k,v in matches:
-					benchmark_data[k]=v	
+					benchmark_data[k]=float(v)	
 			benchmarks_data[name]=benchmark_data
 		data['bench']=benchmarks_data
 		return data
@@ -250,7 +250,7 @@ def ksp_laptop_results_iter(results):
 items = []
 try:
 	try:
-		for page_num in range(23):
+		for page_num in range(1):
 			page = fetch_page(0)
 			item_list=ksp_laptop_results_iter(page)
 			new_items = list(item_list)

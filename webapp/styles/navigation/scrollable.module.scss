@@ -1,0 +1,48 @@
+.scrollable_v {
+    scroll-snap-type: y none;
+    overflow-y: scroll;
+    height: 100vh;
+    overflow-x: hidden;
+
+    @media (max-width: 768px) {
+        scroll-snap-type: y mandatory;
+    }
+}
+
+.scrollable_v > section {
+    height: 100vh;
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    top: 0;
+    scroll-snap-align: start;
+}
+
+.scrollableWrap_v {
+    overflow-y: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.scrollable_h {
+    scroll-snap-type: x none;
+    overflow-x: scroll;
+    width: 100vw;
+    overflow-y: hidden;
+    display: flex;
+
+    @media (max-width: 768px) {
+        scroll-snap-type: x mandatory;
+    }
+}
+
+.scrollable_h > section {
+    flex: none;
+    width: 100vw;
+    scroll-snap-align: start;
+}
+
+.scrollableWrap_h {
+
+    overflow-x: hidden;
+}
