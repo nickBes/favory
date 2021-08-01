@@ -240,8 +240,12 @@ const mutex = new Mutex();
 let categoryNamesAndPriceLimits: RWProtected<CategoryNamesAndPriceLimits|undefined> = 
     new RWProtected(undefined);
 // an event that is fired when the category names and price limits are fetched and
-// written to the `categoryNamesAndPriceLimits` global variable. it is called by 
-// the `fetchCategoryNamesAndPriceLimits` function.
+// written to the `categoryNamesAndPriceLimits` global variable by the 
+// `fetchCategoryNamesAndPriceLimits` function. This event is used to make sure that 
+// if someone tries to access `categoryNamesAndPriceLimits` before it was initially fetched, 
+// we could wait for the data to be fetched, instead of busy waiting for it which would consume
+// huge amounts of cpu, or throwing an exception which will cause many problems. for more info
+// see https://github.com/nickBes/favory/pull/42#discussion_r676050675
 let onCategoryNamesAndPriceLimitsFetched = new AsyncAutoResetEvent(false);
 // on startup, fetch the category names and price limits and cache them. we only need to fetch 
 // this data once since it is cached in the global variable `categoryNamesAndPriceLimits`, 
