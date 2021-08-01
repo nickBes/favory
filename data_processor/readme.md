@@ -5,7 +5,7 @@ were created and initialized. To do that we need to run the `db_access`'s diesel
 
 First of all, if you don't already have the diesel cli installed, execute the following:
 
-`cargo install diesel_cli`
+`cargo install diesel_cli --no-default-features --features postgres`
 
 Once the diesel cli is installed, navigate to the db_access directory using your favorite shell.
 
