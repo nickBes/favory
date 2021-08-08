@@ -13,7 +13,6 @@ const Collapse : React.FC <CollapseProps> = ({isActive}) => {
                 <li><a href="#">Our team</a></li>
                 <li><a href="#">Our goals</a></li>
                 <li><a href="#">Contact us</a></li>
-
             </ul>
         </div>
     )

@@ -1,6 +1,8 @@
 import React, { useState, useRef, MutableRefObject } from 'react'
 import { GetStaticProps } from 'next'
+import Image from 'next/image'
 import Navbar from '../components/navbar/navbar'
+import laptopImage from '../public/laptop_mockup.png'
 import Form from '../components/form/form'
 import Slider from '../components/form/slider'
 import Tags from '../components/form/tags'
@@ -34,13 +36,18 @@ const Home: React.FC<HomeProps> = ({ categories, priceLimits }) => {
 
   return (
     <>
+    {console.log(categories, priceLimits)}
       <section>
         <Navbar></Navbar>
-        <div className='main'>
-          <h1>Hey, what's going on guys it's me jermey.</h1>
-          <p>Did you know that kndred was actually jin?</p>
-          <button onClick={scrollToRef(formRef)}>Scroll to form.</button>
-          <img src="https://wallpaperaccess.com/full/1369012.jpg"></img>
+        <div className="main">
+          <div className="mainTextArea">
+            <h1>Find the ideal laptop that matches you the best.</h1>
+            <p>Answer a short questioneer and get the best matching laptop in a matter of seconds.</p>
+            <button onClick={scrollToRef(formRef)}>START</button>
+          </div>
+          <div className="laptopImage">
+            <Image src={laptopImage} alt="Jermey"></Image>
+          </div>
         </div>
       </section>
       <section ref={formRef} className='gray'>

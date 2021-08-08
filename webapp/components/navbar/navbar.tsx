@@ -10,7 +10,7 @@ const Navbar : React.FC = () => {
     return (
         <div className={styles.navbarWrap}>
             <nav className={styles.navbar}>
-                <h1>Favory</h1>
+                <h1>favory</h1>
                 <Burger toggleIsActive={toggleIsActive} isActive={isActive}></Burger>
             </nav>
             <Collapse isActive={isActive}></Collapse>

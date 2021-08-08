@@ -8,6 +8,11 @@ const RECONNECTION_TIMEOUT = 1000
 const RELOAD_CATEGORY_NAMES_AND_PRICE_LIMITS_TIMEOUT = 30000
 const env = process.env.NODE_ENV
 
+// a mutex over the socket and the connected variables.
+// it's initiated before the exported functions
+// as they are using this variable
+const mutex = new Mutex();
+
 export type SelectionRequestParameters = {
     maxPrice: number,
     categoryScores: {
@@ -232,8 +237,6 @@ let _connected = false;
 let socketData:undefined|Buffer;
 const onDataEvent = new AsyncAutoResetEvent(false)
 const onConnectedEvent = new AsyncAutoResetEvent(false);
-// a mutex over the socket and the connected variables
-const mutex = new Mutex();
 
 // the cached category names and price limits, fetched from the selector using
 // the `fetchCategoryNamesAndPriceLimits` function.
