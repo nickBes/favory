@@ -1,10 +1,20 @@
 $primary_text: #000000;
 $secondary_text: #181818;
+$inactive_text: #464646;
 $background: #ffffff;
-$secondary_background: #f0f0f0;
+$secondary_background: #8f8f8f;
 
-$big_text: 36px;
+$big_text_font: 600 62px/68px 'Poppins', sans-serif;
+$medium_text_font: 300 30px/46px 'Poppins', sans-serif;
+$small_text_font: 300 22px/36px 'Poppins', sans-serif;
+
+$big_text_font_mobile: 600 42px/52px 'Poppins', sans-serif;
+$medium_text_font_mobile: 300 20px/24px 'Poppins', sans-serif;
+
 $medium_text: 30px;
+
 $small_text: 24px;
 
 $green: #094119;
+$blue: #3d7d9b;
+$gray: #141414;

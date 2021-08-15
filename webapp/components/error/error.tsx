@@ -1,10 +1,12 @@
 import React from 'react'
+import Image from 'next/image'
+import unhappyImage from '../../public/unhappy.jpg'
 import styles from '../../styles/error/error.module.scss'
 
 const Error : React.FC = () => {
     return (
         <section>
-            <img src='https://i.kym-cdn.com/photos/images/newsfeed/002/069/850/076.jpg' className={styles.errorImg}/>
+            <Image src={unhappyImage} alt="Hank unhappy"></Image>
         </section>
     )
 }

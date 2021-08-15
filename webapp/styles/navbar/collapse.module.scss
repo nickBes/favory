@@ -6,12 +6,13 @@
     right: -20%;
     height: 100vh;
     width: 20%;
-    background-color: theme.$green;
+    background-color: theme.$gray;
     z-index: 2;
     transition-timing-function: cubic-bezier(0.32, 0.6, 0.62, 0.92);
     transition-duration: .5s;
     display: flex;
     box-sizing: border-box;
+
     @media (max-width: 768px) {
         width: 100%;
         right: -100%;
@@ -26,12 +27,17 @@
         li {
             display: block;
             padding: 20px 0 20px 0;
-
             color: theme.$background;
 
             a {
-                font-size: theme.$medium_text;
+                text-decoration: none;
+                font: theme.$medium_text_font;
                 color: inherit;
+                transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+            }
+
+            a:hover {
+                color: theme.$secondary_background;
             }
         }
     }
