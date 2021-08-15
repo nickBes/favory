@@ -7,18 +7,42 @@ To setup the selector setup please follow these steps:
 
 ## How the category format looks like:
 ```
-gaming:
-    cpu: 
-        *: 3
-        Cinebench&&Single: 5
-        Blender: 5
-        3D Mark: 10
-        geekbench: 5
-    gpu:
-        *: 5
-        3D Mark: 10
-        Cinebench: 3
-        Power Consumption: 3
+{
+	"dev": {
+		"cpu": {
+			"HWBOT": 0,
+			"Cinebench&&Multi": 5,
+			"Cinebench&&Single": 3,
+			"7-Zip": 8,
+			"Blender": 3,
+			"R Bench": 12,
+			"Geekbench": 7,
+			"Mozilla Kraken": 5,
+			"WebXPRT": 3,
+			"Power Consumption": 1,
+			"*": 1
+		},
+		"gpu": {
+			"*": 0.3
+		}
+	},
+	"study": {
+		"cpu": {
+			"HWBOT": 0,
+			"7-Zip": 3,
+			"Geekbench": 6,
+			"Mozzila Kraken": 10,
+			"WebXPRT": 10,
+			"Power Consumption": 7,
+			"*": 0.001
+		},
+		"gpu": {
+			"*": 0
+		}
+	},
+    ...
+}
+
 ```
 
 ## Roee's algorithm:
