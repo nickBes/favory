@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../../styles/navigation/scrollable.module.scss'
+import styles from './scrollable.module.scss'
 
 interface ScrollableProps {
     direction : 'horizontal' | 'vertical'

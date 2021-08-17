@@ -1,0 +1,79 @@
+@use '@/styles/theme';
+
+.gray {
+    background-color: lightgray;
+}
+
+.main {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 15% 5%;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        margin: auto;
+    }
+
+    .mainTextArea {
+        width: 30%;
+
+        h1 {
+            margin-block-start: 0.5em;
+            margin-block-end: 0.5em;
+            text-align: center;
+            font: theme.$big_text_font;
+
+            @media (max-width: 768px) {
+                font: theme.$big_text_font_mobile;
+            }
+        }
+
+        button {
+            margin: auto;
+            display: block;
+            width: 200px;
+            height: 50px;
+
+            border-radius: 20px;
+            background-color: theme.$blue;
+
+            border: 0px;
+            font: theme.$small_text_font;
+            color: theme.$background;
+            transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+        }
+
+        button:hover {
+            cursor:pointer;
+            border: 1px solid theme.$primary_text;
+            background-color: rgba($color: #000000, $alpha: 0.0);
+            color: theme.$primary_text;
+        }
+
+        p {
+            text-align: center;
+            color: theme.$secondary_text;
+            font: theme.$medium_text_font;
+
+            @media (max-width: 768px) {
+                font: theme.$medium_text_font_mobile;
+            }
+        }
+
+        @media (max-width: 768px) {
+            width: auto;
+        }
+    }
+    .laptopImage {
+        padding: 3em;
+        width: 37%;
+        max-width: 715px;
+
+        @media (max-width: 768px) {
+            width: auto;
+            max-width: 500px;
+        }
+    }
+}

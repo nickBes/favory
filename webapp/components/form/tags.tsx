@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styles from '../../styles/form/tags.module.scss'
+import styles from './tags.module.scss'
 
 interface TagProps {
     tags : string[]

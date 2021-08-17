@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../../styles/navbar/collapse.module.scss'
+import styles from './collapse.module.scss'
 
 interface CollapseProps {
     isActive: boolean;

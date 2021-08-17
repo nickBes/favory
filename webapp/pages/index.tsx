@@ -1,3 +1,4 @@
+import styles from '@/styles/index/index.module.scss'
 import React, { useState, useRef, MutableRefObject } from 'react'
 import { GetStaticProps } from 'next'
 import Image from 'next/image'
@@ -39,18 +40,18 @@ const Home: React.FC<HomeProps> = ({ categories, priceLimits }) => {
     {console.log(categories, priceLimits)}
       <section>
         <Navbar></Navbar>
-        <div className="main">
-          <div className="mainTextArea">
+        <div className={styles.main}>
+          <div className={styles.mainTextArea}>
             <h1>Find the ideal laptop that matches you the best.</h1>
             <p>Answer a short questioneer and get the best matching laptop in a matter of seconds.</p>
             <button onClick={scrollToRef(formRef)}>START</button>
           </div>
-          <div className="laptopImage">
+          <div className={styles.laptopImage}>
             <Image src={laptopImage} alt="Jermey"></Image>
           </div>
         </div>
       </section>
-      <section ref={formRef} className='gray'>
+      <section ref={formRef} className={styles.gray}>
         <Form formAttr={{ action: "./results", method: 'post' }}>
           <Scrollable direction='horizontal'>
             <section ref={tagRef}>
