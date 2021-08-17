@@ -1,4 +1,4 @@
-import '../styles/global.scss'
+import '@/styles/global.scss'
 import React from 'react'
 import Head from 'next/head'
 import Scrollable from '../components/navigation/scrollable'
