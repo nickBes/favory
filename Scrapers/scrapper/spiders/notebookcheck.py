@@ -51,10 +51,9 @@ class NotebookCheckSpider(scrapy.Spider):
 
     def _get_cpu_benchmarks(self, laptop_data:dict):
         '''
-        scrapes information about the cpu specified in the laptop_data's 'cpu' field,
-        and replaces the cpu's name in the laptop_data's 'cpu' field with the scraped information,
-        so that after this method finishes scraping the cpu, laptop_data['cpu'] contains a 
-        dictionary with all information about the cpu.
+        scrapes benchmark information about the cpu specified in the laptop_data's 'cpu' field,
+        and stores it in laptop_data['cpu_benchmarks']. when done scraping the cpu benchmarks, 
+        starts scraping gpu benchmarks.
         '''
         cpu_id = detect_cpu_id(laptop_data['cpu'])
 
@@ -69,10 +68,10 @@ class NotebookCheckSpider(scrapy.Spider):
 
     def _get_gpu_benchmarks(self, gpu_id: str, laptop_data: dict):
         '''
-        scrapes information about the given gpu of the given laptop, and stores the
-        scraped information in the laptop_data's 'gpu' field, so that after this method
-        finishes scraping the gpu, laptop_data['gpu'] contains a dictionary with all 
-        information about the gpu.
+        scrapes benchmark information about the given gpu, and stores it in
+        laptop_data['gpu_benchmarks']. when done scraping the gpu benchmarks yields
+        the laptop_data dictionary, which at that point will contain all information
+        about the laptop, the cpu and the gpu.
         '''
         yield FormRequest(
             NOTEBOOKCHECK_GPU_SEARCH_URL,
@@ -88,27 +87,21 @@ class NotebookCheckSpider(scrapy.Spider):
         device_page_url = response.css('td.specs:nth-child(2) > a:nth-child(1)::attr(href)').get()
         yield response.follow(device_page_url, callback=self._parse_device_page, meta=response.meta)
 
-    def _parse_device_info_table(self, response:HtmlResponse)->dict:
+    def _get_integrated_gpu_url(self, response:HtmlResponse)->str:
         '''
-        in the notebookcheck site, each device (cpu, gpu) has a dedicated page that contains 
-        an info table containing general information about the device in a key-value format. 
-        this method extracts this info table into a dictionary.
+        in the notebookcheck site, each cpu has a dedicated page that contains an info
+        table that contains general information about the cpu. one of the rows in the tables
+        contains a link to the page of the cpu's integrated gpu. this method extracts this url
+        and returns it.
         '''
-
-        # read the info table into a dictionary
-        info = {}
         for info_table_row in response.css('.gputable > tbody > tr'):
             header = info_table_row.css('td:nth-child(1)::text').get()
-            # note that ::text is not used here because some values contain
-            # html tags, and we still want to parse them. this is also the
-            # reason why the remove_tags function is used.
-            value = info_table_row.css('td:nth-child(2)').get()
-
-            # some rows don't have a value
-            if value is not None:
-                info[header] = remove_tags(value)
-
-        return info
+            if header == 'GPU':
+                # note that ::text is not used here because the integrated gpu is usually
+                # an <a> tag with a link to the integrated GPU's page. values contain
+                # html tags, and we still want to parse them. this is also the
+                # reason why the remove_tags function is used.
+                return remove_tags(info_table_row.css('td:nth-child(2) > a::attr(href)').get())
         
 
     def _parse_device_benchmarks(self, response:HtmlResponse)->dict:
@@ -170,32 +163,41 @@ class NotebookCheckSpider(scrapy.Spider):
 
         response = self._fix_response_broken_html(response)
 
+        # extract a much more percise name of the device
         device_name = response.css('#content > div:nth-child(1) > div:nth-child(1) > h1:nth-child(1)::text').get()
-        device_info = self._parse_device_info_table(response)
+
+        # extract the benchmarks of the device
         benchmarks = self._parse_device_benchmarks(response)
 
-        # add the benchmarks and the device name to the device_info dict, so that
-        # we have a single dictionary containing all of the device's information.
-        device_info['benchmarks'] = benchmarks
-        device_info['name'] = device_name
-
-        # save the informatoin about the device in the laptop_data dictionary
         laptop_data = response.meta['laptop_data']
         pu_type = response.meta['pu_type']
-        # save the original device description before overwriting it
+
+        # save the original device description before overwriting it with the
+        # percise device name
         device_description = laptop_data[pu_type.get_name()]
-        # rewrite the device description and write the device info instead
-        laptop_data[pu_type.get_name()] = device_info
+
+        # rewrite the device's description with its percise name
+        laptop_data[pu_type.get_name()] = device_name
+
+        # save the device's benchmarks to the laptop_data dictionary
+        laptop_data[f'{pu_type.get_name()}_benchmarks'] = benchmarks
 
         # if we finished scraping the cpu, we should now scrape the gpu
         if pu_type == PuType.CPU:
             # check if the laptop's gpu is an integrated gpu
             gpu_id = detect_gpu_id(laptop_data['gpu'], device_description)
             if is_integrated_gpu(gpu_id):
-                # if the gpu is an integrated gpu, we should get a more percise name for it
-                # from the cpu's device info
-                gpu_id = detect_gpu_id(device_info['GPU'], device_description)
-            yield from self._get_gpu_benchmarks(gpu_id, laptop_data)
+                # if the gpu is an integrated gpu, we can follow the link to the
+                # integrated gpu that is found in the cpu's page
+                integrated_gpu_url = self._get_integrated_gpu_url(response)
+                yield response.follow(integrated_gpu_url, callback=self._parse_device_page, meta={
+                    'pu_type': PuType.GPU,
+                    'laptop_data': laptop_data
+                })
+            else:
+                # if the gpu is not an integrated gpu, follow the usual routine and 
+                # just search for it using its id to find its url
+                yield from self._get_gpu_benchmarks(gpu_id, laptop_data)
         elif pu_type == PuType.GPU:
             # if we finished scraping the gpu, then we have both cpu and gpu data (since
             # cpu is scraped before gpu), and thus we have all information that we need about
