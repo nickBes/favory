@@ -38,11 +38,7 @@ def is_integrated_gpu(gpu_id:str)->bool:
     return 'Graphics' in gpu_id
 
 class NotebookCheckSpider(scrapy.Spider):
-    name = "notebookcheck"
-    def start_requests(self):
-        yield from self.scrape_laptop_cpu_and_gpu({'cpu':'AMD 3020e', 'gpu':'AMD Radeon Graphics'})
-
-    def scrape_laptop_cpu_and_gpu(self, laptop_data: dict):
+    def scrape_laptop_cpu_and_gpu_from_notebookcheck(self, laptop_data: dict):
         '''
         given a laptop_data dictionary scraped from a laptops website (for ex. Ivory), scrapes
         information about the laptop's cpu and gpu from notebookcheck.com, adds it to the laptop_data
