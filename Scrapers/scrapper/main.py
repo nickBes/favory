@@ -1,5 +1,6 @@
 from pathlib import Path
 from spiders.ivory import IvorySpider
+from spiders.notebookcheck import NotebookCheckSpider
 from scrapy.crawler import CrawlerProcess
 
 if __name__ == '__main__':
@@ -8,5 +9,6 @@ if __name__ == '__main__':
         laptops_path.unlink()
 
     process = CrawlerProcess()
-    process.crawl(IvorySpider)
+    #process.crawl(IvorySpider)
+    process.crawl(NotebookCheckSpider)
     process.start()
