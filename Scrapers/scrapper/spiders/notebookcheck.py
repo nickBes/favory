@@ -19,14 +19,26 @@ class PuType(Enum):
     def get_name(self)->str:
         return self.name.lower()
 
-def create_notebookcheck_search_data(device_id:str, pu_type:PuType)->dict:
+def create_notebookcheck_search_form_data(device_id:str, pu_type:PuType)->dict:
     '''
     creates a dictionary of request data that notebook check expects when sending a POST request
     to a search page.
     '''
     return {
+        # the search field is just the string that we want to search
         'search': device_id,
+        # the or field is a boolean field (false = '0', true = '1') which tells notebookcheck
+        # how we want it to connect the words. if the value of the or field is '0', it tells
+        # notebookcheck that we want to perform an 'and' operation on the words in our search 
+        # string, such that the results must contain *all* words in the search string. on the
+        # other hand if the value of the or field is '1', it tells notebookcheck that we want
+        # to perform an 'or' operation on the words in our search string, such that the results
+        # must contain any of the words in our search string. here we use a value of '0', which
+        # uses the 'and' operation on our words, because we want the search to be very percise
+        # and to find only the single matching device given the device's id.
         'or': '0',
+        # this option tell notebookcheck that the results should include a link to the device's
+        # page.
         f'{pu_type.get_name()}_fullname': '1',
     }
 
@@ -59,7 +71,7 @@ class NotebookCheckSpider(scrapy.Spider):
 
         yield FormRequest(
             NOTEBOOKCHECK_CPU_SEARCH_URL, 
-            formdata = create_notebookcheck_search_data(cpu_id, PuType.CPU), 
+            formdata = create_notebookcheck_search_form_data(cpu_id, PuType.CPU), 
             callback = self._parse_search_results,
             meta = {
                 'pu_type': PuType.CPU,
@@ -75,7 +87,7 @@ class NotebookCheckSpider(scrapy.Spider):
         '''
         yield FormRequest(
             NOTEBOOKCHECK_GPU_SEARCH_URL,
-            formdata = create_notebookcheck_search_data(gpu_id, PuType.GPU),
+            formdata = create_notebookcheck_search_form_data(gpu_id, PuType.GPU),
             callback = self._parse_search_results,
             meta = {
                 'pu_type': PuType.GPU,
@@ -113,6 +125,10 @@ class NotebookCheckSpider(scrapy.Spider):
         '''
 
         benchmarks = {}
+        # note that the class named 'gpubench_div' is used here, no matter the pu type.
+        # it is really confusing, but this is how the notebookcheck website is designed,
+        # it uses this class for displaying both cpu and gpu benchmark, even though it
+        # has the word 'gpu' in its name.
         for benchmark_div in response.css('div.gpubench_div'):
             benchmark_name = benchmark_div.css('div:nth-child(1)::text').get()
             # each benchmark's title contains the benchmark's series (for ex. WinRAR, TrueCrypt)
