@@ -56,9 +56,9 @@ class NotebookCheckSpider(scrapy.Spider):
         information about the laptop's cpu and gpu from notebookcheck.com, adds it to the laptop_data
         dictionary, and yields the resulting dictionary with full data about the laptop.
         '''
-            # if the gpu is an integrated gpu, we must get its full id from the cpu's page, so we must first
-            # scrape the cpu data, and when the cpu data is scraped we should have the integrated gpu's full
-            # name, and we can use it to scrape it as well.
+        # if the gpu is an integrated gpu, we must get its full id from the cpu's page, so we must first
+        # scrape the cpu data, and when the cpu data is scraped we should have the integrated gpu's full
+        # name, and we can use it to scrape it as well.
         return self._get_cpu_benchmarks(laptop_data)
 
     def _get_cpu_benchmarks(self, laptop_data:dict):
@@ -212,8 +212,11 @@ class NotebookCheckSpider(scrapy.Spider):
                 })
             else:
                 # if the gpu is not an integrated gpu, follow the usual routine and 
-                # just search for it using its id to find its url
-                return self._get_gpu_benchmarks(gpu_id, laptop_data)
+                # just search for it using its id to find its url.
+                # note that it `yield from` must be used here even though `get_gpu_benchmarks`
+                # only yields a single item, since using a `return` statement inside of a
+                # generator raises a `StopIteration` exception.
+                yield from self._get_gpu_benchmarks(gpu_id, laptop_data)
         elif pu_type == PuType.GPU:
             # if we finished scraping the gpu, then we have both cpu and gpu data (since
             # cpu is scraped before gpu), and thus we have all information that we need about
