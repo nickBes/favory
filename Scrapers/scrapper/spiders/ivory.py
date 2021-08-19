@@ -36,4 +36,4 @@ class IvorySpider(NotebookCheckSpider):
     # collecting laptop data from each laptop page   
     def parse_laptops(self, response):
         laptop_data = get_laptop_dict_from_response(response)
-        yield from self.scrape_laptop_cpu_and_gpu_from_notebookcheck(laptop_data)
+        return self.scrape_laptop_cpu_and_gpu_from_notebookcheck(laptop_data)

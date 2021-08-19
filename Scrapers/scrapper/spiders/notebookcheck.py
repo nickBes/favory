@@ -59,7 +59,7 @@ class NotebookCheckSpider(scrapy.Spider):
             # if the gpu is an integrated gpu, we must get its full id from the cpu's page, so we must first
             # scrape the cpu data, and when the cpu data is scraped we should have the integrated gpu's full
             # name, and we can use it to scrape it as well.
-        yield from self._get_cpu_benchmarks(laptop_data)
+        return self._get_cpu_benchmarks(laptop_data)
 
     def _get_cpu_benchmarks(self, laptop_data:dict):
         '''
@@ -213,7 +213,7 @@ class NotebookCheckSpider(scrapy.Spider):
             else:
                 # if the gpu is not an integrated gpu, follow the usual routine and 
                 # just search for it using its id to find its url
-                yield from self._get_gpu_benchmarks(gpu_id, laptop_data)
+                return self._get_gpu_benchmarks(gpu_id, laptop_data)
         elif pu_type == PuType.GPU:
             # if we finished scraping the gpu, then we have both cpu and gpu data (since
             # cpu is scraped before gpu), and thus we have all information that we need about
