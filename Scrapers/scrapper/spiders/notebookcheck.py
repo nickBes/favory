@@ -27,30 +27,35 @@ class PuType(Enum):
     def get_name(self)->str:
         return self.name.lower()
 
-def is_integrated_gpu(gpu_id:str)->bool:
+    def get_notebookcheck_search_url(self)->str:
+        return NOTEBOOKCHECK_CPU_SEARCH_URL if self == PuType.CPU else NOTEBOOKCHECK_GPU_SEARCH_URL
+
+def is_integrated_gpu(gpu_description:str)->bool:
     '''
-    checks if the given gpu id is of an integrated gpu.
+    checks if the given gpu description is of an integrated gpu.
     the check is currently very simple, but seems to work for all known examples.
     '''
 
-    return 'Graphics' in gpu_id
+    return 'Graphics' in gpu_description
 
 class NotebookCheckSpider(scrapy.Spider):
-    # important notes:
+    # this spider is responsible for scraping benchmark data from notebookcheck.com.
+    #
+    # before reading through the code, it is important to understand the following conecepts:
     #
     # 1. response meta - this spider uses the response meta to store data on each sent request. when sending the initial
-    # search request, the meta only contains information about the pu type, and holds the current laptop_data 
-    # dictionary that holds information about the laptop being scraped, and is updated when fetching 
-    # information about the laptop's cpu or gpu. once the search is finished, the device's url is found, 
-    # and then added to the meta. this is the final form of the meta, in which it contains 3 fields - `pu_type`,
-    # `laptop_data`, and `url`. the only changes to the meta from here are changes to the `laptop_data` dict, 
-    # or a modification of the `url` field, if the url for the next device was found (for example, first we search
-    # for the cpu, and we save its url, but once we finish scraping the cpu, we search for the gpu, and then we
-    # change the value of the `url` field to the gpu's url). also, there are some methods in this class that 
-    # require the reponse's meta after fetching some info, but since we use caching (described in section 3), sometimes 
-    # we will not have an actual response, and we will need to craft a fake response meta, just to be able to call
-    # these methods without sending an actual request. when faking the response meta we will create a dictionary
-    # with all the 3 meta fields described previously.
+    # search request, the meta only contains information about the pu type, the device's id, and holds the current 
+    # laptop_data dictionary that holds information about the laptop being scraped. the laptop data is updated when
+    # fetching information about the laptop's cpu or gpu. once the search is finished, the device's url is found, 
+    # and then added to the meta. this is the final form of the meta, in which it contains 4 fields - `pu_type`,
+    # `device_id`, `laptop_data`, and `url`. the only changes to the meta from here are changes to the `laptop_data`
+    # dict, or a modification of the `url` or `device_id` field after we have finished scraping the first device - 
+    # the cpu. for example, first we search for the cpu, and we save its url and device id, but once we finish scraping
+    # the cpu, we search for the gpu, and then we change the `url` and the `device_id` fields to those of the gpu). also,
+    # there are some methods in this class that require the reponse's meta after fetching some info, but since we use
+    # caching (described in section 3), sometimes we will not have an actual response, and we will need to craft a fake 
+    # response meta, just to be able to call these methods without sending an actual request. when faking the response 
+    # meta we will create a dictionary with all the 3 meta fields described previously.
     #
     #
     # 2. duplicate requests - sometimes, two or more laptops might have the same device (same cpu or same gpu).
@@ -74,7 +79,6 @@ class NotebookCheckSpider(scrapy.Spider):
     # this process up, and **mostly** resolves the problem of scarping a page twice. for more information on why
     # caching does not completely solve this problem, read section 2. the spider caches both search results, and device 
     # information that was scraped from a device's page. 
-    #
     # for more information about caching read the documentation on the following methods:
     # `_get_device_data_cache` and `_get_device_search_cache`.
     #
@@ -138,16 +142,16 @@ class NotebookCheckSpider(scrapy.Spider):
             # page.
             f'{pu_type.get_name()}_fullname': '1',
         }
-        search_url = NOTEBOOKCHECK_CPU_SEARCH_URL if pu_type == PuType.CPU else NOTEBOOKCHECK_GPU_SEARCH_URL
         return FormRequest(
-            search_url, 
+            pu_type.get_notebookcheck_search_url(), 
             formdata = formdata,
             callback = self._parse_search_results,
             # for information on this field, and on why it is set to True, read section 2 in the 
             # class's documentation
             dont_filter = True,
             meta = {
-                'pu_type': PuType.CPU,
+                'pu_type': pu_type,
+                'device_id': device_id,
                 'laptop_data': laptop_data,
             })
 
@@ -164,10 +168,11 @@ class NotebookCheckSpider(scrapy.Spider):
             # have a response since we used the cache, so we must craft a fake response meta
             response_meta = {
                 'pu_type': pu_type,
+                'device_id': device_id,
                 'laptop_data': laptop_data,
                 'url': device_page_url
             }
-            yield from self._fetch_device_page_or_use_cached_data(device_page_url, response_meta)
+            yield from self._fetch_device_page_or_use_cached_data(response_meta)
         else:
             yield self._create_notebookcheck_search_request(device_id, laptop_data, pu_type)
 
@@ -189,7 +194,7 @@ class NotebookCheckSpider(scrapy.Spider):
         about the laptop, the cpu and the gpu.
         '''
 
-        return self._search_device_or_use_cache(gpu_id, laptop_data, PuType.CPU)
+        return self._search_device_or_use_cache(gpu_id, laptop_data, PuType.GPU)
 
     def _parse_search_results(self, response:HtmlResponse):
         '''
@@ -201,25 +206,30 @@ class NotebookCheckSpider(scrapy.Spider):
 
         # update the device search cache
         pu_type = response.meta['pu_type']
+        device_id = response.meta['device_id']
         cache = self._get_device_search_cache(pu_type)
-        cache
+        cache[device_id] = device_page_url
 
-        return self._fetch_device_page_or_use_cached_data(device_page_url, response.meta)
+        # add the url to the meta, so that once done parsing the device info we can add it to the device data 
+        # cache (since the cache uses the url as the key).
+        response.meta['url'] = device_page_url
 
-    def _fetch_device_page_or_use_cached_data(self, device_page_url:str, response_meta:dict):
+        return self._fetch_device_page_or_use_cached_data(response.meta)
+
+    def _fetch_device_page_or_use_cached_data(self, response_meta:dict):
         '''
         fetches the device's page given its url and parses it, or if the url was already fetched
         and is found in the cache, gets the device information from there.
         '''
+
+        # extract the device's page url from the response meta
+        device_page_url = response_meta['url']
 
         cache = self._get_device_data_cache(response_meta['pu_type'])
         if device_page_url in cache:
             device_data = cache[device_page_url]
             yield from self._on_device_fetched(response_meta, device_data)
         else:
-            # add the url to the meta, so that once done parsing the device info we can add it to the cache (since
-            # the cache uses the url as the key).
-            response_meta['url'] = device_page_url
             yield Request(
                 device_page_url, 
                 callback=self._parse_device_page, 
@@ -352,21 +362,32 @@ class NotebookCheckSpider(scrapy.Spider):
 
         # if we finished scraping the cpu, we should now scrape the gpu
         if pu_type == PuType.CPU:
-            # check if the laptop's gpu is an integrated gpu
+
+            # find the gpu's id
             gpu_id = detect_gpu_id(laptop_data['gpu'], device_data.description)
-            if is_integrated_gpu(gpu_id):
+
+            # check if the laptop's gpu is an integrated gpu
+            if is_integrated_gpu(laptop_data['gpu']):
                 # if the gpu is an integrated gpu, we can follow the link to the
                 # integrated gpu that is found in the cpu's page
                 integrated_gpu_url = device_data.integrated_gpu_url
-                # change the pu type to gpu
-                response_meta['pu_type'] = PuType.GPU
-                yield from self._fetch_device_page_or_use_cached_data(integrated_gpu_url, response_meta)
+
+                # note that we don't update the search cache here even though we have the url of a given device id,
+                # since the ids of integrated gpus usually contain very minimal information about them, and 2 different
+                # integrated gpus might have the same id, thus it will not work for us.
+
+                # create a fake response meta for the new device, since we used the cache and we don't
+                # have the actual search results response to get the meta from.
+                response_meta = {
+                    'pu_type': PuType.GPU,
+                    'device_id': gpu_id,
+                    'laptop_data': laptop_data,
+                    'url': integrated_gpu_url,
+                }
+                yield from self._fetch_device_page_or_use_cached_data(response_meta)
             else:
                 # if the gpu is not an integrated gpu, follow the usual routine and 
                 # just search for it using its id to find its url.
-                # note that it `yield from` must be used here even though `get_gpu_benchmarks`
-                # only yields a single item, since using a `return` statement inside of a
-                # generator raises a `StopIteration` exception.
                 yield from self._search_gpu(gpu_id, laptop_data)
         elif pu_type == PuType.GPU:
             # if we finished scraping the gpu, then we have both cpu and gpu data (since
