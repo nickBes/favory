@@ -1,4 +1,5 @@
 import scrapy
+from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.ivory import get_laptop_dict_from_response
 
 IVORY_PAGE_URL = 'https://www.ivory.co.il/catalog.php?act=cat&id=2590&pg=%s'
@@ -6,7 +7,7 @@ IVORY_PAGE_AMOUNT = 1
 IVORY_ITEM_URL = 'https://www.ivory.co.il/catalog.php?id=%s'
 IVORY_ITEM_AMOUNT = 4
 
-class IvorySpider(scrapy.Spider):
+class IvorySpider(NotebookCheckSpider):
     name = 'ivory'
 
     custom_settings = {
@@ -34,4 +35,5 @@ class IvorySpider(scrapy.Spider):
 
     # collecting laptop data from each laptop page   
     def parse_laptops(self, response):
-        yield get_laptop_dict_from_response(response)
+        laptop_data = get_laptop_dict_from_response(response)
+        return self.scrape_laptop_cpu_and_gpu_from_notebookcheck(laptop_data)

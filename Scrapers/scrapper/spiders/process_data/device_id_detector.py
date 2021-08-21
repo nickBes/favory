@@ -15,6 +15,12 @@ NON_MEANINGFULL_WORDS = set([
 # regex for detecting apple m1 gpus
 APPLE_M1_GPU_RE = re.compile('[0-9]+-( )?core GPU')
 
+# this is a set of words that are counted as part of the device id even though they appear after 
+# a word with digits and contain letters only.
+ALLOWED_WORDS_IN_DEVICE_ID_AFTER_DIGITS = set([
+    'Ti'
+])
+
 class DeviceIdBuilder:
     def __init__(self) -> None:
         self.id = ''
@@ -65,7 +71,16 @@ def _detect_id(device_description:str)->str:
             break
 
         id_builder.add_word(word)
-    return id_builder.id
+
+    result = id_builder.id
+
+    # in the ivory website they write the nvidia gpus with the 'Ti' right after the number,
+    # without a space separating them, but in notebookcheck.com there is a space between the
+    # number and the 'Ti', so we should add it.
+    if result.endswith('Ti'):
+        result = result[:-2] + ' Ti'
+
+    return result
 
 def detect_cpu_id(cpu_description:str)->str:
     return _detect_id(cpu_description)
