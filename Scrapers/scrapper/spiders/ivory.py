@@ -25,15 +25,34 @@ class IvorySpider(NotebookCheckSpider):
 
     # Collecting laptop id from each page
     def parse_pages(self, response):
-        ids = response.css('a::attr(data-product-id)').getall()
-        for num, val in enumerate(ids):
-            if num == IVORY_ITEM_AMOUNT:
-                break
-            yield scrapy.Request(url=IVORY_ITEM_URL%val,
-                                callback=self.parse_laptops)
+        laptop_ids = response.css('a::attr(data-product-id)').getall()
+        
+        # Limiting the laptops ids amount and picking the first id,
+        laptop_ids = laptop_ids[:IVORY_ITEM_AMOUNT]
+        last_id = laptop_ids.pop()
+        yield scrapy.Request(url=IVORY_ITEM_URL%last_id,
+                            callback=self.parse_laptops, meta={
+                                'laptop_ids': laptop_ids,
+                            })
 
 
     # collecting laptop data from each laptop page   
     def parse_laptops(self, response):
+        '''
+        Recursive collection of laptop data
+        '''
+        laptop_ids = response.meta['laptop_ids']
+        laptops = response.meta.get('laptops') or []
+
         laptop_data = get_laptop_dict_from_response(response)
-        return self.scrape_laptop_cpu_and_gpu_from_notebookcheck(laptop_data)
+        laptops.append(laptop_data)
+
+        if len(laptop_ids) == 0:
+            yield self.with_benchmarks(laptops)
+        else:
+            last_id = laptop_ids.pop()
+            yield response.follow(url=IVORY_ITEM_URL%last_id, callback=self.parse_laptops,
+                                meta={
+                                    'laptops': laptops,
+                                    'laptop_ids': laptop_ids,
+                                })
