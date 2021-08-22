@@ -5,7 +5,7 @@ from spiders.process_data.ivory import get_laptop_dict_from_response
 IVORY_PAGE_URL = 'https://www.ivory.co.il/catalog.php?act=cat&id=2590&pg=%s'
 IVORY_PAGE_AMOUNT = 1
 IVORY_ITEM_URL = 'https://www.ivory.co.il/catalog.php?id=%s'
-IVORY_ITEM_AMOUNT = 4
+IVORY_ITEM_AMOUNT = 25
 
 class IvorySpider(NotebookCheckSpider):
     name = 'ivory'
@@ -13,7 +13,8 @@ class IvorySpider(NotebookCheckSpider):
     custom_settings = {
         'FEEDS': {
             'laptops.json': {'format': 'json'}
-        }
+        },
+        'DUPEFILTER_DEBUG': True
     }
 
     # Request all of the pages use the parse callback

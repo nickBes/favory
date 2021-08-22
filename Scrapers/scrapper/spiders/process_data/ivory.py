@@ -1,4 +1,3 @@
-from spiders.notebookcheck import is_integrated_gpu
 from spiders.process_data.map_setup.store_map import StoreMap
 from spiders.process_data.device_id_detector import detect_cpu_id, detect_gpu_id, is_integrated_gpu
 

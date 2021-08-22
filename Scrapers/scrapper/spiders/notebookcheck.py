@@ -2,6 +2,7 @@ import scrapy
 from scrapy.http import FormRequest,HtmlResponse
 from enum import Enum
 from scrapy.http.request import Request
+from scrapy.http.response.text import TextResponse
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
@@ -143,20 +144,39 @@ class NotebookCheckSpider(scrapy.Spider):
                 # checks if an integrated url has been scrapped
                 # if it has been it goes to the next integrated device
                 # and checks again
-                start = True
-                while start:
+                start_integrated_check = True
+                while start_integrated_check:
+                    # during the while loop the integrated gpu array might be empty
+                    # from here we can finish the query
                     if len(meta['integrated']) == 0:
                         yield from self._finish()
-                        start = False
+                        start_integrated_check = False
+                    else:
+                        next_integrated_gpu = meta['integrated'].pop()
+                        integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
+                        if integrated_gpu_url not in self.integrated_benches:
+                            start_integrated_check = False
+                            meta['device'] = next_integrated_gpu
+                            yield Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
+        else:
+            # checks if the dedicated device has been scraped
+            # if it has been scraped, it continues to the next one
+            start_dedicated_check = True
+            while start_dedicated_check:
+                # during the while loop the dedicated devices array might be empty,
+                # so we need to start the integrated gpu query
+                if len('dedicated') == 0:
+                    start_dedicated_check = False
                     next_integrated_gpu = meta['integrated'].pop()
                     integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
-                    if integrated_gpu_url not in self.integrated_benches:
-                        start = False
-                        meta['device'] = next_integrated_gpu
-                        yield Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
-        else:
-            next_pu = meta['dedicated'].pop()
-            yield self._create_notebookcheck_device_form_request(device=next_pu, meta=meta)
+                    meta['device'] = next_integrated_gpu
+                    yield Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
+                else:
+                    next_pu = meta['dedicated'].pop()
+                    if next_pu['id'] not in self.dedicated_benches:
+                        start_dedicated_check = False
+                        yield self._create_notebookcheck_device_form_request(device=next_pu, meta=meta)
+
         
     def _finish(self):
         '''
