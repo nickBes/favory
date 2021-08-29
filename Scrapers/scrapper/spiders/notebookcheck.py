@@ -42,8 +42,15 @@ class NotebookCheckSpider(scrapy.Spider):
     # meta we will create a dictionary with all the 3 meta fields described previously.
 
     def __init__(self):
+        # for each dedicated device we're storing it's benchmark in a way
+        # that the key is the device's name and the value is the benchark object
         self.dedicated_benches = {}
+        # same as for self.dedicated_benches but it includes only benchmarks
+        # for integrated devices (integrated gpus) and keys are the urls of 
+        # each integrated device
         self.integrated_benches = {}
+        # a mapping between each integrated device and it's notebookcheck url
+        # so the key is the device's name and the value is the url
         self.integrated_urls = {}
         self.laptops = []
 
@@ -99,12 +106,11 @@ class NotebookCheckSpider(scrapy.Spider):
                         callback=self._parse_dedicated_search_results,
                         meta=meta)
 
-    def with_benchmarks(self, laptops)->FormRequest:
+    def with_benchmarks(self)->FormRequest:
         '''
         Initiate recursive requests of pus
         '''
-        dedicated, integrated = self._get_devices(laptops)
-        self.laptops = laptops
+        dedicated, integrated = self._get_devices(self.laptops)
         first_pu = dedicated.pop()
         return self._create_notebookcheck_device_form_request(device=first_pu, meta={
             'dedicated': dedicated,
@@ -112,6 +118,10 @@ class NotebookCheckSpider(scrapy.Spider):
         })
 
     def _with_benchmarks_recursive(self, response:HtmlResponse):
+        '''
+        This method will iterate recursively over the devices (dedicated / integrated)
+        and for each devices it'll save relavant benchmark data without duplicates
+        '''
         response = self._fix_response_broken_html(response)
         meta = response.meta
 
@@ -131,6 +141,9 @@ class NotebookCheckSpider(scrapy.Spider):
             'name': device_name,
             'benchmarks': benchmarks
         }
+        # each integrated device object has a refrence to a cpu with a 
+        # 'cpu' key. using that we can identify whether the previous
+        # device was integrated or dedicated
         if meta['device'].get('cpu') != None:
             self.integrated_benches[response.url] = bench_data
         else:
@@ -141,43 +154,51 @@ class NotebookCheckSpider(scrapy.Spider):
             if len(meta['integrated']) == 0:
                 yield from self._finish()
             else:
-                # checks if an integrated url has been scrapped
-                # if it has been it goes to the next integrated device
-                # and checks again
-                start_integrated_check = True
-                while start_integrated_check:
-                    # during the while loop the integrated gpu array might be empty
-                    # from here we can finish the query
-                    if len(meta['integrated']) == 0:
-                        yield from self._finish()
-                        start_integrated_check = False
-                    else:
-                        next_integrated_gpu = meta['integrated'].pop()
-                        integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
-                        if integrated_gpu_url not in self.integrated_benches:
-                            start_integrated_check = False
-                            meta['device'] = next_integrated_gpu
-                            yield Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
+                yield from self.start_next_integrated_device_request(meta)
         else:
-            # checks if the dedicated device has been scraped
-            # if it has been scraped, it continues to the next one
-            start_dedicated_check = True
-            while start_dedicated_check:
-                # during the while loop the dedicated devices array might be empty,
-                # so we need to start the integrated gpu query
-                if len('dedicated') == 0:
+            yield self.start_next_dedicated_device_request(meta)
+
+    def start_next_dedicated_device_request(self, meta)->Request:
+        # checks if the dedicated device has been scraped
+        # if it has been scraped, it continues to the next one
+        start_dedicated_check = True
+        while start_dedicated_check:
+            # during the while loop the dedicated devices array might be empty,
+            # so we need to start the integrated gpu query
+            if len(meta['dedicated']) == 0:
+                start_dedicated_check = False
+                next_integrated_gpu = meta['integrated'].pop()
+                integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
+                meta['device'] = next_integrated_gpu
+                return Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
+            else:
+                next_pu = meta['dedicated'].pop()
+                if next_pu['id'] not in self.dedicated_benches:
                     start_dedicated_check = False
-                    next_integrated_gpu = meta['integrated'].pop()
-                    integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
+                    return self._create_notebookcheck_device_form_request(device=next_pu, meta=meta)
+
+    def start_next_integrated_device_request(self, meta)->Request:
+        '''
+        Starts next request for an integrated device and check for duplicates
+        '''
+        # checks if an integrated url has been scrapped
+        # if it has been it goes to the next integrated device
+        # and checks again
+        start_integrated_check = True
+        while start_integrated_check:
+            # during the while loop the integrated gpu array might be empty
+            # from here we can finish the query
+            if len(meta['integrated']) == 0:
+                yield from self._finish()
+                start_integrated_check = False
+            else:
+                next_integrated_gpu = meta['integrated'].pop()
+                integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
+                if integrated_gpu_url not in self.integrated_benches:
+                    start_integrated_check = False
                     meta['device'] = next_integrated_gpu
                     yield Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
-                else:
-                    next_pu = meta['dedicated'].pop()
-                    if next_pu['id'] not in self.dedicated_benches:
-                        start_dedicated_check = False
-                        yield self._create_notebookcheck_device_form_request(device=next_pu, meta=meta)
 
-        
     def _finish(self):
         '''
         Iterates over the laptops, saves each relevant benchmark array as well
