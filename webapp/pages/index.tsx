@@ -14,6 +14,7 @@ import Navbar from '@/components/navbar/navbar'
 import Form from '@/components/form/form'
 import Slider from '@/components/form/slider'
 import Card, {CategoryData} from '@/components/form/card'
+import CardSelection, {CategoryMap} from '@/components/form/CardSelection'
 // import Tags from '@/components/form/tags'
 // import SearchBar from '@/components/form/searchbar'
 import Scrollable from '@/components/navigation/scrollable'
@@ -31,8 +32,6 @@ interface HomeProps {
   categories: string[]
   priceLimits: PriceLimits
 }
-
-type CategoryMap = {[category: string]: CategoryData}
 
 // this object is set manually as we choose the categories
 // after research and it's not automatic yet.
@@ -108,21 +107,7 @@ const Home: React.FC<HomeProps> = ({ categories, priceLimits }) => {
             <section ref={tagRef}>
               <div>
                 <h1>Choose your categories</h1>
-                <div>
-                  {categories.map((category, index) => {
-                    if (categoryMap[category]) {
-                      return (
-                        <Card category={category}
-                              title={categoryMap[category].title} 
-                              image={categoryMap[category].image} 
-                              description={categoryMap[category].description} 
-                              onCardClick={updateTags}
-                              key={index}>
-                        </Card>
-                      )
-                    }
-                  })}
-                </div>
+                <CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
                 {/* <Tags tags={tags} onTagClick={removeTag}></Tags>
                 <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
                 <a onClick={scrollToRef(ratingRef)}>Next</a>
