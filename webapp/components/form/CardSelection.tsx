@@ -1,18 +1,20 @@
 import React from 'react'
-import Card, { CategoryData, CardClick } from './card'
+import Card, { CategoryData, CardClickCallback } from './card'
 
 export type CategoryMap = {[category: string]: CategoryData}
 
 interface CardSelectionProps {
     categoryMap: CategoryMap,
     categories: string[]
-    onCardClick: CardClick
+    onCardClick: CardClickCallback
 }
 
 const CardSelection : React.FC<CardSelectionProps> = ({categoryMap, categories, onCardClick}) => {
     return (
         <div>
             {categories.map((category, index) => {
+            // checkes whether category exists in the
+            // category map as the category map is created manually
             if (categoryMap[category]) {
                 return (
                 <Card category={category}

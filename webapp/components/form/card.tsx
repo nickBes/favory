@@ -7,11 +7,11 @@ export interface CategoryData {
     image: StaticImageData
 }
 
-export type CardClick = (category : string) => void
+export type CardClickCallback = (category : string) => void
 
 interface CardProps extends CategoryData {
     category: string,
-    onCardClick: CardClick
+    onCardClick: CardClickCallback
 }
 
 const Card : React.FC<CardProps> = ({category, title, description, image, onCardClick}) => {
