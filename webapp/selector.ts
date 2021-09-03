@@ -31,6 +31,9 @@ export type SelectorRequest =
 
 export type SelectedLaptopInfo = {
     name: string,
+    price: number,
+    cpu: string,
+    gpu: string,
 }
 
 type SelectorResponse<T> = {
