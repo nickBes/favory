@@ -11,4 +11,7 @@ use serde::Serialize;
 #[derive(Debug, Queryable, Serialize)]
 pub struct SelectedLaptopInfo{
     name: String,
+    price: f32,
+    cpu: String,
+    gpu: String,
 }

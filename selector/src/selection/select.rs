@@ -112,7 +112,7 @@ fn get_top_laptops_information(
 
     laptop
         .filter(id.eq_any(top_laptop_ids))
-        .select((name,))
+        .select((name,price,cpu,gpu))
         .load(db_connection)
         .into_selector_result(SelectorErrorKind::DatabaseError)
 }
