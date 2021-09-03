@@ -1,9 +1,13 @@
 import React, {useState} from 'react'
 import Burger from './burger'
-import Collapse from './collapse'
+import Collapse, {CollapseUrlObject} from './collapse'
 import styles from './navbar.module.scss'
 
-const Navbar : React.FC = () => {
+interface NavbarProps {
+    collapseUrlObject: CollapseUrlObject
+}
+
+const Navbar : React.FC<NavbarProps> = ({collapseUrlObject}) => {
     const [isActive, setActive] = useState(false)
 
     const toggleIsActive = () => setActive(!isActive)
@@ -13,7 +17,7 @@ const Navbar : React.FC = () => {
                 <h1>favory</h1>
                 <Burger toggleIsActive={toggleIsActive} isActive={isActive}></Burger>
             </nav>
-            <Collapse isActive={isActive}></Collapse>
+            <Collapse collapseUrlObject={collapseUrlObject} isActive={isActive}></Collapse>
         </div>
     )
 }

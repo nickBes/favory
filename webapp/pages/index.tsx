@@ -13,7 +13,6 @@ import Image from 'next/image'
 import Navbar from '@/components/navbar/navbar'
 import Form from '@/components/form/form'
 import Slider from '@/components/form/slider'
-import Card, {CategoryData} from '@/components/form/card'
 import CardSelection, {CategoryMap} from '@/components/form/CardSelection'
 // import Tags from '@/components/form/tags'
 // import SearchBar from '@/components/form/searchbar'
@@ -59,7 +58,7 @@ const categoryMap : CategoryMap = {
   }
 }
 
-const Home: React.FC<HomeProps> = ({ categories, priceLimits }) => {
+const Home : React.FC<HomeProps> = ({ categories, priceLimits }) => {
   const [tags, setTags] = useState<string[]>([])
   const formRef = useRef<null | HTMLElement>(null)
   const ratingRef = useRef<null | HTMLElement>(null)
@@ -89,8 +88,13 @@ const Home: React.FC<HomeProps> = ({ categories, priceLimits }) => {
     <>
     {console.log(categories, priceLimits)}
       <section>
-        <Navbar></Navbar>
-        <div className={styles.main}>
+          <Navbar collapseUrlObject={{
+                  'About': './about',
+                  'Our goals': './goals',
+                  'Our team': './team',
+                  'Contact us': './contact'
+          }}></Navbar>
+          <div className={styles.main}>
           <div className={styles.mainTextArea}>
             <h1>Find the ideal laptop that matches you the best.</h1>
             <p>Answer a short questioneer and get the best matching laptop in a matter of seconds.</p>
