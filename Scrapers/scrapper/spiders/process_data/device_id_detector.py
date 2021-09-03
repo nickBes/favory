@@ -98,5 +98,10 @@ def detect_gpu_id(gpu_description:str, cpu_description:str)->str:
         return 'Apple M1 %s'%(cores_amount)
     return _detect_id(gpu_description)
         
+def is_integrated_gpu(gpu_description:str)->bool:
+    '''
+    checks if the given gpu description is of an integrated gpu.
+    the check is currently very simple, but seems to work for all known examples.
+    '''
 
-    
+    return 'Graphics' in gpu_description

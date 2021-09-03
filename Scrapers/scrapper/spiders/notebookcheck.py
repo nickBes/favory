@@ -1,21 +1,13 @@
 import scrapy
 from scrapy.http import FormRequest,HtmlResponse
 from enum import Enum
-from dataclasses import dataclass
 from scrapy.http.request import Request
+from scrapy.http.response.text import TextResponse
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
-from spiders.process_data.device_id_detector import detect_cpu_id, detect_gpu_id
 
 NOTEBOOKCHECK_CPU_SEARCH_URL = 'https://www.notebookcheck.net/Mobile-Processors-Benchmark-List.2436.0.html?'
 NOTEBOOKCHECK_GPU_SEARCH_URL = 'https://www.notebookcheck.net/Mobile-Graphics-Cards-Benchmark-List.844.0.html'
-
-@dataclass
-class DeviceData:
-    name: str
-    description:str
-    benchmarks:dict
-    integrated_gpu_url:str
 
 class PuType(Enum):
     CPU = 0
@@ -29,14 +21,6 @@ class PuType(Enum):
 
     def get_notebookcheck_search_url(self)->str:
         return NOTEBOOKCHECK_CPU_SEARCH_URL if self == PuType.CPU else NOTEBOOKCHECK_GPU_SEARCH_URL
-
-def is_integrated_gpu(gpu_description:str)->bool:
-    '''
-    checks if the given gpu description is of an integrated gpu.
-    the check is currently very simple, but seems to work for all known examples.
-    '''
-
-    return 'Graphics' in gpu_description
 
 class NotebookCheckSpider(scrapy.Spider):
     # this spider is responsible for scraping benchmark data from notebookcheck.com.
@@ -56,78 +40,52 @@ class NotebookCheckSpider(scrapy.Spider):
     # caching (described in section 3), sometimes we will not have an actual response, and we will need to craft a fake 
     # response meta, just to be able to call these methods without sending an actual request. when faking the response 
     # meta we will create a dictionary with all the 3 meta fields described previously.
-    #
-    #
-    # 2. duplicate requests - sometimes, two or more laptops might have the same device (same cpu or same gpu).
-    # if we didn't use caching, in such case the spider would just send the same request twice. scrapy has a
-    # mechanism of recognizing when the same request is sent twice, and in such case it just ignores the request.
-    # this is a big problem, since some laptops might just not be scraped, because their requests weren't sent,
-    # and thus the callback wasn't called, and the laptop wasn't yielded. using caching (described in section 3) 
-    # **mostly** solves the problem, but in some scenarios, the spider will still send duplicate requests.
-    # an example of such scenario:
-    # thread 'A' start scraping url 'U', he gets the response and starts processing it. before
-    # thread 'A' finishes processing the response, thread 'B' also sends a request for url 'U',
-    # but scrapy will see a duplicate request and will thus ignore it, and the second laptop won't
-    # be scraped.
-    # such a scenario can happen both for search requests, and device page requests.
-    # thus, forcing scrapy to send duplicate requests (by setting the `dont_filter` parameter in the
-    # `FormRequest`'s constructor to true) is still required.
-    #
-    #
-    # 3. caching - this spider uses caching, since sometimes two or more laptops might have the same device (same
-    # cpu or same gpu), and thus the same page will be scraped twice. this is very inefficient, and caching speeds
-    # this process up, and **mostly** resolves the problem of scarping a page twice. for more information on why
-    # caching does not completely solve this problem, read section 2. the spider caches both search results, and device 
-    # information that was scraped from a device's page. 
-    # for more information about caching read the documentation on the following methods:
-    # `_get_device_data_cache` and `_get_device_search_cache`.
-    #
 
     def __init__(self):
-        # initialize the caches for each device
-        self._cpu_data_cache = {}
-        self._gpu_data_cache = {}
-        self._cpu_search_cache = {}
-        self._gpu_search_cache = {}
+        # for each dedicated device we're storing it's benchmark in a way
+        # that the key is the device's name and the value is the benchark object
+        self.dedicated_benches = {}
+        # same as for self.dedicated_benches but it includes only benchmarks
+        # for integrated devices (integrated gpus) and keys are the urls of 
+        # each integrated device
+        self.integrated_benches = {}
+        # a mapping between each integrated device and it's notebookcheck url
+        # so the key is the device's name and the value is the url
+        self.integrated_urls = {}
+        self.laptops = []
 
-    def scrape_laptop_cpu_and_gpu_from_notebookcheck(self, laptop_data: dict):
+    def _get_devices(self, laptops):
         '''
-        given a laptop_data dictionary scraped from a laptops website (for ex. Ivory), scrapes
-        information about the laptop's cpu and gpu from notebookcheck.com, adds it to the laptop_data
-        dictionary, and yields the resulting dictionary with full data about the laptop.
+        Given an organized laptop data array return non repetetive arrays of
+        dedicated devices and integrated gpus
         '''
+        dedicated = []
+        integrated = []
+        for laptop in laptops:
+            cpu = {
+                'id': laptop.get('cpu'),
+                'pu_type': PuType.CPU,
+                'has_integrated_gpu': laptop.get('integrated')
+            }
+            if cpu not in dedicated:
+                dedicated.append(cpu)
+            gpu = {
+                'id': laptop.get('gpu'),
+                'pu_type': PuType.GPU
+            }
+            if laptop.get('integrated'):
+                if gpu not in integrated:
+                    gpu['cpu'] = laptop.get('cpu')
+                    integrated.append(gpu)
+            else:
+                if gpu not in dedicated:
+                    dedicated.append(gpu)
+        return dedicated, integrated
 
-        # if the gpu is an integrated gpu, we must get its full id from the cpu's page, so we must first
-        # scrape the cpu data, and when the cpu data is scraped we should have the integrated gpu's full
-        # name, and we can use it to scrape it as well.
-        return self._search_cpu(laptop_data)
-
-    def _get_device_data_cache(self, pu_type: PuType)->dict:
-        '''
-        returns the device data cache.
-        the cache is a dictionary that maps each device's url to the device's data (`DeviceData`).
-        for more info about caching, read section 3 in the class's documentation.
-        '''
-
-        # find the field name of the cache given the pu type
-        field_name = f'_{pu_type.get_name()}_data_cache'
-        return getattr(self, field_name)
-
-    def _get_device_search_cache(self, pu_type: PuType)->dict:
-        '''
-        returns the device search cache.
-        the cache is a dictionary that maps each device's id to the link of the first search result.
-        for more info about caching, read section 3 in the class's documentation.
-        '''
-
-        # find the field name of the cache given the pu type
-        field_name = f'_{pu_type.get_name()}_search_cache'
-        return getattr(self, field_name)
-
-    def _create_notebookcheck_search_request(self, device_id:str, laptop_data, pu_type:PuType)->FormRequest:
+    def _create_notebookcheck_device_form_request(self, device, meta)->FormRequest:
         formdata = {
             # the search field is just the string that we want to search
-            'search': device_id,
+            'search': device['id'],
             # the or field is a boolean field (false = '0', true = '1') which tells notebookcheck
             # how we want it to connect the words. if the value of the or field is '0', it tells
             # notebookcheck that we want to perform an 'and' operation on the words in our search 
@@ -140,103 +98,133 @@ class NotebookCheckSpider(scrapy.Spider):
             'or': '0',
             # this option tell notebookcheck that the results should include a link to the device's
             # page.
-            f'{pu_type.get_name()}_fullname': '1',
+            f'{device["pu_type"].get_name()}_fullname': '1',
         }
-        return FormRequest(
-            pu_type.get_notebookcheck_search_url(), 
-            formdata = formdata,
-            callback = self._parse_search_results,
-            # for information on this field, and on why it is set to True, read section 2 in the 
-            # class's documentation
-            dont_filter = True,
-            meta = {
-                'pu_type': pu_type,
-                'device_id': device_id,
-                'laptop_data': laptop_data,
-            })
+        meta['device'] = device
+        return FormRequest(device['pu_type'].get_notebookcheck_search_url(),
+                        formdata=formdata,
+                        callback=self._parse_dedicated_search_results,
+                        meta=meta)
 
-    def _search_device_or_use_cache(self, device_id: str, laptop_data: dict, pu_type: PuType):
+    def with_benchmarks(self)->FormRequest:
         '''
-        finds the device's page url by searching it or by looking it up in the cache.
-        once the device's page url is found it fetches and scrapes it.
+        Initiate recursive requests of pus
         '''
+        dedicated, integrated = self._get_devices(self.laptops)
+        first_pu = dedicated.pop()
+        return self._create_notebookcheck_device_form_request(device=first_pu, meta={
+            'dedicated': dedicated,
+            'integrated': integrated
+        })
 
-        cache = self._get_device_search_cache(pu_type)
-        if device_id in cache:
-            device_page_url = cache[device_id]
-            # the `_fetch_device_page_or_use_cached_data` method requires a response meta, but we don't actually
-            # have a response since we used the cache, so we must craft a fake response meta
-            response_meta = {
-                'pu_type': pu_type,
-                'device_id': device_id,
-                'laptop_data': laptop_data,
-                'url': device_page_url
-            }
-            yield from self._fetch_device_page_or_use_cached_data(response_meta)
+    def _with_benchmarks_recursive(self, response:HtmlResponse):
+        '''
+        This method will iterate recursively over the devices (dedicated / integrated)
+        and for each devices it'll save relavant benchmark data without duplicates
+        '''
+        response = self._fix_response_broken_html(response)
+        meta = response.meta
+
+        # extract a much more percise name of the device
+        device_name = response.css('#content > div:nth-child(1) > div:nth-child(1) > h1:nth-child(1)::text').get()
+
+        # save the integrated gpu url if relevant
+        if meta['device'].get('has_integrated_gpu'):
+            integrated_gpu_url = self._get_integrated_gpu_url(response)
+            self.integrated_urls[meta['device']['id']] = integrated_gpu_url
+
+        # extract the benchmarks of the device
+        benchmarks = self._parse_device_benchmarks(response)
+
+        # save benchmarks
+        bench_data = {
+            'name': device_name,
+            'benchmarks': benchmarks
+        }
+        # each integrated device object has a refrence to a cpu with a 
+        # 'cpu' key. using that we can identify whether the previous
+        # device was integrated or dedicated
+        if meta['device'].get('cpu') != None:
+            self.integrated_benches[response.url] = bench_data
         else:
-            yield self._create_notebookcheck_search_request(device_id, laptop_data, pu_type)
+            self.dedicated_benches[meta['device']['id']] = bench_data
 
-    def _search_cpu(self, laptop_data:dict):
-        '''
-        seaches and scrapes benchmark information about the cpu specified in the laptop_data's 'cpu' field,
-        and stores it in laptop_data['cpu_benchmarks']. when done scraping the cpu benchmarks, 
-        starts scraping gpu benchmarks.
-        '''
+        # stops / starts recursion based on remaining devices
+        if len(meta['dedicated']) == 0:
+            if len(meta['integrated']) == 0:
+                yield from self._finish()
+            else:
+                yield from self.start_next_integrated_device_request(meta)
+        else:
+            yield self.start_next_dedicated_device_request(meta)
 
-        cpu_id = detect_cpu_id(laptop_data['cpu'])
-        return self._search_device_or_use_cache(cpu_id, laptop_data, PuType.CPU)
+    def start_next_dedicated_device_request(self, meta)->Request:
+        # checks if the dedicated device has been scraped
+        # if it has been scraped, it continues to the next one
+        start_dedicated_check = True
+        while start_dedicated_check:
+            # during the while loop the dedicated devices array might be empty,
+            # so we need to start the integrated gpu query
+            if len(meta['dedicated']) == 0:
+                start_dedicated_check = False
+                next_integrated_gpu = meta['integrated'].pop()
+                integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
+                meta['device'] = next_integrated_gpu
+                return Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
+            else:
+                next_pu = meta['dedicated'].pop()
+                if next_pu['id'] not in self.dedicated_benches:
+                    start_dedicated_check = False
+                    return self._create_notebookcheck_device_form_request(device=next_pu, meta=meta)
 
-    def _search_gpu(self, gpu_id: str, laptop_data: dict):
+    def start_next_integrated_device_request(self, meta)->Request:
         '''
-        searches and scrapes benchmark information about the given gpu, and stores it in
-        laptop_data['gpu_benchmarks']. when done scraping the gpu benchmarks yields
-        the laptop_data dictionary, which at that point will contain all information
-        about the laptop, the cpu and the gpu.
+        Starts next request for an integrated device and check for duplicates
         '''
+        # checks if an integrated url has been scrapped
+        # if it has been it goes to the next integrated device
+        # and checks again
+        start_integrated_check = True
+        while start_integrated_check:
+            # during the while loop the integrated gpu array might be empty
+            # from here we can finish the query
+            if len(meta['integrated']) == 0:
+                yield from self._finish()
+                start_integrated_check = False
+            else:
+                next_integrated_gpu = meta['integrated'].pop()
+                integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
+                if integrated_gpu_url not in self.integrated_benches:
+                    start_integrated_check = False
+                    meta['device'] = next_integrated_gpu
+                    yield Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
 
-        return self._search_device_or_use_cache(gpu_id, laptop_data, PuType.GPU)
-
-    def _parse_search_results(self, response:HtmlResponse):
+    def _finish(self):
         '''
-        parses the search results page, and follows the link of the first result
+        Iterates over the laptops, saves each relevant benchmark array as well
+        as renaming the devices to more accurate names and yields them
         '''
+        for laptop in self.laptops:
+            cpu_name = laptop['cpu']
+            laptop['cpu_bench'] = self.dedicated_benches[cpu_name]['benchmarks']
+            laptop['cpu'] = self.dedicated_benches[cpu_name]['name']
 
+            if laptop['integrated']:
+                key = self.integrated_urls[cpu_name]
+                laptop['gpu_bench'] = self.integrated_benches[key]['benchmarks']
+                laptop['gpu'] = self.integrated_benches[key]['name']
+            else:
+                gpu_name = laptop['gpu']
+                laptop['gpu_bench'] = self.dedicated_benches[gpu_name]['benchmarks']
+                laptop['gpu'] = self.dedicated_benches[gpu_name]['name']
+
+            yield laptop
+
+    def _parse_dedicated_search_results(self, response:HtmlResponse):
         # there should only be a single search result, so we follow the first result
         device_page_url = response.css('td.specs:nth-child(2) > a:nth-child(1)::attr(href)').get()
+        yield Request(url=device_page_url, meta=response.meta, callback=self._with_benchmarks_recursive)
 
-        # update the device search cache
-        pu_type = response.meta['pu_type']
-        device_id = response.meta['device_id']
-        cache = self._get_device_search_cache(pu_type)
-        cache[device_id] = device_page_url
-
-        # add the url to the meta, so that once done parsing the device info we can add it to the device data 
-        # cache (since the cache uses the url as the key).
-        response.meta['url'] = device_page_url
-
-        return self._fetch_device_page_or_use_cached_data(response.meta)
-
-    def _fetch_device_page_or_use_cached_data(self, response_meta:dict):
-        '''
-        fetches the device's page given its url and parses it, or if the url was already fetched
-        and is found in the cache, gets the device information from there.
-        '''
-
-        # extract the device's page url from the response meta
-        device_page_url = response_meta['url']
-
-        cache = self._get_device_data_cache(response_meta['pu_type'])
-        if device_page_url in cache:
-            device_data = cache[device_page_url]
-            yield from self._on_device_fetched(response_meta, device_data)
-        else:
-            yield Request(
-                device_page_url, 
-                callback=self._parse_device_page, 
-                # for information on this field, and on why it is set to True, read section 2 in the 
-                # class's documentation
-                dont_filter=True,
-                meta=response_meta)
 
     def _fix_response_broken_html(self, response:HtmlResponse)->HtmlResponse:
         '''
@@ -310,88 +298,3 @@ class NotebookCheckSpider(scrapy.Spider):
             benchmarks[benchmark_name] = benchmark_score
         
         return benchmarks
-
-    def _parse_device_page(self, response:HtmlResponse):
-        '''
-        in the notebookcheck site, each device (cpu,gpu) has a dedicated page. 
-        this method extracts information from the page about the device.
-        '''
-
-        response = self._fix_response_broken_html(response)
-
-        # extract a much more percise name of the device
-        device_name = response.css('#content > div:nth-child(1) > div:nth-child(1) > h1:nth-child(1)::text').get()
-
-        # extract the benchmarks of the device
-        benchmarks = self._parse_device_benchmarks(response)
-
-        laptop_data = response.meta['laptop_data']
-        pu_type = response.meta['pu_type']
-
-        # save the original device description before overwriting it with the
-        # percise device name
-        device_description = laptop_data[pu_type.get_name()]
-
-        # save the device data into the cache
-        integrated_gpu_url = self._get_integrated_gpu_url(response)
-        device_data = DeviceData(device_name, device_description, benchmarks, integrated_gpu_url)
-
-        url = response.meta['url']
-
-        cache = self._get_device_data_cache(pu_type)
-        cache[url] = device_data
-
-        return self._on_device_fetched(response.meta, device_data)
-
-    def _on_device_fetched(self, response_meta:dict, device_data: DeviceData):
-        '''
-        this function is called once a device (cpu or gpu) was successfully fetched (from a url or from cache). it is
-        responsible for deciding what the next move should be once this device was fetched. if the fetched device is a cpu,
-        it sends a request for fetching the gpu. if the fetched device is a gpu, it has all laptop information that it 
-        needs, and thus yields the laptop data.
-        '''
-
-        pu_type = response_meta['pu_type']
-        laptop_data = response_meta['laptop_data']
-
-        # rewrite the device's description with its percise name
-        laptop_data[pu_type.get_name()] = device_data.name
-
-        # save the device's benchmarks to the laptop_data dictionary
-        laptop_data[f'{pu_type.get_name()}_benchmarks'] = device_data.benchmarks
-
-        # if we finished scraping the cpu, we should now scrape the gpu
-        if pu_type == PuType.CPU:
-
-            # find the gpu's id
-            gpu_id = detect_gpu_id(laptop_data['gpu'], device_data.description)
-
-            # check if the laptop's gpu is an integrated gpu
-            if is_integrated_gpu(laptop_data['gpu']):
-                # if the gpu is an integrated gpu, we can follow the link to the
-                # integrated gpu that is found in the cpu's page
-                integrated_gpu_url = device_data.integrated_gpu_url
-
-                # note that we don't update the search cache here even though we have the url of a given device id,
-                # since the ids of integrated gpus usually contain very minimal information about them, and 2 different
-                # integrated gpus might have the same id, thus it will not work for us.
-
-                # create a fake response meta for the new device, since we used the cache and we don't
-                # have the actual search results response to get the meta from.
-                response_meta = {
-                    'pu_type': PuType.GPU,
-                    'device_id': gpu_id,
-                    'laptop_data': laptop_data,
-                    'url': integrated_gpu_url,
-                }
-                yield from self._fetch_device_page_or_use_cached_data(response_meta)
-            else:
-                # if the gpu is not an integrated gpu, follow the usual routine and 
-                # just search for it using its id to find its url.
-                yield from self._search_gpu(gpu_id, laptop_data)
-        elif pu_type == PuType.GPU:
-            # if we finished scraping the gpu, then we have both cpu and gpu data (since
-            # cpu is scraped before gpu), and thus we have all information that we need about
-            # the laptop, so we can yield it.
-            yield laptop_data
-
