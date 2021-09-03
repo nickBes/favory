@@ -30,6 +30,8 @@ const Slider : React.FC<SliderProps> = ({inputName, defaultValue, min, max, onSl
 
     return (
         <>
+            {/* Debug purposes */}
+            <p>{inputName}: {inputValue}</p>
             <input name={inputName} type='range' min={min} max={max} value={inputValue} onChange={event => updateInputValue(event.target.value)}/>
         </>
     )
