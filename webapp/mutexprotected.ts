@@ -19,7 +19,7 @@ export class MutexProtected<T>{
         await this.mutex.runExclusive(()=>{
             data = this.data;
         })
-        return data as any as T;
+        return data as T;
     }
 
     // safely executes the modifier async function on the data allowing it to mutate it.
