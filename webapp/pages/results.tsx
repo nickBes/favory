@@ -1,6 +1,8 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import Error from '../components/error/error'
 import { GetServerSideProps } from 'next'
+import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
 import { SelectedLaptopInfo, SelectionRequestParameters, select, getCategoryNames, getPriceLimits } from '../selector'
@@ -46,15 +48,23 @@ type ResultsPageProps =
     | ResultsPagePropsFailure
 
 const Results: React.FC<{ pageProps: ResultsPageProps }> = ({ pageProps }) => {
+    const router = useRouter()
+
     console.log('selection result:',pageProps)
     if(pageProps.success){
         return (
-            <div>{JSON.stringify(pageProps.laptops)}</div>
+            <>
+                <Navbar path={router.pathname}></Navbar>
+                <div>{JSON.stringify(pageProps.laptops)}</div>
+            </>
         )
     }else {
         // somehow include information about the error
         return (
-            <Error></Error>
+            <>
+                <Navbar path={router.pathname}></Navbar>
+                <Error></Error>
+            </>
         )
     }
 }

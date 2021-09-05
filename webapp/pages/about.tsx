@@ -1,15 +1,12 @@
 import React from 'react'
 import Navbar from '@/components/navbar/navbar'
+import { useRouter } from 'next/router'
 
 const About : React.FC = () => {
+    const router = useRouter()
     return (
         <>    
-            <Navbar collapseUrlObject={{
-                'Home': './',
-                'Our team': './team',
-                'Our goals': './goals',
-                'Contact us': './contact'
-            }}></Navbar>
+            <Navbar path={router.pathname}></Navbar>
             <h1>About Favory</h1>
             <p>Our survey gathers the user’s personal preferences, as they’ve stated, regarding price, the intended uses and the importancy of each use to the person.</p>
             <p>Using a special algorithm we’ve created, all the traits are processed to find the best answer for those preferences. Laptops considered as qualified by the algorithm will be presented to the user, including the level of qualification for each laptop, as well as a detailed reasoning behind every rating.</p>

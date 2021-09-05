@@ -1,15 +1,12 @@
 import React from 'react'
 import Navbar from '@/components/navbar/navbar'
+import { useRouter } from 'next/router'
 
 const Team : React.FC = () => {
+    const router = useRouter()
     return (
         <> 
-            <Navbar collapseUrlObject={{
-                'Home': './',
-                'About': './about',
-                'Our goals': './goals',
-                'Contact us': './contact'
-            }}></Navbar>
+            <Navbar path={router.pathname}></Navbar>
             <h1>Our team</h1>
             <p>Favory started as a small developing team consisting of 3 high school students from Israel.</p>
             <p>We felt as though purchasing computers and laptops was much more comlicated than it should have been, as many people don’t know how to decide between all the different options, getting confused by the odd technical descriptions and endless, meaningless data.</p>

@@ -4,6 +4,7 @@ import styles from '@/styles/index/index.module.scss'
 // __next & react__
 import React, { useState, useRef, MutableRefObject } from 'react'
 import { GetStaticProps } from 'next'
+import { useRouter } from 'next/router'
 
 // __selector__
 import { PriceLimits, getCategoryNames, getPriceLimits } from '../selector'
@@ -27,7 +28,7 @@ import designIcon from '@/public/categories/dev.png'
 import gamingIcon from '@/public/categories/gaming.png'
 import studyIcon from '@/public/categories/study.png'
 
-interface HomeProps {
+interface HomeProps{
   categories: string[]
   priceLimits: PriceLimits
 }
@@ -58,12 +59,13 @@ const categoryMap : CategoryMap = {
   }
 }
 
-const Home : React.FC<HomeProps> = ({ categories, priceLimits }) => {
+const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
   const [tags, setTags] = useState<string[]>([])
   const formRef = useRef<null | HTMLElement>(null)
   const ratingRef = useRef<null | HTMLElement>(null)
   const tagRef = useRef<null | HTMLElement>(null)
   const priceRef = useRef<null | HTMLElement>(null)
+  const router = useRouter()
 
   const scrollToRef = (ref: MutableRefObject<null | HTMLElement>) => {
     return () => ref.current?.scrollIntoView({ behavior: 'smooth' })
@@ -88,13 +90,8 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits }) => {
     <>
     {console.log(categories, priceLimits)}
       <section>
-          <Navbar collapseUrlObject={{
-                  'About': './about',
-                  'Our goals': './goals',
-                  'Our team': './team',
-                  'Contact us': './contact'
-          }}></Navbar>
-          <div className={styles.main}>
+        <Navbar path={router.pathname}></Navbar>
+        <div className={styles.main}>
           <div className={styles.mainTextArea}>
             <h1>Find the ideal laptop that matches you the best.</h1>
             <p>Answer a short questioneer and get the best matching laptop in a matter of seconds.</p>
