@@ -8,6 +8,8 @@ ivory_map = StoreMap('ivory')
 # dictionary that includes laptop's features from the response
 def get_laptop_dict_from_response(response)->dict:
     laptop_dict = dict()
+    # saving laptops ivory url
+    laptop_dict['url'] = response.url
     # gets table and processes each row in it
     table = response.css(ivory_map.table_map.get('css'))
     for row in table:
