@@ -1,17 +1,9 @@
-mod select;
+mod user_category_scores;
+mod scores_in_categories_of_laptops;
 mod top_laptops;
+mod select;
 
-pub use select::select;
+pub use select::Select;
+pub use user_category_scores::UserCategoryScoresByName;
 
 pub const TOP_LAPTOPS_AMOUNT:usize = 5;
-
-use serde::Serialize;
-
-/// infomation about a laptop return from a selection operation
-#[derive(Debug, Queryable, Serialize)]
-pub struct SelectedLaptopInfo{
-    name: String,
-    price: f32,
-    cpu: String,
-    gpu: String,
-}
