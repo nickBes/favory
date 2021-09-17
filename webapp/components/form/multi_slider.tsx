@@ -27,7 +27,6 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
             defaultValueArray.push(count)
         }
         const categoryAndSliderValues : CategoryAndSliderValues = {categories: categories, values: [min, ...defaultValueArray, max]} 
-        console.log(categoryAndSliderValues, 'default')
         return categoryAndSliderValues
     }
     // use state is only called once, to update the categoryAndSliderValues we need to use useEffect
@@ -47,7 +46,6 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
             for (let i = 0; i < tags.length; i++) {
                 categories[tags[i]] = categoryValues[i]
             }
-            console.log(categories)
             return {categories: categories, values: values}       
         })
     }
