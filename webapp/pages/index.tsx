@@ -27,6 +27,7 @@ import devIcon from '@/public/categories/dev.png'
 import designIcon from '@/public/categories/dev.png'
 import gamingIcon from '@/public/categories/gaming.png'
 import studyIcon from '@/public/categories/study.png'
+import MultiSlider from '@/components/form/multi_slider'
 
 interface HomeProps{
   categories: string[]
@@ -117,11 +118,12 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
             <section ref={ratingRef}>
               <div>
                 <h1>Rate the categories</h1>
-                {tags.map(tag => {
+                {/* {tags.map(tag => {
                   return (
                     <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
                   )
-                })}
+                })} */}
+                <MultiSlider tags={tags} min={0} max={100}></MultiSlider>
                 <a onClick={scrollToRef(tagRef)}>Prev</a>
                 <a onClick={scrollToRef(priceRef)}>Next</a>
               </div>
