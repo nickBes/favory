@@ -123,7 +123,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
                     <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
                   )
                 })} */}
-                <MultiSlider tags={tags} min={0} max={100}></MultiSlider>
+                {/* <MultiSlider tags={tags} min={0} max={100}></MultiSlider> */}
                 <a onClick={scrollToRef(tagRef)}>Prev</a>
                 <a onClick={scrollToRef(priceRef)}>Next</a>
               </div>

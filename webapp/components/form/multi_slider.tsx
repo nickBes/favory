@@ -16,37 +16,40 @@ interface CategoryAndSliderValues {
 }
 
 const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
-    const generateDefaultValues = () => {
-        let defaultValueArray = new Array<number>()
-        let addition = (max - min) / (tags.length)
-        let categories : CategoryScoreMap = {}
-        tags.forEach(element => {
-            categories[element] = addition;
-        })
-        for (let count = addition; count < max; count += addition) {
-            defaultValueArray.push(count)
-        }
-        const categoryAndSliderValues : CategoryAndSliderValues = {categories: categories, values: [min, ...defaultValueArray, max]} 
-        return categoryAndSliderValues
-    }
-    // use state is only called once, to update the categoryAndSliderValues we need to use useEffect
+
+    // use state is only called once, to update the categoryAndSliderValues so we need to use useEffect
     // that is called when tags are changed
     const [categoryAndSliderValues, setcategoryAndSliderValues] = useState<CategoryAndSliderValues>({categories: {}, values: []})
-    useEffect(() => setcategoryAndSliderValues(generateDefaultValues()), [tags])
+    useEffect(() => {
+        const generateDefaultValues = () => {
+            let defaultValues = new Array<number>()
+            let step = (max - min) / (tags.length)
+            let categories : CategoryScoreMap = {}
+            tags.forEach(element => {
+                categories[element] = step;
+            })
+            for (let count = step; count < max; count += step) {
+                defaultValues.push(count)
+            }
+            const categoryAndSliderValues : CategoryAndSliderValues = {categories: categories, values: [min, ...defaultValues, max]} 
+            return categoryAndSliderValues
+        }
+        setcategoryAndSliderValues(generateDefaultValues())
+    }, [tags, min, max])
 
-    const handleChange = (value : number[]) => {
+    const handleSliderChange = (values : number[]) => {
         setcategoryAndSliderValues(prev => {
-            const values = [min, ...value, max]
+            const nextValues = [min, ...values, max]
             let categoryValues : number[] = []
-            for (let i = 1; i < values.length; i++) {
-                categoryValues.push(values[i] - values[i - 1])
+            for (let i = 1; i < nextValues.length; i++) {
+                categoryValues.push(nextValues[i] - nextValues[i - 1])
             }
             const tags = Object.keys(prev.categories)
             const categories : CategoryScoreMap = {}
             for (let i = 0; i < tags.length; i++) {
                 categories[tags[i]] = categoryValues[i]
             }
-            return {categories: categories, values: values}       
+            return {categories: categories, values: nextValues}       
         })
     }
 
@@ -64,7 +67,7 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
     return (
         <>
             <p>{JSON.stringify(categoryAndSliderValues)}</p>
-            <Range onChange={handleChange}
+            <Range onChange={handleSliderChange}
                     value={categoryAndSliderValues.values.slice(1, categoryAndSliderValues.values.length - 1)} 
                     allowCross={false}
                     pushable={true}
