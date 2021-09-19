@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use super::{
     scores_in_categories_of_laptops::MappedScoresInCategoriesOfLaptops,
     user_category_scores::UserCategoryScoresById,
@@ -98,10 +100,18 @@ impl TopLaptops {
     }
 
     /// returns the laptop ids of the top laptops, in order
-    pub fn laptop_ids(self) -> Vec<i32> {
+    pub fn laptop_ids(&self) -> Vec<i32> {
         self.top_laptops
             .iter()
             .map(|entry| entry.laptop_id)
+            .collect()
+    }
+
+    /// returns a map the maps each laptop id to its score
+    pub fn laptop_id_to_score_map(&self) -> HashMap<i32, f32> {
+        self.top_laptops
+            .iter()
+            .map(|entry| (entry.laptop_id, entry.score))
             .collect()
     }
 }
