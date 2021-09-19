@@ -5,7 +5,7 @@ import {GetServerSideProps} from 'next'
 import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
-import {SelectedLaptopInfo, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
+import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
 import cookie from 'cookie'
 import LaptopResultsList from '@/components/results/laptopResultsList'
 
@@ -36,7 +36,7 @@ type ResultsPageError =
 
 type ResultsPagePropsSuccess = {
 	success: true,
-	laptops: SelectedLaptopInfo[]
+	laptops: SelectedLaptop[]
 }
 
 type ResultsPagePropsFailure = {
