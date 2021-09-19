@@ -1,8 +1,5 @@
 use crate::{errors::*, SelectorDBConnection};
-use db_access::{
-    models,
-    schema,
-};
+use db_access::{models, schema};
 use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
 use serde::{Deserialize, Serialize};
 
@@ -24,13 +21,41 @@ pub struct LaptopScoreInCategoryInfo {
     pub category_id: i32,
 }
 
-/// information about a selected laptop
-#[derive(Debug, Queryable, Serialize)]
+/// information that we need to query from the database
+/// about a selected laptop
+#[derive(Debug, Queryable)]
 pub struct SelectedLaptopInfo {
+    id: i32,
     name: String,
     price: f32,
     cpu: String,
     gpu: String,
+}
+impl SelectedLaptopInfo {
+    pub fn id(&self) -> i32 {
+        self.id
+    }
+}
+
+/// information about a selected laptop
+#[derive(Debug, Serialize)]
+pub struct SelectedLaptop {
+    name: String,
+    price: f32,
+    cpu: String,
+    gpu: String,
+    score: f32,
+}
+impl SelectedLaptop {
+    pub fn new(score: f32, info: SelectedLaptopInfo) -> Self {
+        Self {
+            name: info.name,
+            price: info.price,
+            cpu: info.cpu,
+            gpu: info.gpu,
+            score,
+        }
+    }
 }
 
 pub trait FetchData {
@@ -102,7 +127,6 @@ impl FetchData for SelectorDBConnection {
 
         laptop
             .filter(id.eq_any(ids))
-            .select((name, price, cpu, gpu))
             .load(&self.0)
             .into_selector_result(SelectorErrorKind::DatabaseError)
     }

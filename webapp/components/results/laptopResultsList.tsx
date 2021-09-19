@@ -1,9 +1,9 @@
 import React from 'react'
-import {SelectedLaptopInfo} from 'selector';
+import {SelectedLaptop} from 'selector';
 import LaptopCard from './laptopCard';
 
 interface LaptopResultsListProps {
-	laptops: SelectedLaptopInfo[],
+	laptops: SelectedLaptop[],
 }
 
 const LaptopResultsList: React.FC<LaptopResultsListProps> = ({laptops}) => {
@@ -12,12 +12,9 @@ const LaptopResultsList: React.FC<LaptopResultsListProps> = ({laptops}) => {
 			{
 				laptops.map((laptop, index) => {
 					return (
-						<>
-							<li key={index}>
-								<LaptopCard {...laptop} />
-							</li>
-							<br />
-						</>
+						<li key={index}>
+							<LaptopCard {...laptop} />
+						</li>
 					)
 				})
 			}

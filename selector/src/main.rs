@@ -4,8 +4,8 @@ use diesel::PgConnection;
 extern crate diesel;
 
 mod errors;
-mod selection;
 mod fetch_data;
+mod selection;
 mod server;
 
 pub struct SelectorDBConnection(PgConnection);
@@ -13,7 +13,7 @@ pub struct SelectorDBConnection(PgConnection);
 fn main() {
     let db_connection = SelectorDBConnection(db_access::get_db_connection());
 
-    if let Err(e) = server::start_server(&db_connection){
-        eprintln!("error: {:?}",e);
+    if let Err(e) = server::start_server(&db_connection) {
+        eprintln!("error: {:?}", e);
     }
 }
