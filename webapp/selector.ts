@@ -96,6 +96,14 @@ function createConnectionToSelector(){
     return net.createConnection(SELECTOR_SERVER_PORT, "127.0.0.1")
 }
 
+// reconnects the production mode socket to the selector server in case of a communication error
+function reconnect(){
+	setTimeout(async ()=>{
+		await notifyEventsOnSocketError()
+		await setupSocket()
+	}, RECONNECTION_TIMEOUT)
+}
+
 // sets handlers for the the sockets events (connect, data, etc)
 function setSocketEvents(){
     // only set the reconnection events when in production mode, since in dev mode it keeps 
@@ -103,12 +111,12 @@ function setSocketEvents(){
     // of the new recompiled version, and it forces you to completely rerun the app, and it
     // is very annoying
     if (env == "production"){
-        //socket.on('close', reconnect)
+        socket.on('close', reconnect)
         socket.on('error', ()=>socket.destroy())
         socket.on('timeout', ()=>socket.destroy())
     }else{
-        socket.on('error', handleSocketErrorDebugMode);
-        socket.on('timeout', handleSocketErrorDebugMode);
+        socket.on('error', notifyEventsOnSocketError);
+        socket.on('timeout', notifyEventsOnSocketError);
     }
     socket.on('connect', async ()=>{
         await isConnected.set(true);
@@ -120,7 +128,14 @@ function setSocketEvents(){
     })
 }
 
-async function handleSocketErrorDebugMode(){
+// notifies the onConnected and onData events to prevent a deadlock
+// when a socket error occures. 
+//
+// the deadlock occurs because if a thread is currently inside the 
+// `sendRequestaAndGetResponseContent` function, and is currently using
+// the mutex while waiting for the `onData` event, the reconnection
+// will cause a deadlock since it will also try to lock the mutex
+async function notifyEventsOnSocketError(){
     if (await isConnected.get()){
         // an error has occured while trying to receive data,
         // set the onDataEvent to wake the waiting function up,
@@ -159,10 +174,9 @@ async function setupSocket(){
 // into the R type (where R stands for the response content type).
 async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): Promise<R>{
     let response: SelectorResponse<R> | undefined;
-    console.log('start')
     // in development we create a socket for each request, but we only setup the socket
     // inside of mutex.runExclusive, so we can't check if we're connected at this point.
-    if(env != "development"){
+    if(env == "production"){
         // if we're not yet connected, wait until we are
         // note that this is done outside the mutex to prevent a deadlock, since waiting
         // for the connected event while the mutex is locked, will block the reconnection process,
@@ -190,7 +204,7 @@ async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): P
         onDataEvent.reset();
 
         // send the message
-        await socket.write(JSON.stringify(request))
+        socket.write(JSON.stringify(request))
 
         // wait for data
         await onDataEvent.wait();
@@ -198,7 +212,9 @@ async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): P
         // decode the data
         let responseString = (await socketData.get())?.toString();
         if(responseString == undefined){
-            throw new Error('failed to decode response buffer')
+			// if the onDataEvent was set but no data was recevied then it means
+			// that a socket error occured and we should retry once reconnected
+			return await sendRequestaAndGetResponseContent(request)
         }
 
         // parse the data
@@ -212,17 +228,14 @@ async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): P
         }
     })
 
-    // this should never happed, since the callback in mutex.runExclusive should
-    // either set the response or throw an exception, and in both cases this 
-    // should never happen, but this check is added to resolve the type errors
-    // of using response without checking if its undefined.
+	// the response is undefined if a socket error has occured,
+	// so we should retry to perform the request
     if(response === undefined){
-        throw new Error('an unknown error has occured')
+		return await sendRequestaAndGetResponseContent(request)
     }
     if(!response.success || response.content === null){
         throw new Error('the selector returned a failure response')
     }
-    console.log('end')
     return response.content;
 }
 
