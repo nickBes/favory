@@ -27,7 +27,7 @@ class IvorySpider(NotebookCheckSpider):
     # Collecting laptop id from each page
     def parse_pages(self, response):
         laptop_ids = response.css('a::attr(data-product-id)').getall()
-        
+
         # Limiting the laptops ids amount and picking the first id,
         laptop_ids = laptop_ids[:IVORY_ITEM_AMOUNT]
         last_id = laptop_ids.pop()
