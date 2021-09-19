@@ -12,12 +12,9 @@ const LaptopResultsList: React.FC<LaptopResultsListProps> = ({laptops}) => {
 			{
 				laptops.map((laptop, index) => {
 					return (
-						<>
-							<li key={index}>
-								<LaptopCard {...laptop} />
-							</li>
-							<br />
-						</>
+						<li key={index}>
+							<LaptopCard {...laptop} />
+						</li>
 					)
 				})
 			}
