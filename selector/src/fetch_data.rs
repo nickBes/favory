@@ -56,6 +56,9 @@ impl SelectedLaptop {
             score,
         }
     }
+    pub fn score(&self)->f32{
+        self.score
+    }
 }
 
 pub trait FetchData {
