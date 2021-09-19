@@ -7,11 +7,14 @@ const About : React.FC = () => {
     return (
         <>    
             <Navbar path={router.pathname}></Navbar>
-            <h1>About Favory</h1>
-            <p>Our survey gathers the user’s personal preferences, as they’ve stated, regarding price, the intended uses and the importancy of each use to the person.</p>
-            <p>Using a special algorithm we’ve created, all the traits are processed to find the best answer for those preferences. Laptops considered as qualified by the algorithm will be presented to the user, including the level of qualification for each laptop, as well as a detailed reasoning behind every rating.</p>
-            <p>Each suggestion will provide a link leading directly to a site selling the item, for the customer’s convenience. Once the user decides, they will be able to check-out directly from the store they picked.</p>
-            <p>After the item has arrived, we will be more than happy to know if you expectations have been met.</p>
+            <h1>אודות</h1>
+            <p>השאלון שלנו אוסף את ההעדפות האישיות של המשתמש, כפי שציין, בנוגע למחיר, השימושים הרצויים והחשיבות של כל שימוש למשתמש.</p>
+            <p>בעזרת אלגוריתם מיוחד שפיתחנו, כל התכונות מעובדות כדי למצוא את התשובה הטובה ביותר לדרישות האלה. מחשבים ניידים שהאלגוריתם מחשיב כמספקים יוצגו למשתמש, יחד עם דירוג רמת הכשירות לכל מחשב, וכן הסבר מפורט לכל דירוג.</p>
+            <p>כל הצעה תספק קישור שמוביל ישירות לאתר שמוכר את אותו מוצר, למען נוחות המשתמש. כאשר המשתמש מקבל החלטה, הוא יוכל לבצע קנייה ישירות מהחנות בה בחרו.</p>
+            <p>לאחר שהמוצר מגיע, נהיה יותר משמחים לדעת אם ציפיותכם נפגשו.</p>
+            <h1>מטרות לעתיד</h1>
+            <p>נכון להיום, אנחנו מתכננים להרחיב את שירותינו מעבר לישראל, ולתמוך בעוד שפות כדי לעזור לכמה שיותר אנשים מרחבי העולם להנות מחווית קניות נוחה, וכן להוסיף עוד סוגי מוצרים מלבד מחשבים ניידים, שמבלבלים באותה מידה לרכוש (למשל, אוזניות, שואבי אבק, מחשבים נייחים).</p>
+            <p>בבוא הזמן, אולי נוסיף עוד מטרות אם נראה בכך צורך.</p>
         </>
     )
 }

@@ -5,6 +5,10 @@ body {
     scroll-behavior: smooth;
 }
 
+* {
+    direction: rtl;
+}
+
 ::-webkit-scrollbar {
     width: 0;
 }

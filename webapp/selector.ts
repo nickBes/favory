@@ -159,7 +159,6 @@ async function setupSocket(){
 // into the R type (where R stands for the response content type).
 async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): Promise<R>{
     let response: SelectorResponse<R> | undefined;
-    console.log('start')
     // in development we create a socket for each request, but we only setup the socket
     // inside of mutex.runExclusive, so we can't check if we're connected at this point.
     if(env != "development"){
@@ -222,7 +221,6 @@ async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): P
     if(!response.success || response.content === null){
         throw new Error('the selector returned a failure response')
     }
-    console.log('end')
     return response.content;
 }
 

@@ -39,23 +39,23 @@ interface HomeProps{
 // also dynamic image imorting is horrible in webpack
 const categoryMap : CategoryMap = {
   'dev': {
-    title: 'Development',
-    description: 'Choose this option if you intend to engage in coding procedures.',
+    title: 'תכנות',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות',
     image: devIcon
   },
   'design': {
-    title: 'Digital art',
-    description: 'Choose this option if you intend to use adobe software or any other similar ones.',
+    title: 'עיצוב דיגיטלי',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן',
     image: designIcon
   },
   'gaming': {
-    title: 'Gaming or 3D graphics',
-    description: 'Choose this option if you intend to play video games or design 3D graphics.',
+    title: 'גיימינג או עיצוב תלת מימדי',
+    description: ' בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי ',
     image: gamingIcon
   },
   'study': {
-    title: 'Studying or Working',
-    description: 'Choose this option if you intend to use office software, browse the internet and engage in other basic tasks.',
+    title: 'למידה או עבודה מרחוק',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים להשתמש בתוכנות Office למיניהן, לגלוש באינטרנט או לבצע כל פעולה או משימה בסיסית אחרת.',
     image: studyIcon
   }
 }
@@ -94,9 +94,9 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
         <Navbar path={router.pathname}></Navbar>
         <div className={styles.main}>
           <div className={styles.mainTextArea}>
-            <h1>Find the ideal laptop that matches you the best.</h1>
-            <p>Answer a short questioneer and get the best matching laptop in a matter of seconds.</p>
-            <button onClick={scrollToRef(formRef)}>START</button>
+            <h1>מצאו את המחשב הנייד האידיאלי שהכי מתאים לכם</h1>
+            <p>ענו על שאלון קצר וקבלו את המחשב הנייד המתאים ביותר תוך שניות</p>
+            <button onClick={scrollToRef(formRef)}>התחלה</button>
           </div>
           <div className={styles.laptopImage}>
             <Image src={laptopImage} alt="Jermey"></Image>
@@ -108,7 +108,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
           <Scrollable direction='horizontal'>
             <section ref={tagRef}>
               <div>
-                <h1>Choose your categories</h1>
+                <h1>בחרו בקטגוריות המתאימות לכם.</h1>
                 <CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
                 {/* <Tags tags={tags} onTagClick={removeTag}></Tags>
                 <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
@@ -117,7 +117,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
             </section>
             <section ref={ratingRef}>
               <div>
-                <h1>Rate the categories</h1>
+                <h1>דרגו את הקטגוריות שבחרתם.</h1>
                 {/* {tags.map(tag => {
                   return (
                     <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
@@ -130,7 +130,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
             </section>
             <section ref={priceRef}>
               <div>
-                <h1>Choose maximum price</h1>
+                <h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
                 <Slider inputName='maxPrice' max={priceLimits.max} min={priceLimits.min} defaultValue={500}></Slider>
                 <a onClick={scrollToRef(ratingRef)}>Prev</a>
                 <input type="submit" />
