@@ -80,6 +80,11 @@ def _detect_id(device_description:str)->str:
     if result.endswith('Ti'):
         result = result[:-2] + ' Ti'
 
+    # in the lastprice website, the string 'A4' is added to some amd devices when
+    # it is not part of the device id, so remove it.
+    if 'AMD A4 ' in result:
+        result = result.replace('AMD A4 ', 'AMD ')
+
     return result
 
 def detect_cpu_id(cpu_description:str)->str:
@@ -105,3 +110,18 @@ def is_integrated_gpu(gpu_description:str)->bool:
     '''
 
     return 'Graphics' in gpu_description
+
+def detect_pu_ids_in_laptop_data(laptop_data):
+    '''
+    Reads the cpu and gpu info from the laptop, extracts their device ids,
+    and stores the ids back to the laptop_data. Also adds an 'integrated' field
+    to the laptop data the determines whether the gpu is an integrated gpu or not
+    '''
+    # detecting device's ids that are relevant to notebookcheck
+    # there might be a better way of accessing these parameters
+    # using map functionalities, but for now it'll do the work
+    gpu_id = detect_gpu_id(laptop_data['gpu'], laptop_data['cpu'])
+    laptop_data['gpu'] = gpu_id
+    laptop_data['integrated'] = is_integrated_gpu(gpu_id)
+    laptop_data['cpu'] = detect_cpu_id(laptop_data['cpu'])
+
