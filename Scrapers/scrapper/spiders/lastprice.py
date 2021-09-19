@@ -1,7 +1,7 @@
 import scrapy
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
-from bs4 import BeautifulSoup
+from w3lib.html import remove_tags
 
 PAGE_AMOUNT = 1
 ITEM_AMOUNT = 7
@@ -46,18 +46,29 @@ class LastPriceSpider(NotebookCheckSpider):
                                 'laptop_urls': laptop_urls,
                             })
 
-    def extract_laptop_description(self, response)->str:
-        pass
+    def extract_laptop_images(self, response)->str:
+        urls = []
+        for thumbnail_url in response.css('img.ms-thumb::attr(src)').getall():
+            # thumbnails have the same name as the images, but are in a directory called 180.
+            # to get the actual image url, remove the '180' directory from the url
+            image_url = thumbnail_url.replace('180/','')
+
+            # the thumbnail url doesn't contain the 'http:' at the start, and starts with
+            # '//www.lastprice.co.il' for some reason, so add back the 'https:' part
+            image_url = 'https:' + image_url
+
+            urls.append(image_url)
+        return urls
 
     def extract_laptop_key_value_data(self, response)->dict:
         '''
         Extracts key-value data from the laptop's page, according to the keys in the `LABELS_MAP` map
         '''
         laptop_data = {}
-        bs = BeautifulSoup(response.body, "html5lib")
-        paragraphs = bs.select('#descr > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p')
+
+        paragraphs = response.css('#descr > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p').getall()
         for paragraph in paragraphs:
-            text = paragraph.get_text().strip()
+            text = remove_tags(paragraph).strip()
             for line in text.splitlines():
                 line = line.strip()
                 parts = line.split(':')
@@ -88,11 +99,14 @@ class LastPriceSpider(NotebookCheckSpider):
         Extracts a dictionary of laptop data from the laptop's page
         '''
 
+        # key value data
         laptop_data = self.extract_laptop_key_value_data(response)
+
+        # images
+        laptop_data['images'] = self.extract_laptop_images(response)
 
 
         # additional fields that are not in key value pairs
-
         brand_url = response.css('a.h4::attr(href)').get()
         laptop_data['brand'] = brand_url.split('/')[-1]
 
@@ -115,7 +129,8 @@ class LastPriceSpider(NotebookCheckSpider):
         self.laptops.append(laptop_data)
 
         if len(laptop_urls) == 0:
-            yield self.with_benchmarks()
+            #yield self.with_benchmarks()
+            yield from self.laptops
         else:
             url = laptop_urls.pop()
             yield response.follow(url=url, callback=self.parse_laptops,
