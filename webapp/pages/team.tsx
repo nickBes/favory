@@ -7,10 +7,10 @@ const Team : React.FC = () => {
     return (
         <> 
             <Navbar path={router.pathname}></Navbar>
-            <h1>Our team</h1>
-            <p>Favory started as a small developing team consisting of 3 high school students from Israel.</p>
-            <p>We felt as though purchasing computers and laptops was much more comlicated than it should have been, as many people don’t know how to decide between all the different options, getting confused by the odd technical descriptions and endless, meaningless data.</p>
-            <p>We’ve decided to create a new, simple platform which not only will help make the purchasing experience easy to understand, but match the product to the user’s personal needs, with absolutely zero need for previous knowledge in computers or experience.</p>
+            <h1>הצוות</h1>
+            <p>פייבורי התחיל כצוות פיתוח קטן של שלושה תלמידי תיכון ישראליים.</p>
+            <p>הרגשנו שרכישת מחשבים נייחים וניידים הייתה מסובכת הרבה יותר ממה שהיא אמורה להיות, כיוון שהמון אנשים לא יודעים להחליט בין כל האפשרויות השונות, ומתבלבלים מהמפרטים הטכניים המוזרים וים הנתונים חסרי המשמעות האינסופי.</p>
+            <p>החלטנו ליצור פלטפורמה חדשה ופשוטה שלא רק תעזור להפוך את חווית הרכישה לקלה להבנה, אלא גם תתאים את המוצר לצרכים האישיים של המשתמש, ללא שום צורך בידע קודם במחשבים.</p>
         </>
     )
 }

@@ -6,11 +6,10 @@ import styles from './collapse.module.scss'
 type CollapseUrlObject = {[title: string]: string}
 
 const globalCollapseUrlObject : CollapseUrlObject = {
-    '/': 'Home',
-    '/about': 'About',
-    '/goals': 'Our goals',
-    '/team': 'Our team',
-    '/contact': 'Contact us'
+    '/': 'ראשי',
+    '/about': 'אודות',
+    '/team': 'הצוות',
+    '/contact': 'צרו קשר'
 }
 
 interface CollapseProps {
