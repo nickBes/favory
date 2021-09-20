@@ -25,6 +25,10 @@
     @media (max-width: 768px) {
         padding: 0 5%;
     }
+    a {
+        text-decoration: none;
+        color: theme.$primary_text;
+    }
 }
 
 .navbarWrap {

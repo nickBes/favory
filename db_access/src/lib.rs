@@ -7,6 +7,6 @@ pub mod error_types_generator;
 
 use diesel::{Connection, PgConnection};
 
-pub fn get_db_connection()->PgConnection{
-    PgConnection::establish("postgres://postgres:putin@localhost/favory").unwrap()
+pub fn get_db_connection()->PgConnection {
+    PgConnection::establish("postgres://postgres:favory@localhost/favory").unwrap()
 }

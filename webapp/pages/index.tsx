@@ -62,6 +62,7 @@ const categoryMap : CategoryMap = {
 
 const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
   const [tags, setTags] = useState<string[]>([])
+  const [firstSectionPass, setFirstSectionPass] = useState(false)
   const formRef = useRef<null | HTMLElement>(null)
   const ratingRef = useRef<null | HTMLElement>(null)
   const tagRef = useRef<null | HTMLElement>(null)
@@ -75,7 +76,11 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
   // using the card component
   const updateTags = (tag: string) => {
     // 
-    setTags(prevTags => prevTags.includes(tag) ? prevTags.filter(val => val != tag) : [...prevTags, tag])
+    setTags(prevTags => {
+      const nextTags = prevTags.includes(tag) ? prevTags.filter(val => val != tag) : [...prevTags, tag]
+      setFirstSectionPass(() => nextTags.length > 1)
+      return nextTags
+    }) 
   }
 
   // using the tags and searchbar components
@@ -89,30 +94,30 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
 
   return (
     <>
-    {console.log(categories, priceLimits)}
       <section>
         <Navbar path={router.pathname}></Navbar>
-        <div className={styles.main}>
+        <header className={styles.main}>
           <div className={styles.mainTextArea}>
             <h1>מצאו את המחשב הנייד האידיאלי שהכי מתאים לכם</h1>
             <p>ענו על שאלון קצר וקבלו את המחשב הנייד המתאים ביותר תוך שניות</p>
-            <button onClick={scrollToRef(formRef)}>התחלה</button>
+            <button onClick={scrollToRef(formRef)} className={styles.primaryButton}>התחלה</button>
           </div>
           <div className={styles.laptopImage}>
             <Image src={laptopImage} alt="Jermey"></Image>
           </div>
-        </div>
+        </header>
       </section>
-      <section ref={formRef} className={styles.gray}>
+      <section ref={formRef}>
         <Form formAttr={{ action: "./results", method: 'post' }}>
           <Scrollable direction='horizontal'>
-            <section ref={tagRef}>
-              <div>
-                <h1>בחרו בקטגוריות המתאימות לכם.</h1>
-                <CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
-                {/* <Tags tags={tags} onTagClick={removeTag}></Tags>
-                <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
-                <a onClick={scrollToRef(ratingRef)}>Next</a>
+            <section ref={tagRef} className={styles.firstFormSection}>
+              <div className={styles.firstFormSectionContent}>
+                  <h1>בחרו בקטגוריות המתאימות לכם</h1>
+                  <p>אנא בחרו לפחות 2 קטגוריות</p>
+                  <CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
+                  {/* <Tags tags={tags} onTagClick={removeTag}></Tags>
+                  <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
+                  <button type='button' onClick={scrollToRef(ratingRef)} disabled={!firstSectionPass}>הבא</button>
               </div>
             </section>
             <section ref={ratingRef}>

@@ -13,7 +13,7 @@ const Navbar : React.FC<NavbarProps> = ({path}) => {
     return (
         <div className={styles.navbarWrap}>
             <nav className={styles.navbar}>
-                <h1>favory</h1>
+                <h1><a href='/'>favory</a></h1>
                 <Burger toggleIsActive={toggleIsActive} isActive={isActive}></Burger>
             </nav>
             <Collapse exclude={path} isActive={isActive}></Collapse>
