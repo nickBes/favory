@@ -218,6 +218,9 @@ class NotebookCheckSpider(scrapy.Spider):
                 laptop['gpu_bench'] = self.dedicated_benches[gpu_name]['benchmarks']
                 laptop['gpu'] = self.dedicated_benches[gpu_name]['name']
 
+            # find the laptop's name using the brand and model
+            laptop['name'] = laptop['brand'] + ' ' + laptop['model']
+
             yield laptop
 
     def _parse_dedicated_search_results(self, response:HtmlResponse):
