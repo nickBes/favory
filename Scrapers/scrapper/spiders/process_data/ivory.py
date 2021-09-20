@@ -20,6 +20,13 @@ def get_laptop_dict_from_response(response)->dict:
         value = row.css(ivory_map.table_map.get('value_css')).get()
         laptop_dict[key] = value
 
+    price_text = response.css('.print-actual-price::text').get()
+
+    # remove the ',' from the price
+    price_text = price_text.replace(',','')
+
+    laptop_dict['price'] = float(price_text)
+
     detect_pu_ids_in_laptop_data(laptop_dict)
     return laptop_dict
 
