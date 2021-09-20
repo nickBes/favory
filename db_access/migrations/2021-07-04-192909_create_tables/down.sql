@@ -1,3 +1,4 @@
+DROP TABLE laptop_image;
 DROP TABLE benchmark_score_in_category;
 DROP TABLE laptop_score_in_category;
 DROP TABLE benchmark;
