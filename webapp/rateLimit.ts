@@ -1,6 +1,6 @@
 import {MutexProtected} from "mutexprotected"
 
-const WINDOW_DURATION_SECONDS = 10
+const WINDOW_DURATION_SECONDS = 120
 
 const MAX_REQUESTS_PER_WINDOW = 1
 
@@ -50,9 +50,8 @@ function runCleanupIfNeeded(currentWindows: WindowsMap){
 	}
 }
 
-function hasExceededRateLimit(ip:string):boolean{
-	let exceededRateLimit = false;
-	currentWindows.modify(async (currentWindows)=>{
+async function hasExceededRateLimit(ip:string):Promise<boolean>{
+	return await currentWindows.modify(async (currentWindows)=>{
 
 		runCleanupIfNeeded(currentWindows)
 
@@ -69,15 +68,15 @@ function hasExceededRateLimit(ip:string):boolean{
 					start: new Date(),
 					amountOfRequests: 1
 				}
-				exceededRateLimit = false;
+				return false
 			}else{
 				// window is not over yet, check if we have any request left
 				if(currentWindow.amountOfRequests < MAX_REQUESTS_PER_WINDOW){
 					currentWindow.amountOfRequests+=1;
-					exceededRateLimit = false;
+					return false
 				}else{
 					// this ip has reached its limit
-					exceededRateLimit = true;
+					return true
 				}
 			}
 		}else{
@@ -86,10 +85,9 @@ function hasExceededRateLimit(ip:string):boolean{
 				start: new Date(),
 				amountOfRequests: 1
 			}
-			exceededRateLimit = false;
+			return false
 		}
 	})
-	return exceededRateLimit
 }
 
 export default hasExceededRateLimit

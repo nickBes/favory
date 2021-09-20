@@ -23,9 +23,9 @@ export class MutexProtected<T>{
     }
 
     // safely executes the modifier async function on the data allowing it to mutate it.
-    async modify(modifier: (data: T) => Promise<void>): Promise<void> {
-        await this.mutex.runExclusive(async ()=>{
-            await modifier(this.data)
+    async modify<R>(modifier: (data: T) => Promise<R>): Promise<R> {
+        return await this.mutex.runExclusive(async ()=>{
+            return await modifier(this.data)
         })
     }
 

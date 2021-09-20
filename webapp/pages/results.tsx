@@ -1,5 +1,6 @@
 import React from 'react'
 import {useRouter} from 'next/router'
+import {IncomingMessage} from 'http'
 import Error from '../components/error/error'
 import {GetServerSideProps} from 'next'
 import Navbar from '@/components/navbar/navbar'
@@ -8,6 +9,7 @@ import qs from 'querystring'
 import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
 import cookie from 'cookie'
 import LaptopResultsList from '@/components/results/laptopResultsList'
+import hasExceededRateLimit from 'rateLimit'
 
 type ResultsPageInvalidFieldError = {
 	type: "invalidField",
@@ -28,11 +30,15 @@ type ResultsPageInvalidMethodError = {
 	type: "invalidMethod"
 }
 
+type ResultsPageTooManyRequestsError = {
+	type: "tooManyRequests"
+}
 type ResultsPageError =
 	| ResultsPageInvalidFieldError
 	| ResultsPageMissingFieldError
 	| ResultsPageSelectionError
 	| ResultsPageInvalidMethodError
+	| ResultsPageTooManyRequestsError
 
 type ResultsPagePropsSuccess = {
 	success: true,
@@ -204,23 +210,32 @@ async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<Resu
 export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
 	let result: ResultsPageProps;
 	if (req.method == 'POST') {
-		let query = qs.parse(await getRawBody(req, {encoding: 'utf-8'}))
+		if (await hasExceededRateLimit(req.socket.remoteAddress as string)){
+			console.log('exceeded rate limit')
+			result = {
+				success: false,
+				error: {
+					type: "tooManyRequests",
+				}
+			}
+		} else {
+			let query = qs.parse(await getRawBody(req, {encoding: 'utf-8'}))
 
-		result = await performRequestedSelection(query);
+			result = await performRequestedSelection(query);
 
-		// when the user sends a new selection request, we should cache the results of the 
-		// request, so that if he returns to the page using a GET request, we can present him
-		// with his previous results.
-		const cookie_data = cookie.serialize('previousResults', JSON.stringify(result), {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === 'production',
-			maxAge: 60 * 60 * 24,
-			sameSite: 'strict',
-			path: '/results'
-		})
-		res.setHeader('set-cookie', cookie_data)
+			// when the user sends a new selection request, we should cache the results of the 
+			// request, so that if he returns to the page using a GET request, we can present him
+			// with his previous results.
+			const cookie_data = cookie.serialize('previousResults', JSON.stringify(result), {
+				httpOnly: true,
+				secure: process.env.NODE_ENV === 'production',
+				maxAge: 60 * 60 * 24,
+				sameSite: 'strict',
+				path: '/results'
+			})
+			res.setHeader('set-cookie', cookie_data)
+		}
 	} else if (req.method == 'GET') {
-		let query = qs.parse(await getRawBody(req, {encoding: 'utf-8'}))
 		const previousResults: string | undefined = cookie.parse(req.headers.cookie || '').previousResults
 		if (previousResults) {
 			result = JSON.parse(previousResults)
