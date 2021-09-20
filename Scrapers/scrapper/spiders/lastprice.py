@@ -1,7 +1,9 @@
 import scrapy
+import re
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
 from w3lib.html import remove_tags
+from bs4 import BeautifulSoup
 
 PAGE_AMOUNT = 1
 ITEM_AMOUNT = 7
@@ -13,6 +15,8 @@ LABELS_MAP = {
         'כרטיס מסך': 'gpu',
         'גרפיקה': 'gpu',
         }
+
+PRICE_REGEX = re.compile('[0-9]+(?:,[0-9]+)?')
 
 def create_page_url(page_index:int)->str:
     return 'https://www.lastprice.co.il/MoreProducts.asp?offset=%s&catcode=85'%page_index
@@ -64,6 +68,7 @@ class LastPriceSpider(NotebookCheckSpider):
         '''
         Extracts key-value data from the laptop's page, according to the keys in the `LABELS_MAP` map
         '''
+
         laptop_data = {}
 
         paragraphs = response.css('#descr > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p').getall()
@@ -93,6 +98,36 @@ class LastPriceSpider(NotebookCheckSpider):
 
         return laptop_data
 
+    def extract_laptop_price(self, response)->float:
+        '''
+        Extracts the laptop's price from the laptop's page
+        '''
+
+        # the buy now label contains the price
+        buy_now_label = response.css('div.no-padding-desktop > div:nth-child(1) > h2:nth-child(1)').get()
+
+        # beautifulsoup is used here because scrapy doesn't handle well the special symbols in the html
+        # code.
+        # not using beautifulsoup for the whole document for performance reasons, instead using it
+        # just on the buy now label
+        # using find('h2') because beautifulsoup appends an html and body tags to the given html document
+        # if it doesn't have these tags.
+        bs = BeautifulSoup(buy_now_label,'html5lib').find('h2')
+
+        # find the first child that contains the '₪' symbol
+        buy_now_label_text = next(child for child in bs.children if '₪' in child)
+
+        price_matches = PRICE_REGEX.findall(buy_now_label_text)
+
+        # sometimes the buy label contains another number before the price, inside a hidden span,
+        # so we should always just take the last match, which will be the price
+        price_text = price_matches[-1]
+
+        # remove the ',' from the price if it is present
+        price_text = price_text.replace(',','')
+
+        return float(price_text)
+
 
     def extract_laptop_data(self, response)->dict:
         '''
@@ -107,12 +142,17 @@ class LastPriceSpider(NotebookCheckSpider):
 
 
         # additional fields that are not in key value pairs
+
+        # brand
+        # extracting the brand from the url to the brand's lastprice page
         brand_url = response.css('a.h4::attr(href)').get()
         laptop_data['brand'] = brand_url.split('/')[-1]
 
+        # model
         laptop_data['model'] = response.css('span.h4::text').get()
 
-        laptop_data['name'] = response.css('#descr > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p:nth-child(1) > strong:nth-child(1)::text').get()
+        # price
+        laptop_data['price'] = self.extract_laptop_price(response)
 
         return laptop_data
 
@@ -129,8 +169,7 @@ class LastPriceSpider(NotebookCheckSpider):
         self.laptops.append(laptop_data)
 
         if len(laptop_urls) == 0:
-            #yield self.with_benchmarks()
-            yield from self.laptops
+            yield self.with_benchmarks()
         else:
             url = laptop_urls.pop()
             yield response.follow(url=url, callback=self.parse_laptops,
