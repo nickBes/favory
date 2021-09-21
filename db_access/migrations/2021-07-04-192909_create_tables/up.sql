@@ -45,3 +45,9 @@ CREATE TABLE price_limits (
 	max_price REAL NOT NULL,
 	min_price REAL NOT NULL
 );
+
+CREATE TABLE laptop_image (
+	id SERIAL PRIMARY KEY,
+	laptop_id INTEGER REFERENCES laptop(id) NOT NULL,
+	image_url TEXT NOT NULL
+);

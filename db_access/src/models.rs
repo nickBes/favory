@@ -144,3 +144,19 @@ pub struct NewPriceLimits {
     pub max_price: f32,
     pub min_price: f32,
 }
+
+#[derive(Debug, Queryable, Associations)]
+#[belongs_to(Laptop)]
+#[table_name = "laptop_image"]
+pub struct LaptopImage{
+    pub id: i32,
+    pub laptop_id: i32,
+    pub image_url: String,
+}
+
+#[derive(Debug, Insertable)]
+#[table_name = "laptop_image"]
+pub struct NewLaptopImage<'a>{
+    pub laptop_id: i32,
+    pub image_url: &'a str,
+}

@@ -1,6 +1,7 @@
 use crate::errors::*;
 use bigdecimal::BigDecimal;
 use bigdecimal::Zero;
+use db_access::models::NewLaptopImage;
 use db_access::{models, schema};
 use diesel::prelude::*;
 
@@ -22,6 +23,7 @@ struct LaptopInformation {
     cpu_data: LaptopPuData,
     gpu: Gpu,
     gpu_data: LaptopPuData,
+    image_urls: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -156,10 +158,10 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
         global_benchmarks_id_by_name.len()
     );
 
-    println!("inserting laptops and benchmarks...");
+    println!("inserting laptops, benchmarks and image urls...");
     // insert the laptops and benchmarks
     let price_limits =
-        insert_laptops_and_benchmarks(&laptops_file, &global_benchmarks_id_by_name, db_connection)?;
+        insert_laptops_benchmarks_and_image_urls(&laptops_file, &global_benchmarks_id_by_name, db_connection)?;
 
     println!("inserting price limits...");
     insert_price_limits(&price_limits, db_connection)?;
@@ -189,13 +191,26 @@ fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnect
 /// inserts each laptops in the laptops file and its corresponding benchmarks
 /// into the database. while iterating through the laptops also finds the laptops price limits,
 /// to avoid iterating over the laptops twice, which improves performance.
-fn insert_laptops_and_benchmarks(
+fn insert_laptops_benchmarks_and_image_urls(
     laptops_file: &[LaptopInformation],
     global_benchmarks_id_by_name: &HashMap<String, i32>,
     db_connection: &PgConnection,
 ) -> Result<PriceLimits> {
     use schema::benchmark;
+    use schema::laptop_image;
     use schema::laptop;
+
+    /// returns a list of insertable laptop images from the laptop
+    fn convert_image_urls_to_insertable_structs(laptop: &LaptopInformation, id: i32) -> Vec<NewLaptopImage> {
+        let mut laptop_images = Vec::new();
+        for image_url in &laptop.image_urls{
+            laptop_images.push(models::NewLaptopImage{
+                laptop_id: id,
+                image_url: &image_url,
+            });
+        }
+        laptop_images
+    }
 
     /// converts the given benchmarks to the insertable benchmark struct NewBenchmark,
     /// and inserts them into the insertable_structs vector.
@@ -262,6 +277,12 @@ fn insert_laptops_and_benchmarks(
         // insert the benchmarks into the database
         diesel::insert_into(benchmark::table)
             .values(new_benchmarks.as_slice())
+            .execute(db_connection)
+            .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
+
+        let new_image_urls = convert_image_urls_to_insertable_structs(laptop_info, inserted_laptop_id);
+        diesel::insert_into(laptop_image::table)
+            .values(new_image_urls.as_slice())
             .execute(db_connection)
             .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
     }
