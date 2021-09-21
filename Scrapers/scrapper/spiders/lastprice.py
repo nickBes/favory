@@ -17,6 +17,7 @@ LABELS_MAP = {
         }
 
 PRICE_REGEX = re.compile('[0-9]+(?:,[0-9]+)?')
+RAM_REGEX = re.compile('[0-9]+GB')
 
 def create_page_url(page_index:int)->str:
     return 'https://www.lastprice.co.il/MoreProducts.asp?offset=%s&catcode=85'%page_index
@@ -76,7 +77,12 @@ class LastPriceSpider(NotebookCheckSpider):
             text = remove_tags(paragraph).strip()
             for line in text.splitlines():
                 line = line.strip()
-                parts = line.split(':')
+
+                # the lastprice website uses 2 different separators
+                if ':' in line:
+                    parts = line.split(':')
+                else:
+                    parts = line.split('-')
 
                 # only take paragraphs with key value structure
                 if len(parts) != 2:
@@ -95,6 +101,20 @@ class LastPriceSpider(NotebookCheckSpider):
                     # map the key from its hebrew name to its english name
                     mapped_key = LABELS_MAP[key]
                     laptop_data[mapped_key] = value
+                elif 'זיכרון' in key or 'זכרון' in key and not 'מקסימלי' in key:
+                    # the lasprice website uses many labels for representing the amount of ram
+                    # so to find the right one we just check if it contains the word 'זיכרון' or its variant,
+                    # does not contain the word 'מקסימלי', and contains the regex of the ram.
+                    ram_matches = RAM_REGEX.findall(value)
+                    if len(ram_matches) > 0:
+                        ram_text = ram_matches[0]
+
+                        # remove the 'GB' at the end
+                        ram_text = ram_text[:-len('GB')]
+
+                        laptop_data['ram'] = int(ram_text)
+
+
 
         return laptop_data
 
@@ -127,7 +147,6 @@ class LastPriceSpider(NotebookCheckSpider):
         price_text = price_text.replace(',','')
 
         return float(price_text)
-
 
     def extract_laptop_data(self, response)->dict:
         '''
@@ -169,7 +188,8 @@ class LastPriceSpider(NotebookCheckSpider):
         self.laptops.append(laptop_data)
 
         if len(laptop_urls) == 0:
-            yield self.with_benchmarks()
+            #yield self.with_benchmarks()
+            yield from self.laptops
         else:
             url = laptop_urls.pop()
             yield response.follow(url=url, callback=self.parse_laptops,
