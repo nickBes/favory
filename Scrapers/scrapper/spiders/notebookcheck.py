@@ -221,6 +221,13 @@ class NotebookCheckSpider(scrapy.Spider):
             # find the laptop's name using the brand and model
             laptop['name'] = laptop['brand'] + ' ' + laptop['model']
 
+            # assign the laptop's weight and ram as benchmarks
+            laptop['cpu_bench']['ram'] = laptop['ram']
+            # using the weight in the denominator because we want the score to get higher
+            # as the weight grows smaller, and the 1000 to avoid using numbers that are 
+            # too small, to avoid percision issues
+            laptop['cpu_bench']['weight'] = 1000/laptop['weight']
+
             yield laptop
 
     def _parse_dedicated_search_results(self, response:HtmlResponse):
