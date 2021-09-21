@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './card_selection.module.scss'
+import styles from './card-selection.module.scss'
 import Card, { CategoryData, CardClickCallback } from './card'
 
 export type CategoryMap = {[category: string]: CategoryData}

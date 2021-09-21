@@ -1,0 +1,54 @@
+@use '@/styles/theme';
+
+.card {
+    max-width: 230px;
+    margin: 0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    aspect-ratio: 12/13;
+    @media (max-width: 769px) {
+        max-width: 200px;
+    }
+    @media (max-width: 600px) {
+        max-width: 100px;
+    }
+
+    .cardIcon {
+        max-width: 40%;
+        @media (max-width: 769px) {
+            max-width: 70%;
+        }
+    }
+
+    > div > figcaption {
+        font: theme.$medium_text_font;
+        @media (max-width: 769px) {
+            font: theme.$medium_text_font_mobile;
+            font-size: 20px;
+            line-height: 20px;
+        }
+        @media (max-width: 600px) {
+            font: theme.$medium_text_font_mobile;
+            font-size: 16px;
+            line-height: 16px;
+        }
+    }
+}
+
+.cardWrapper {
+    border: 2px solid theme.$blue;
+    border-radius: 10px;
+    transition: .5s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+}
+.activeCardWrapper {
+    background-color: theme.$secondary_background;
+    transform: scale(0.9);
+    transition: .5s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+}
+.cardWrapper:hover {
+    transition: .1s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+    background-color: theme.$secondary_background;
+}

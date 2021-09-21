@@ -62,7 +62,6 @@ const categoryMap : CategoryMap = {
 
 const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
   const [tags, setTags] = useState<string[]>([])
-  const [firstSectionPass, setFirstSectionPass] = useState(false)
   const formRef = useRef<null | HTMLElement>(null)
   const ratingRef = useRef<null | HTMLElement>(null)
   const tagRef = useRef<null | HTMLElement>(null)
@@ -75,12 +74,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
 
   // using the card component
   const updateTags = (tag: string) => {
-    // 
-    setTags(prevTags => {
-      const nextTags = prevTags.includes(tag) ? prevTags.filter(val => val != tag) : [...prevTags, tag]
-      setFirstSectionPass(() => nextTags.length > 1)
-      return nextTags
-    }) 
+    setTags(prevTags => prevTags.includes(tag) ? prevTags.filter(val => val != tag) : [...prevTags, tag])
   }
 
   // using the tags and searchbar components
@@ -107,18 +101,16 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
           </div>
         </header>
       </section>
-      <section ref={formRef}>
+      <main ref={formRef}>
         <Form formAttr={{ action: "./results", method: 'post' }}>
           <Scrollable direction='horizontal'>
             <section ref={tagRef} className={styles.firstFormSection}>
-              <div className={styles.firstFormSectionContent}>
                   <h1>בחרו בקטגוריות המתאימות לכם</h1>
                   <p>אנא בחרו לפחות 2 קטגוריות</p>
                   <CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
                   {/* <Tags tags={tags} onTagClick={removeTag}></Tags>
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
-                  <button type='button' onClick={scrollToRef(ratingRef)} disabled={!firstSectionPass}>הבא</button>
-              </div>
+                  <button type='button' onClick={scrollToRef(ratingRef)} disabled={tags.length < 2}>הבא</button>
             </section>
             <section ref={ratingRef}>
               <div>
@@ -143,7 +135,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
             </section>
           </Scrollable>
         </Form>
-      </section>
+      </main>
     </>
   )
 }

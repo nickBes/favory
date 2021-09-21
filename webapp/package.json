@@ -11,6 +11,7 @@
   "dependencies": {
     "@esfx/async-autoresetevent": "^1.0.0-pre.19",
     "@types/rc-slider": "^9.3.1",
+    "@types/react-tooltip": "^4.2.4",
     "async-mutex": "^0.3.1",
     "async-rwlock": "^1.1.1",
     "cookie": "^0.4.1",
@@ -19,6 +20,7 @@
     "rc-slider": "^9.7.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-tooltip": "^4.2.21",
     "sass": "^1.35.1"
   },
   "devDependencies": {

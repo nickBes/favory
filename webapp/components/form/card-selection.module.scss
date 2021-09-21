@@ -1,0 +1,13 @@
+.cardSelection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-self: center;
+    gap: 60px;
+    padding: 50px;
+
+    @media (max-width: 769px) {
+        padding: 25px;
+        gap: 50px;
+    }
+}

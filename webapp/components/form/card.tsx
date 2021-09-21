@@ -22,7 +22,7 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
         onCardClick(category)
     }
     return (
-        <div className={`${styles.cardWrapper} ${isActive ? styles.activeCard : ''}`} >
+        <div className={`${styles.cardWrapper} ${isActive ? styles.activeCardWrapper : ''}`} >
             <figure onClick={updateActivity} className={styles.card}>
                 <div className={styles.cardIcon}><Image src={image} alt={title}></Image></div>
                 <div><figcaption>{title}</figcaption></div>

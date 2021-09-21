@@ -2,17 +2,11 @@
 
 .firstFormSection {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-}
-
-.firstFormSectionContent {
-    display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     flex-direction: column;
+    height: 100vh;
     > * {
         margin: 0%;
     }
@@ -44,7 +38,7 @@
 
         @media (max-width: 768px) {
             font: theme.$big_text_font_mobile;
-            font-size: 36px;
+            font-size: 32px;
         }
     }
 
@@ -115,7 +109,7 @@
 
         @media (max-width: 900px) {
             width: auto;
-            max-width: 400px;
+            max-width: 425px;
         }
     }
 }
