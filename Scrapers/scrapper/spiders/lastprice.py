@@ -138,7 +138,7 @@ class LastPriceSpider(NotebookCheckSpider):
         laptop_data = self.extract_laptop_key_value_data(response)
 
         # images
-        laptop_data['images'] = self.extract_laptop_images(response)
+        laptop_data['image_urls'] = self.extract_laptop_images(response)
 
 
         # additional fields that are not in key value pairs
