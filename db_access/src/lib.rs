@@ -8,5 +8,10 @@ pub mod error_types_generator;
 use diesel::{Connection, PgConnection};
 
 pub fn get_db_connection()->PgConnection{
-    PgConnection::establish("postgres://postgres:putin@localhost/favory").unwrap()
+    let db_url = if cfg!(debug_assertions){
+        "postgres://postgres:putin@localhost/favory".into()
+    }else{
+        std::env::var("DATABASE_URL").expect("the DATABASE_URL environment variable must be set")
+    };
+    PgConnection::establish(&db_url).unwrap()
 }
