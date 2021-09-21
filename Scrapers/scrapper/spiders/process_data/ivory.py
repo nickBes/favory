@@ -27,6 +27,10 @@ def get_laptop_dict_from_response(response)->dict:
 
     laptop_dict['price'] = float(price_text)
 
+    # the `image_urls` field is required by the data processor, 
+    # but the ivory spider doesn't support images scraping
+    laptop_dict['image_urls'] = []
+
     detect_pu_ids_in_laptop_data(laptop_dict)
     return laptop_dict
 
