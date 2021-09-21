@@ -2,7 +2,7 @@ import scrapy
 import re
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
-from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX
+from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX, WEIGHT_REGEX
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
@@ -111,6 +111,14 @@ class LastPriceSpider(NotebookCheckSpider):
                         ram_text = ram_text[:-len('GB')]
 
                         laptop_data['ram'] = int(ram_text)
+                elif 'משקל' in key:
+                    # the lasprice website uses many labels for representing the weight of a laptop
+                    # so to find the right one we just check if it contains the word 'משקל',
+                    # and contains the regex of the weight.
+                    weight_matches = WEIGHT_REGEX.findall(value)
+                    if len(weight_matches) > 0:
+                        weight_text = weight_matches[0]
+                        laptop_data['weight'] = float(weight_text)
 
 
 

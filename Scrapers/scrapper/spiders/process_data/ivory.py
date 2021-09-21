@@ -1,6 +1,6 @@
 from spiders.process_data.map_setup.store_map import StoreMap
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
-from spiders.process_data.regex import RAM_REGEX
+from spiders.process_data.regex import RAM_REGEX, WEIGHT_REGEX
 
 # read the map data before being used
 ivory_map = StoreMap('ivory')
@@ -34,6 +34,10 @@ def get_laptop_dict_from_response(response)->dict:
     # remove the 'GB' at the end
     ram_text = ram_text[:-len('GB')]
     laptop_dict['ram'] = int(ram_text)
+
+    # apply the weight regex to the weight string
+    weight_text = WEIGHT_REGEX.findall(laptop_dict['weight'])[0]
+    laptop_dict['weight'] = float(weight_text)
 
     # the `image_urls` field is required by the data processor, 
     # but the ivory spider doesn't support images scraping
