@@ -1,6 +1,5 @@
 import React from 'react'
 import {useRouter} from 'next/router'
-import {IncomingMessage} from 'http'
 import Error from '../components/error/error'
 import {GetServerSideProps} from 'next'
 import Navbar from '@/components/navbar/navbar'
@@ -72,7 +71,7 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 		return (
 			<>
 				<Navbar path={router.pathname}></Navbar>
-				<Error></Error>
+				<Error message={(pageProps as ResultsPagePropsFailure).error.type}></Error>
 			</>
 		)
 	}
