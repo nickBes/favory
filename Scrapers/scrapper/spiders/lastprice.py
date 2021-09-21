@@ -2,6 +2,7 @@ import scrapy
 import re
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
+from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
@@ -15,9 +16,6 @@ LABELS_MAP = {
         'כרטיס מסך': 'gpu',
         'גרפיקה': 'gpu',
         }
-
-PRICE_REGEX = re.compile('[0-9]+(?:,[0-9]+)?')
-RAM_REGEX = re.compile('[0-9]+GB')
 
 def create_page_url(page_index:int)->str:
     return 'https://www.lastprice.co.il/MoreProducts.asp?offset=%s&catcode=85'%page_index
@@ -188,8 +186,7 @@ class LastPriceSpider(NotebookCheckSpider):
         self.laptops.append(laptop_data)
 
         if len(laptop_urls) == 0:
-            #yield self.with_benchmarks()
-            yield from self.laptops
+            yield self.with_benchmarks()
         else:
             url = laptop_urls.pop()
             yield response.follow(url=url, callback=self.parse_laptops,
