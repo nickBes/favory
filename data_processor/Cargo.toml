@@ -14,3 +14,5 @@ serde = {version = "1.0.126", features = ["derive"]}
 maplit = {version = "1.0.2"}
 db_access = {path = "../db_access"}
 paste = "1.0.5"
+regex = "1.5.4"
+lazy_static = "1.4.0"
