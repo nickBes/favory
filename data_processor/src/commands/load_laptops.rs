@@ -33,6 +33,22 @@ struct LaptopInformation {
     gpu_bench: LaptopPuBenchmarksData,
     image_urls: Vec<String>,
 }
+impl PartialEq for LaptopInformation{
+    fn eq(&self, other: &Self) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+impl Eq for LaptopInformation{ }
+impl PartialOrd for LaptopInformation{
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        self.name.partial_cmp(&other.name)
+    }
+}
+impl Ord for LaptopInformation{
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.name.cmp(&other.name)
+    }
+}
 
 /// the benchmarks of the cpu or gpu in a laptop object from the laptops.json file,
 /// mapped using each benchmark's name
@@ -158,6 +174,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
         &global_benchmarks_id_by_name,
         db_connection,
     )?;
+    println!("inserted {} laptops", laptops_file.len());
 
     println!("inserting price limits...");
     insert_price_limits(&price_limits, db_connection)?;
@@ -391,6 +408,11 @@ fn parse_laptops_files() -> Result<LaptopInformations> {
             }
         }
     }
+
+    // remove duplicate laptops
+    informations.sort_unstable();
+    informations.dedup();
+
     Ok(informations)
 }
 
