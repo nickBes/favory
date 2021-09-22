@@ -31,6 +31,7 @@ export type SelectedLaptop = {
 	cpu: string,
 	gpu: string,
 	score: number,
+	imageUrls: string[],
 }
 
 type SelectorResponse<T> = {
