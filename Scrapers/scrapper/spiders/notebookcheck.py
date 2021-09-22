@@ -223,10 +223,13 @@ class NotebookCheckSpider(scrapy.Spider):
 
             # assign the laptop's weight and ram as benchmarks
             laptop['cpu_bench']['ram'] = laptop['ram']
+            del laptop['ram']
+
             # using the weight in the denominator because we want the score to get higher
             # as the weight grows smaller, and the 1000 to avoid using numbers that are 
             # too small, to avoid percision issues
             laptop['cpu_bench']['weight'] = 1000/laptop['weight']
+            del laptop['weight']
 
             yield laptop
 
