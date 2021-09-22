@@ -10,8 +10,8 @@ const Footer : React.FC = () => {
     return (
         <footer className={styles.footer}>
             <ul>
-                <li><a href='https://www.facebook.com/people/Favory/100065238591445/'><Image src={igIcon}></Image></a></li>
-                <li><a href='https://www.instagram.com/favory.il/'><Image src={fbIcon}></Image></a></li>
+                <li><a href='https://www.facebook.com/people/Favory/100065238591445/'><Image src={fbIcon}></Image></a></li>
+                <li><a href='https://www.instagram.com/favory.il/'><Image src={igIcon}></Image></a></li>
                 <li><a href='https://www.linkedin.com/company/favoryisrael/'><Image src={lkIcon}></Image></a></li>
 
             </ul>
