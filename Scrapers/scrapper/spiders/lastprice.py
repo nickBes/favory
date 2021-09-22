@@ -79,10 +79,8 @@ class LastPriceSpider(NotebookCheckSpider):
                 line = lines[i].strip()
 
                 # the lastprice website uses 2 different separators
-                if ':' in line:
-                    parts = line.split(':', 1)
-                else:
-                    parts = line.split('-', 1)
+                separator = ':' if ':' in line else '-'
+                parts = line.split(separator, 1)
 
                 # only take paragraphs with key value structure
                 if len(parts) != 2:
@@ -106,7 +104,8 @@ class LastPriceSpider(NotebookCheckSpider):
                     if mapped_key == 'gpu' and value == 'GPU':
                         value = lines[i+1].strip()
 
-                    # special case for missing spaces in the value
+                    # special case for missing spaces in the value, becuase notebookcheck expects 
+                    # spaces between words.
                     for device_word_with_missing_space in DEVICE_WORD_WITH_MISSING_SPACE_REGEX.findall(value):
                         # a missing space is detected by finding a word that has a digit right after it,
                         # with no space
