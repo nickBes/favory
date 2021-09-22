@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import 'rc-slider/assets/index.css'
 import { Range } from 'rc-slider'
+import Tooltip from './tooltip'
 
 interface MultiSliderProps {
     tags: string[],
@@ -16,7 +17,8 @@ interface CategoryAndSliderValues {
 }
 
 const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
-
+    // refrence of the actuall slider component
+    const rangeRef = useRef<HTMLDivElement>(null)
     // use state is only called once, to update the categoryAndSliderValues so we need to use useEffect
     // that is called when tags are changed
     const [categoryAndSliderValues, setcategoryAndSliderValues] = useState<CategoryAndSliderValues>({categories: {}, values: []})
@@ -64,14 +66,47 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
         return inputList
     }
 
+    const createTooltipFromCategoryAndSliderValues = (categoryAndSliderValues : CategoryAndSliderValues, max : number, min: number, rangeWidth: number) => {
+        const values = categoryAndSliderValues.values
+        let tooltipList = []
+        let top = true
+        const tags = Object.keys(categoryAndSliderValues.categories)
+        // we start from one because the difference between 2 values 
+        // represents the actual category value
+        for (let i = 1; i < values.length; i++) {
+            const tag = tags[i - 1]
+            const currentValue = values[i]
+            const previousValue = values[i - 1]
+            tooltipList.push(<Tooltip 
+                                    // display the category and the percentage of the category
+                                    content={`${tag} ${Math.floor(100 * (currentValue - previousValue)/(max-min))}%`} 
+                                    // get the relative (to [max - min]) centred location between 2 values and multiply 
+                                    // it by the width of the actuall slider to know how much to move from the left of
+                                    // of the slider
+                                    distanceFromLeft={(currentValue + previousValue)/((max - min) * 2) * rangeWidth}
+                                    position={top ? 'top' : 'bottom'}
+                                    key={i}>
+                            </Tooltip>)
+            top = !top
+        }
+        return tooltipList
+    }
+
     return (
         <>
-            <p>{JSON.stringify(categoryAndSliderValues)}</p>
-            <Range onChange={handleSliderChange}
-                    value={categoryAndSliderValues.values.slice(1, categoryAndSliderValues.values.length - 1)} 
-                    allowCross={false}
-                    pushable={true}
-            />
+            <div ref={rangeRef} style={{
+                            maxWidth: 700,
+                            position: 'relative'
+                        }}>
+                <Range onChange={handleSliderChange}
+                        // we need the min and max values in the array for calculations, but the slider 
+                        // needs the values of the handles
+                        value={categoryAndSliderValues.values.slice(1, categoryAndSliderValues.values.length - 1)} 
+                        allowCross={false}
+                        pushable={true}
+                />
+                {createTooltipFromCategoryAndSliderValues(categoryAndSliderValues, max, min, rangeRef.current?.clientWidth ?? 0)}
+            </div>
             {/* Range doesn't create ibputs, so we need to create them ourselves as
                 the values are passed with a <form> */}
             {createInputsFromCategoryValues(categoryAndSliderValues.categories)}
