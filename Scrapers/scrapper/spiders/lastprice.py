@@ -15,6 +15,7 @@ LABELS_MAP = {
         'כרטיס גרפי': 'gpu',
         'כרטיס מסך': 'gpu',
         'גרפיקה': 'gpu',
+        'מעבד גרפי': 'gpu',
         }
 
 def create_page_url(page_index:int)->str:
