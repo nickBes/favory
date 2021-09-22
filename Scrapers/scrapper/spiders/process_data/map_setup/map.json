@@ -1,0 +1,20 @@
+{
+    "ivory": {
+        "lables": {
+            "מותג":"brand",
+            "דגם":"model",
+            "מעבד":"cpu",
+            "מאיץ גרפי - Video":"gpu",
+            "זכרון":"ram",
+            "כונן SSD":"ssd",
+            "סוללה":"battery",
+            "משקל כ-":"weight"
+        },
+        "table": {
+            "css": "#panel2 > ul > div > li",
+            "lable_css": "div:nth-child(1) > b::text",
+            "value_css": "div:nth-child(2)::text"
+        }
+    }
+
+}

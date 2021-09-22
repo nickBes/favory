@@ -1,0 +1,1 @@
+# in this package we'll create scrapy spiders that are relevant for each store

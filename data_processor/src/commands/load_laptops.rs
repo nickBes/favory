@@ -20,30 +20,15 @@ struct LaptopInformation {
     name: String,
     price: f32,
     cpu: String,
-    cpu_data: LaptopPuData,
-    gpu: Gpu,
-    gpu_data: LaptopPuData,
+    cpu_bench: LaptopPuBenchmarksData,
+    gpu: String,
+    gpu_bench: LaptopPuBenchmarksData,
     image_urls: Vec<String>,
-}
-
-#[derive(Debug, Deserialize)]
-struct Gpu {
-    model: String,
-}
-/// the data of the cpu or gpu in a laptop object from the laptops.json file
-#[derive(Debug, Deserialize)]
-struct LaptopPuData {
-    bench: LaptopPuBenchmarksData,
 }
 
 /// the benchmarks of the cpu or gpu in a laptop object from the laptops.json file,
 /// mapped using each benchmark's name
-type LaptopPuBenchmarksData = HashMap<String, BenchmarkResults>;
-
-#[derive(Debug, Deserialize)]
-struct BenchmarkResults {
-    avg: f32,
-}
+type LaptopPuBenchmarksData = HashMap<String, f32>;
 
 // the info about each global benchmark info. The name is not included here
 // since this struct is stored in a hashmap that maps each global benchmark's name
@@ -224,7 +209,7 @@ fn insert_laptops_benchmarks_and_image_urls(
         laptop_id: i32,
         global_benchmarks_id_by_name: &HashMap<String, i32>,
     ) {
-        for (benchmark_name, benchmark_results) in benchmarks {
+        for (benchmark_name, &score) in benchmarks {
             let global_benchmark_name = format!("{}{}", prefix, benchmark_name);
             insertable_structs.push(models::NewBenchmark {
                 laptop_id,
@@ -233,7 +218,7 @@ fn insert_laptops_benchmarks_and_image_urls(
                 global_benchmark_id: *global_benchmarks_id_by_name
                     .get(&global_benchmark_name)
                     .unwrap(),
-                score: benchmark_results.avg,
+                score,
             });
         }
     }
@@ -250,7 +235,7 @@ fn insert_laptops_benchmarks_and_image_urls(
                 name: &laptop_info.name,
                 price: laptop_info.price,
                 cpu: &laptop_info.cpu,
-                gpu: &laptop_info.gpu.model,
+                gpu: &laptop_info.gpu,
             })
             .returning(laptop::id)
             .get_result(db_connection)
@@ -260,14 +245,14 @@ fn insert_laptops_benchmarks_and_image_urls(
         // so that we can insert them to the database
         let mut new_benchmarks = Vec::new();
         convert_benchmarks_to_insertable_structs(
-            &laptop_info.cpu_data.bench,
+            &laptop_info.cpu_bench,
             &mut new_benchmarks,
             'c',
             inserted_laptop_id,
             global_benchmarks_id_by_name,
         );
         convert_benchmarks_to_insertable_structs(
-            &laptop_info.gpu_data.bench,
+            &laptop_info.gpu_bench,
             &mut new_benchmarks,
             'g',
             inserted_laptop_id,
@@ -306,20 +291,20 @@ fn calculate_global_benchmarks(
         info_by_name: &mut HashMap<String, GlobalBenchmarkInfo>,
         prefix: char,
     ) {
-        for (benchmark_name, benchmark_results) in benchmarks {
+        for (benchmark_name, &score) in benchmarks {
             let global_benchmark_name = format!("{}{}", prefix, benchmark_name);
             // find the entry or insert a new one if it does not exist, and update it with the benchmark's average score
             info_by_name
                 .entry(global_benchmark_name)
                 .or_insert_with(GlobalBenchmarkInfo::new)
-                .update(benchmark_results.avg);
+                .update(score);
         }
     }
 
     let mut info_by_name = HashMap::new();
     for laptop_info in laptops_file {
-        update_info_according_to_benchmarks(&laptop_info.cpu_data.bench, &mut info_by_name, 'c');
-        update_info_according_to_benchmarks(&laptop_info.gpu_data.bench, &mut info_by_name, 'g');
+        update_info_according_to_benchmarks(&laptop_info.cpu_bench, &mut info_by_name, 'c');
+        update_info_according_to_benchmarks(&laptop_info.gpu_bench, &mut info_by_name, 'g');
     }
 
     info_by_name
