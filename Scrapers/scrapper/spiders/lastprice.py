@@ -78,9 +78,9 @@ class LastPriceSpider(NotebookCheckSpider):
 
                 # the lastprice website uses 2 different separators
                 if ':' in line:
-                    parts = line.split(':')
+                    parts = line.split(':', 1)
                 else:
-                    parts = line.split('-')
+                    parts = line.split('-', 1)
 
                 # only take paragraphs with key value structure
                 if len(parts) != 2:
