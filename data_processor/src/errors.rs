@@ -1,12 +1,14 @@
 use db_access::generate_error_types;
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum DataProcessorErrorKind{
+#[derive(Debug, PartialEq, Eq, Clone)]
+pub enum DataProcessorErrorKind {
     FailedToOpenCategoriesFile,
     FailedToDeserializeCategoriesFile,
-    FailedToOpenLaptopsFile,
-    FailedToDeserializeLaptopsFile,
+    FailedToReadLaptopsDirectory,
+    FailedToOpenLaptopsFile { name: String },
+    FailedToDeserializeLaptopsFile { name: String },
     DatabaseError,
 }
 
-generate_error_types!{data_processor}
+generate_error_types! {data_processor}
+

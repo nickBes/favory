@@ -6,14 +6,22 @@ use db_access::{models, schema};
 use diesel::prelude::*;
 
 use diesel::PgConnection;
+use lazy_static::lazy_static;
+use regex::Regex;
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::fs::read_dir;
 use std::fs::OpenOptions;
 
-const LAPTOPS_FILE_PATH: &str = "laptops.json";
+lazy_static! {
+    /// the regex used to match laptops files. examples for a valid file name: ivory-laptops.json
+    static ref LAPTOPS_FILES_REGEX:Regex = Regex::new(r"[a-z]+-laptops[.]json").unwrap();
+}
+
+const LAPTOPS_DIR_PATH: &str = "laptops";
 
 /// the laptops file is just an array of laptop informations
-type LaptopsFile = Vec<LaptopInformation>;
+type LaptopInformations = Vec<LaptopInformation>;
 
 #[derive(Debug, Deserialize)]
 struct LaptopInformation {
@@ -127,7 +135,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     delete_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
 
     println!("loading the laptops file...");
-    let laptops_file = parse_laptops_file()?;
+    let laptops_file = parse_laptops_files()?;
 
     println!("calculating global benchmarks...");
     // calculate the global benchmarks
@@ -145,8 +153,11 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
 
     println!("inserting laptops, benchmarks and image urls...");
     // insert the laptops and benchmarks
-    let price_limits =
-        insert_laptops_benchmarks_and_image_urls(&laptops_file, &global_benchmarks_id_by_name, db_connection)?;
+    let price_limits = insert_laptops_benchmarks_and_image_urls(
+        &laptops_file,
+        &global_benchmarks_id_by_name,
+        db_connection,
+    )?;
 
     println!("inserting price limits...");
     insert_price_limits(&price_limits, db_connection)?;
@@ -182,14 +193,17 @@ fn insert_laptops_benchmarks_and_image_urls(
     db_connection: &PgConnection,
 ) -> Result<PriceLimits> {
     use schema::benchmark;
-    use schema::laptop_image;
     use schema::laptop;
+    use schema::laptop_image;
 
     /// returns a list of insertable laptop images from the laptop
-    fn convert_image_urls_to_insertable_structs(laptop: &LaptopInformation, id: i32) -> Vec<NewLaptopImage> {
+    fn convert_image_urls_to_insertable_structs(
+        laptop: &LaptopInformation,
+        id: i32,
+    ) -> Vec<NewLaptopImage> {
         let mut laptop_images = Vec::new();
-        for image_url in &laptop.image_urls{
-            laptop_images.push(models::NewLaptopImage{
+        for image_url in &laptop.image_urls {
+            laptop_images.push(models::NewLaptopImage {
                 laptop_id: id,
                 image_url: &image_url,
             });
@@ -265,7 +279,8 @@ fn insert_laptops_benchmarks_and_image_urls(
             .execute(db_connection)
             .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
 
-        let new_image_urls = convert_image_urls_to_insertable_structs(laptop_info, inserted_laptop_id);
+        let new_image_urls =
+            convert_image_urls_to_insertable_structs(laptop_info, inserted_laptop_id);
         diesel::insert_into(laptop_image::table)
             .values(new_image_urls.as_slice())
             .execute(db_connection)
@@ -345,13 +360,38 @@ fn insert_and_map_global_benchmarks(
     Ok(global_benchmarks_map)
 }
 
-fn parse_laptops_file() -> Result<LaptopsFile> {
-    let laptops_file = OpenOptions::new()
-        .read(true)
-        .open(LAPTOPS_FILE_PATH)
-        .into_data_processor_result(DataProcessorErrorKind::FailedToOpenLaptopsFile)?;
-    serde_json::de::from_reader(laptops_file)
-        .into_data_processor_result(DataProcessorErrorKind::FailedToDeserializeLaptopsFile)
+fn parse_laptops_files() -> Result<LaptopInformations> {
+    let mut informations = LaptopInformations::new();
+    for laptops_dir_entry in read_dir(LAPTOPS_DIR_PATH)
+        .into_data_processor_result(DataProcessorErrorKind::FailedToReadLaptopsDirectory)?
+    {
+        let laptops_dir_entry = laptops_dir_entry
+            .into_data_processor_result(DataProcessorErrorKind::FailedToReadLaptopsDirectory)?;
+
+        // if the entry is a file
+        if laptops_dir_entry.path().is_file() {
+            let file_name_raw = laptops_dir_entry.file_name();
+            let file_name = file_name_raw.to_string_lossy();
+
+            // if the file's name matches the laptops files regex, load the file
+            if LAPTOPS_FILES_REGEX.is_match(&file_name) {
+                // find the path of the file
+                let file_path = format!("{}/{}", LAPTOPS_DIR_PATH, file_name);
+
+                let laptops_file = OpenOptions::new()
+                    .read(true)
+                    .open(&file_path)
+                    .into_data_processor_result(
+                        DataProcessorErrorKind::FailedToOpenLaptopsFile { name: file_name.to_string() },
+                    )?;
+                let mut new_laptop_informations = serde_json::de::from_reader(laptops_file).into_data_processor_result(
+                    DataProcessorErrorKind::FailedToDeserializeLaptopsFile { name: file_name.to_string() },
+                )?;
+                informations.append(&mut new_laptop_informations);
+            }
+        }
+    }
+    Ok(informations)
 }
 
 /// saves the given price limits to the database, if it actually contains the price limits
@@ -377,7 +417,7 @@ fn insert_price_limits(price_limits: &PriceLimits, db_connection: &PgConnection)
             min_price.eq(insertable_price_limits.min_price),
         ))
         .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::FailedToDeserializeLaptopsFile)?;
+        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
 
     Ok(())
 }
