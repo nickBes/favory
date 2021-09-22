@@ -2,6 +2,7 @@ import scrapy
 import re
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
+from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX, WEIGHT_REGEX
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
@@ -15,8 +16,6 @@ LABELS_MAP = {
         'כרטיס מסך': 'gpu',
         'גרפיקה': 'gpu',
         }
-
-PRICE_REGEX = re.compile('[0-9]+(?:,[0-9]+)?')
 
 def create_page_url(page_index:int)->str:
     return 'https://www.lastprice.co.il/MoreProducts.asp?offset=%s&catcode=85'%page_index
@@ -76,7 +75,12 @@ class LastPriceSpider(NotebookCheckSpider):
             text = remove_tags(paragraph).strip()
             for line in text.splitlines():
                 line = line.strip()
-                parts = line.split(':')
+
+                # the lastprice website uses 2 different separators
+                if ':' in line:
+                    parts = line.split(':')
+                else:
+                    parts = line.split('-')
 
                 # only take paragraphs with key value structure
                 if len(parts) != 2:
@@ -95,6 +99,28 @@ class LastPriceSpider(NotebookCheckSpider):
                     # map the key from its hebrew name to its english name
                     mapped_key = LABELS_MAP[key]
                     laptop_data[mapped_key] = value
+                elif 'זיכרון' in key or 'זכרון' in key and not 'מקסימלי' in key:
+                    # the lasprice website uses many labels for representing the amount of ram
+                    # so to find the right one we just check if it contains the word 'זיכרון' or its variant,
+                    # does not contain the word 'מקסימלי', and contains the regex of the ram.
+                    ram_matches = RAM_REGEX.findall(value)
+                    if len(ram_matches) > 0:
+                        ram_text = ram_matches[0]
+
+                        # remove the 'GB' at the end
+                        ram_text = ram_text[:-len('GB')]
+
+                        laptop_data['ram'] = int(ram_text)
+                elif 'משקל' in key:
+                    # the lasprice website uses many labels for representing the weight of a laptop
+                    # so to find the right one we just check if it contains the word 'משקל',
+                    # and contains the regex of the weight.
+                    weight_matches = WEIGHT_REGEX.findall(value)
+                    if len(weight_matches) > 0:
+                        weight_text = weight_matches[0]
+                        laptop_data['weight'] = float(weight_text)
+
+
 
         return laptop_data
 
@@ -127,7 +153,6 @@ class LastPriceSpider(NotebookCheckSpider):
         price_text = price_text.replace(',','')
 
         return float(price_text)
-
 
     def extract_laptop_data(self, response)->dict:
         '''
