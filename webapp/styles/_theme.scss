@@ -1,14 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,600;0,900;1,300;1,600;1,900&display=swap');
 $primary_text: #000000;
 $secondary_text: #181818;
 $inactive_text: #464646;
 $background: #ffffff;
-$secondary_background: #8f8f8f;
+$secondary_background: #e4e4e4;
 
 $big_text_font: 600 62px/68px 'Poppins', sans-serif;
 $medium_text_font: 300 30px/46px 'Poppins', sans-serif;
 $small_text_font: 300 22px/36px 'Poppins', sans-serif;
 
-$big_text_font_mobile: 600 42px/52px 'Poppins', sans-serif;
+$big_text_font_mobile: 600 38px/52px 'Poppins', sans-serif;
 $medium_text_font_mobile: 300 20px/24px 'Poppins', sans-serif;
 
 $medium_text: 30px;
@@ -17,4 +18,30 @@ $small_text: 24px;
 
 $green: #094119;
 $blue: #068585;
+$light_blue: #e8fffd;
+$very_light_blue: #b1eeee;
 $gray: #141414;
+
+@mixin primary-button {
+    display: block;
+    width: 200px;
+    height: 50px;
+
+    border-radius: 7px;
+    background-color: $blue;
+
+    border: 0px;
+    font: $small_text_font;
+    color: $background;
+    transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+    @media (max-width: 769px) {
+        width: 150px;
+    }
+}
+
+@mixin primary-button-hover {
+    cursor:pointer;
+    border: 1px solid $primary_text;
+    background-color: rgba($color: #000000, $alpha: 0.0);
+    color: $primary_text;
+}

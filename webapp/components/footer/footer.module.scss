@@ -1,0 +1,46 @@
+@use '@/styles/theme';
+
+.footer {
+    position: relative;
+    background-color: theme.$gray;
+    color: theme.$background;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    gap: 10px;
+
+    ul {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        list-style-type: none;
+        margin: 0%;
+        padding: 0;
+        li {
+            max-width: 25px;
+            padding: 10px;
+            transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+        }
+        li:hover{
+            transform: scale(0.9);
+        }
+    }
+
+    > * {          
+        max-width: 600px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+        transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+    }
+
+    a:hover {
+        color: theme.$secondary_background;
+    }
+}

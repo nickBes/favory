@@ -1,7 +1,56 @@
 @use '@/styles/theme';
 
-.gray {
-    background-color: lightgray;
+.firstFormSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    height: 100vh;
+    > * {
+        margin: 0%;
+    }
+    button {
+        @include theme.primary-button;
+        margin: 0%;
+    }
+    button:disabled {
+        @include theme.primary-button;
+        background-color: theme.$secondary_background;
+        color: black;
+    }
+
+    button:hover {
+        @include theme.primary-button-hover;
+    }
+
+    button:hover:disabled {
+        background-color: theme.$secondary_background;
+        color: black;
+        border:none;
+        cursor: default;
+    }
+
+    > h1 {
+        font: theme.$big_text_font;
+        font-size: 50px;
+        color: theme.$primary_text;
+
+        @media (max-width: 768px) {
+            font: theme.$big_text_font_mobile;
+            font-size: 32px;
+        }
+    }
+
+    > p {
+        text-align: center;
+        color: theme.$secondary_text;
+        font: theme.$medium_text_font;
+
+        @media (max-width: 1000px) {
+            font: theme.$medium_text_font_mobile;
+        }
+    }
 }
 
 .main {
@@ -11,7 +60,7 @@
     box-sizing: border-box;
     padding: 15% 5%;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1000px) {
         flex-direction: column;
         margin: auto;
     }
@@ -22,34 +71,12 @@
         h1 {
             margin-block-start: 0.5em;
             margin-block-end: 0.5em;
-            text-align: center;
             font: theme.$big_text_font;
+            text-align: center;
 
-            @media (max-width: 768px) {
+            @media (max-width: 1000px) {
                 font: theme.$big_text_font_mobile;
             }
-        }
-
-        button {
-            margin: auto;
-            display: block;
-            width: 200px;
-            height: 50px;
-
-            border-radius: 20px;
-            background-color: theme.$blue;
-
-            border: 0px;
-            font: theme.$small_text_font;
-            color: theme.$background;
-            transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
-        }
-
-        button:hover {
-            cursor:pointer;
-            border: 1px solid theme.$primary_text;
-            background-color: rgba($color: #000000, $alpha: 0.0);
-            color: theme.$primary_text;
         }
 
         p {
@@ -57,13 +84,22 @@
             color: theme.$secondary_text;
             font: theme.$medium_text_font;
 
-            @media (max-width: 768px) {
+            @media (max-width: 1000px) {
                 font: theme.$medium_text_font_mobile;
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1000px) {
             width: auto;
+        }
+
+        button {
+            @include theme.primary-button;
+            margin: auto;
+        }
+    
+        button:hover {
+            @include theme.primary-button-hover
         }
     }
     .laptopImage {
@@ -71,9 +107,9 @@
         width: 37%;
         max-width: 715px;
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             width: auto;
-            max-width: 500px;
+            max-width: 425px;
         }
     }
 }

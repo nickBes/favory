@@ -3,11 +3,16 @@ import Image from 'next/image'
 import unhappyImage from '../../public/unhappy.jpg'
 import styles from './error.module.scss'
 
-const Error : React.FC = () => {
+interface ErrorProps {
+    message: string
+}
+
+const Error : React.FC<ErrorProps> = ({message}) => {
     return (
-        <section>
+        <figure className={styles.errorFigure}>
             <div className={styles.errorImg}><Image src={unhappyImage} alt="Hank unhappy"></Image></div>
-        </section>
+            <figcaption>{message}</figcaption>
+        </figure>
     )
 }
 

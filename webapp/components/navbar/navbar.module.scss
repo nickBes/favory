@@ -1,5 +1,4 @@
 @use '@/styles/theme';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,600;0,900;1,300;1,600;1,900&display=swap');
 
 .navbar {
     direction: ltr;
@@ -24,6 +23,10 @@
 
     @media (max-width: 768px) {
         padding: 0 5%;
+    }
+    a {
+        text-decoration: none;
+        color: theme.$primary_text;
     }
 }
 
