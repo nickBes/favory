@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 use crate::{errors::*, SelectorDBConnection};
 use db_access::{models, schema};
-use diesel::{ExpressionMethods, QueryDsl, RunQueryDsl};
+use diesel::{BelongingToDsl, ExpressionMethods, QueryDsl, RunQueryDsl};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -21,44 +23,16 @@ pub struct LaptopScoreInCategoryInfo {
     pub category_id: i32,
 }
 
-/// information that we need to query from the database
-/// about a selected laptop
-#[derive(Debug, Queryable)]
-pub struct SelectedLaptopInfo {
-    id: i32,
-    name: String,
-    price: f32,
-    cpu: String,
-    gpu: String,
-}
-impl SelectedLaptopInfo {
-    pub fn id(&self) -> i32 {
-        self.id
-    }
-}
-
 /// information about a selected laptop
 #[derive(Debug, Serialize)]
 pub struct SelectedLaptop {
-    name: String,
-    price: f32,
-    cpu: String,
-    gpu: String,
-    score: f32,
-}
-impl SelectedLaptop {
-    pub fn new(score: f32, info: SelectedLaptopInfo) -> Self {
-        Self {
-            name: info.name,
-            price: info.price,
-            cpu: info.cpu,
-            gpu: info.gpu,
-            score,
-        }
-    }
-    pub fn score(&self)->f32{
-        self.score
-    }
+    pub name: String,
+    pub price: f32,
+    pub cpu: String,
+    pub gpu: String,
+    #[serde(rename = "imageUrls")]
+    pub image_urls: Vec<String>,
+    pub score: f32,
 }
 
 pub trait FetchData {
@@ -68,7 +42,11 @@ pub trait FetchData {
         &self,
         max_price: f32,
     ) -> Result<Vec<LaptopScoreInCategoryInfo>>;
-    fn fetch_selected_laptops(&self, ids: &[i32]) -> Result<Vec<SelectedLaptopInfo>>;
+    fn fetch_selected_laptops(
+        &self,
+        ids: &[i32],
+        id_to_score_map: &HashMap<i32, f32>,
+    ) -> Result<Vec<SelectedLaptop>>;
 }
 impl FetchData for SelectorDBConnection {
     fn fetch_category_names_and_price_limits(&self) -> Result<CategoryNamesAndPriceLimitsData> {
@@ -121,16 +99,37 @@ impl FetchData for SelectorDBConnection {
             .load(&self.0)
             .into_selector_result(SelectorErrorKind::DatabaseError)
     }
-    fn fetch_selected_laptops(&self, ids: &[i32]) -> Result<Vec<SelectedLaptopInfo>> {
+    fn fetch_selected_laptops(
+        &self,
+        ids: &[i32],
+        id_to_score_map: &HashMap<i32, f32>,
+    ) -> Result<Vec<SelectedLaptop>> {
         if ids.is_empty() {
             return Ok(Vec::new());
         }
 
-        use schema::laptop::dsl::*;
+        use schema::laptop;
+        use schema::laptop_image;
 
-        laptop
-            .filter(id.eq_any(ids))
+        let laptops: Vec<models::Laptop> = laptop::table
+            .filter(laptop::id.eq_any(ids))
             .load(&self.0)
-            .into_selector_result(SelectorErrorKind::DatabaseError)
+            .into_selector_result(SelectorErrorKind::DatabaseError)?;
+        let mut selected_laptops = Vec::new();
+        for laptop in laptops {
+            let image_urls: Vec<String> = models::LaptopImage::belonging_to(&laptop)
+                .select(laptop_image::image_url)
+                .load(&self.0)
+                .into_selector_result(SelectorErrorKind::DatabaseError)?;
+            selected_laptops.push(SelectedLaptop {
+                name: laptop.name,
+                cpu: laptop.cpu,
+                gpu: laptop.gpu,
+                price: laptop.price,
+                score: id_to_score_map[&laptop.id],
+                image_urls,
+            });
+        }
+        Ok(selected_laptops)
     }
 }

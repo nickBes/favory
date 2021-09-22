@@ -41,20 +41,14 @@ impl Select for SelectorDBConnection {
         // we have the ids of the selected laptops, we now need to load the
         // information about them from the database
         let selected_laptop_ids = top_laptops.laptop_ids();
-        let laptop_infos = self.fetch_selected_laptops(&selected_laptop_ids)?;
-
-        // collect the laptops with their scores into a vector
         let id_to_score_map = top_laptops.laptop_id_to_score_map();
-        let mut selected_laptops: Vec<SelectedLaptop> = laptop_infos
-            .into_iter()
-            .map(|laptop_info| SelectedLaptop::new(id_to_score_map[&laptop_info.id()], laptop_info))
-            .collect();
+        let mut selected_laptops = self.fetch_selected_laptops(&selected_laptop_ids, &id_to_score_map)?;
 
         // since these laptops were returned from the database, they are no longer sorted by their
         // score, so we should re-sort them by score
         selected_laptops.sort_unstable_by(|laptop1, laptop2|{
             // reverse the comparison result to sort them in descending order instead of ascending
-            laptop1.score().partial_cmp(&laptop2.score()).unwrap().reverse()
+            laptop1.score.partial_cmp(&laptop2.score).unwrap().reverse()
         });
 
         Ok(selected_laptops)
