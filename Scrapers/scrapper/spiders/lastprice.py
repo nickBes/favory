@@ -2,7 +2,7 @@ import scrapy
 import re
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
-from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX, WEIGHT_REGEX
+from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX, WEIGHT_REGEX, DEVICE_WORD_WITH_MISSING_SPACE_REGEX
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
@@ -74,8 +74,9 @@ class LastPriceSpider(NotebookCheckSpider):
         paragraphs = response.css('#descr > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > p').getall()
         for paragraph in paragraphs:
             text = remove_tags(paragraph).strip()
-            for line in text.splitlines():
-                line = line.strip()
+            lines = text.splitlines()
+            for i in range(len(lines)):
+                line = lines[i].strip()
 
                 # the lastprice website uses 2 different separators
                 if ':' in line:
@@ -89,7 +90,7 @@ class LastPriceSpider(NotebookCheckSpider):
 
                 key,value = parts
 
-                value = value.strip()
+                value = value.strip().replace('-',' ')
                 key = key.strip()
 
                 # if the key has not value, skip it
@@ -99,6 +100,19 @@ class LastPriceSpider(NotebookCheckSpider):
                 if key in LABELS_MAP:
                     # map the key from its hebrew name to its english name
                     mapped_key = LABELS_MAP[key]
+
+                    # special case for gpu, where lastprice decided to write the word 'GPU'
+                    # as the value, and write the actual gpu on the next line
+                    if mapped_key == 'gpu' and value == 'GPU':
+                        value = lines[i+1].strip()
+
+                    # special case for missing spaces in the value
+                    for device_word_with_missing_space in DEVICE_WORD_WITH_MISSING_SPACE_REGEX.findall(value):
+                        # a missing space is detected by finding a word that has a digit right after it,
+                        # with no space
+                        word,digit_after_word = device_word_with_missing_space
+                        value = value.replace(word+digit_after_word,word+' '+digit_after_word)
+
                     laptop_data[mapped_key] = value
                 elif 'זיכרון' in key or 'זכרון' in key and not 'מקסימלי' in key:
                     # the lasprice website uses many labels for representing the amount of ram
