@@ -30,9 +30,9 @@ const Collapse : React.FC <CollapseProps> = ({isActive, exclude}) => {
     }
     return (
         <div className={`${styles.collapse} ${isActive ? styles.isActive : undefined}`}>
-            <ul>
+            <menu>
                 {createList()}
-            </ul>
+            </menu>
         </div>
     )
 }

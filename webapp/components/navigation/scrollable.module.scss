@@ -9,7 +9,7 @@
     }
 }
 
-.scrollable_v > section {
+.scrollable_v > * {
     height: 100vh;
     display: flex;
     position: relative;
@@ -36,9 +36,10 @@
     }
 }
 
-.scrollable_h > section {
+.scrollable_h > * {
     flex: none;
     width: 100vw;
+    height: 100vh;
     scroll-snap-align: start;
 }
 

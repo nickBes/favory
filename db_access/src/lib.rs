@@ -9,7 +9,7 @@ use diesel::{Connection, PgConnection};
 
 pub fn get_db_connection()->PgConnection{
     let db_url = if cfg!(debug_assertions){
-        "postgres://postgres:putin@localhost/favory".into()
+        "postgres://postgres:favory@localhost/favory".into()
     }else{
         std::env::var("DATABASE_URL").expect("the DATABASE_URL environment variable must be set")
     };

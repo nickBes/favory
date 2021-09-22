@@ -1,4 +1,5 @@
 import React from 'react'
+import styles from './card-selection.module.scss'
 import Card, { CategoryData, CardClickCallback } from './card'
 
 export type CategoryMap = {[category: string]: CategoryData}
@@ -11,7 +12,7 @@ interface CardSelectionProps {
 
 const CardSelection : React.FC<CardSelectionProps> = ({categoryMap, categories, onCardClick}) => {
     return (
-        <div>
+        <div className={styles.cardSelection}>
             {categories.map((category, index) => {
             // checkes whether category exists in the
             // category map as the category map is created manually

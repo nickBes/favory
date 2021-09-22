@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import styles from './card.module.scss'
 import Image from 'next/image'
 
 export interface CategoryData {
@@ -21,12 +22,15 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
         onCardClick(category)
     }
     return (
-        <div onClick={updateActivity}>
-            <Image src={image} alt={description}></Image>
-            <h1>{title}</h1>
-            {/* Debug purposes before designing */}
-            <p>{isActive ? 'active' : 'not'}</p>
-            <p>{description}</p>
+        <div className={`${styles.cardWrapper} ${isActive ? styles.activeCardWrapper : ''}`} >
+            <figure onClick={updateActivity} className={styles.card}>
+                <div className={styles.cardIcon}><Image src={image} alt={title}></Image></div>
+                <div><figcaption>{title}</figcaption></div>
+                {/* Debug purposes before designing */}
+                {/* <p>{isActive ? 'active' : 'not'}</p> */}
+                {/* will add a tooltip instead of the description */}
+                {/* <p>{description}</p> */}
+            </figure>
         </div>
     )
 }
