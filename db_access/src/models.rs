@@ -72,7 +72,7 @@ pub struct NewCategory<'a> {
     pub name: &'a str,
 }
 
-#[derive(Debug, Queryable, Associations)]
+#[derive(Debug, Identifiable, Queryable, Associations)]
 #[belongs_to(Laptop)]
 #[belongs_to(GlobalBenchmark)]
 #[table_name = "benchmark"]
@@ -91,7 +91,7 @@ pub struct NewBenchmark {
     pub global_benchmark_id: i32,
 }
 
-#[derive(Debug, Queryable, Associations)]
+#[derive(Debug, Identifiable, Queryable, Associations)]
 #[belongs_to(Category)]
 #[belongs_to(GlobalBenchmark)]
 #[table_name = "benchmark_score_in_category"]
@@ -110,7 +110,7 @@ pub struct NewBenchmarkScoreInCategory {
     pub global_benchmark_id: i32,
 }
 
-#[derive(Debug, Queryable, Associations)]
+#[derive(Debug, Identifiable, Queryable, Associations)]
 #[belongs_to(Laptop)]
 #[belongs_to(Category)]
 #[table_name = "laptop_score_in_category"]
@@ -145,7 +145,7 @@ pub struct NewPriceLimits {
     pub min_price: f32,
 }
 
-#[derive(Debug, Queryable, Associations)]
+#[derive(Debug, Identifiable, Queryable, Associations)]
 #[belongs_to(Laptop)]
 #[table_name = "laptop_image"]
 pub struct LaptopImage{
