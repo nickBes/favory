@@ -27,6 +27,7 @@ pub struct LaptopScoreInCategoryInfo {
 #[derive(Debug, Serialize)]
 pub struct SelectedLaptop {
     pub name: String,
+    pub url: String,
     pub price: f32,
     pub cpu: String,
     pub gpu: String,
@@ -123,6 +124,7 @@ impl FetchData for SelectorDBConnection {
                 .into_selector_result(SelectorErrorKind::DatabaseError)?;
             selected_laptops.push(SelectedLaptop {
                 name: laptop.name,
+                url: laptop.url,
                 cpu: laptop.cpu,
                 gpu: laptop.gpu,
                 price: laptop.price,
