@@ -233,7 +233,8 @@ fn insert_laptops_benchmarks_and_image_urls(
         // insert the laptop and get the laptop's id
         let inserted_laptop_id: i32 = diesel::insert_into(laptop::table)
             .values(models::NewLaptop {
-                name: &&laptop_name,
+                name: laptop_name,
+                url: &laptop_info.url,
                 price: laptop_info.price,
                 cpu: &laptop_info.cpu,
                 gpu: &laptop_info.gpu,
