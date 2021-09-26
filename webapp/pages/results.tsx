@@ -59,20 +59,20 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 	console.log('selection result:', pageProps)
 	if (pageProps.success) {
 		return (
-			<>
+			<section>
 				<Navbar path={router.pathname}></Navbar>
 				<div>
 					<LaptopResultsList laptops={pageProps.laptops} />
 				</div>
-			</>
+			</section>
 		)
 	} else {
 		// somehow include information about the error
 		return (
-			<>
+			<section>
 				<Navbar path={router.pathname}></Navbar>
 				<Error message={getErrorMessage(pageProps.error)}></Error>
-			</>
+			</section>
 		)
 	}
 }

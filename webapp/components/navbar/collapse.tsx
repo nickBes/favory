@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './collapse.module.scss'
+import Link from 'next/link'
 
 // represents a mapping of urls to titles that will be used in the
 // Collapse component menu
@@ -26,7 +27,7 @@ const Collapse : React.FC <CollapseProps> = ({isActive, exclude}) => {
 
     const createList = () => {
         const collapseUrlObject = createCollapseUrlObject(exclude)
-        return Object.keys(collapseUrlObject).map((url, index) => <li key={index}><a href={url}>{collapseUrlObject[url]}</a></li>)
+        return Object.keys(collapseUrlObject).map((url, index) => <li key={index}><Link href={url}>{collapseUrlObject[url]}</Link></li>)
     }
     return (
         <div className={`${styles.collapse} ${isActive ? styles.isActive : undefined}`}>
