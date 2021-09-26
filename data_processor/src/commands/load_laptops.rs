@@ -1,4 +1,9 @@
 use crate::errors::*;
+use crate::laptop_set::LaptopInformation;
+use crate::laptop_set::LaptopInfosByName;
+use crate::laptop_set::LaptopPuBenchmarksData;
+use crate::laptop_set::LaptopSet;
+use crate::laptop_set::LaptopsFileEntry;
 use bigdecimal::BigDecimal;
 use bigdecimal::Zero;
 use db_access::models::NewLaptopImage;
@@ -8,7 +13,6 @@ use diesel::prelude::*;
 use diesel::PgConnection;
 use lazy_static::lazy_static;
 use regex::Regex;
-use serde::Deserialize;
 use std::collections::HashMap;
 use std::fs::read_dir;
 use std::fs::OpenOptions;
@@ -19,40 +23,6 @@ lazy_static! {
 }
 
 const LAPTOPS_DIR_PATH: &str = "laptops";
-
-/// the laptops file is just an array of laptop informations
-type LaptopInformations = Vec<LaptopInformation>;
-
-#[derive(Debug, Deserialize)]
-struct LaptopInformation {
-    name: String,
-    price: f32,
-    cpu: String,
-    cpu_bench: LaptopPuBenchmarksData,
-    gpu: String,
-    gpu_bench: LaptopPuBenchmarksData,
-    image_urls: Vec<String>,
-}
-impl PartialEq for LaptopInformation{
-    fn eq(&self, other: &Self) -> bool {
-        self.name.eq(&other.name)
-    }
-}
-impl Eq for LaptopInformation{ }
-impl PartialOrd for LaptopInformation{
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        self.name.partial_cmp(&other.name)
-    }
-}
-impl Ord for LaptopInformation{
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.name.cmp(&other.name)
-    }
-}
-
-/// the benchmarks of the cpu or gpu in a laptop object from the laptops.json file,
-/// mapped using each benchmark's name
-type LaptopPuBenchmarksData = HashMap<String, f32>;
 
 // the info about each global benchmark info. The name is not included here
 // since this struct is stored in a hashmap that maps each global benchmark's name
@@ -151,11 +121,11 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     delete_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
 
     println!("loading the laptops file...");
-    let laptops_file = parse_laptops_files()?;
+    let laptops = parse_laptops_files()?;
 
     println!("calculating global benchmarks...");
     // calculate the global benchmarks
-    let global_benchmark_infos = calculate_global_benchmarks(&laptops_file);
+    let global_benchmark_infos = calculate_global_benchmarks(&laptops);
 
     // insert the global benchmarks, and map them, so we can get each global benchmark's id
     // using its name
@@ -170,11 +140,11 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     println!("inserting laptops, benchmarks and image urls...");
     // insert the laptops and benchmarks
     let price_limits = insert_laptops_benchmarks_and_image_urls(
-        &laptops_file,
+        &laptops,
         &global_benchmarks_id_by_name,
         db_connection,
     )?;
-    println!("inserted {} laptops", laptops_file.len());
+    println!("inserted {} laptops", laptops.len());
 
     println!("inserting price limits...");
     insert_price_limits(&price_limits, db_connection)?;
@@ -205,7 +175,7 @@ fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnect
 /// into the database. while iterating through the laptops also finds the laptops price limits,
 /// to avoid iterating over the laptops twice, which improves performance.
 fn insert_laptops_benchmarks_and_image_urls(
-    laptops_file: &[LaptopInformation],
+    laptops: &LaptopInfosByName,
     global_benchmarks_id_by_name: &HashMap<String, i32>,
     db_connection: &PgConnection,
 ) -> Result<PriceLimits> {
@@ -256,14 +226,14 @@ fn insert_laptops_benchmarks_and_image_urls(
 
     let mut price_limits = PriceLimits::new();
 
-    for laptop_info in laptops_file {
+    for (laptop_name,laptop_info) in laptops {
         // update the price limits according to the laptop's price
         price_limits.update(laptop_info.price);
 
         // insert the laptop and get the laptop's id
         let inserted_laptop_id: i32 = diesel::insert_into(laptop::table)
             .values(models::NewLaptop {
-                name: &laptop_info.name,
+                name: &&laptop_name,
                 price: laptop_info.price,
                 cpu: &laptop_info.cpu,
                 gpu: &laptop_info.gpu,
@@ -312,7 +282,7 @@ fn insert_laptops_benchmarks_and_image_urls(
 /// is no need to update the global benchmarks when inserting the benchmarks, and the whole process of calculating
 /// the global benchmarks was redurced to a single query.
 fn calculate_global_benchmarks(
-    laptops_file: &[LaptopInformation],
+    laptops: &LaptopInfosByName
 ) -> HashMap<String, GlobalBenchmarkInfo> {
     /// updates the info of the global benchmarks according to each of given the benchmarks
     /// the prefix is used to specify the pu type of the benchmarks, since we are not using
@@ -334,7 +304,7 @@ fn calculate_global_benchmarks(
     }
 
     let mut info_by_name = HashMap::new();
-    for laptop_info in laptops_file {
+    for laptop_info in laptops.values() {
         update_info_according_to_benchmarks(&laptop_info.cpu_bench, &mut info_by_name, 'c');
         update_info_according_to_benchmarks(&laptop_info.gpu_bench, &mut info_by_name, 'g');
     }
@@ -377,8 +347,9 @@ fn insert_and_map_global_benchmarks(
     Ok(global_benchmarks_map)
 }
 
-fn parse_laptops_files() -> Result<LaptopInformations> {
-    let mut informations = LaptopInformations::new();
+fn parse_laptops_files() -> Result<LaptopInfosByName> {
+    let mut laptops = LaptopSet::new();
+
     for laptops_dir_entry in read_dir(LAPTOPS_DIR_PATH)
         .into_data_processor_result(DataProcessorErrorKind::FailedToReadLaptopsDirectory)?
     {
@@ -401,19 +372,18 @@ fn parse_laptops_files() -> Result<LaptopInformations> {
                     .into_data_processor_result(
                         DataProcessorErrorKind::FailedToOpenLaptopsFile { name: file_name.to_string() },
                     )?;
-                let mut new_laptop_informations = serde_json::de::from_reader(laptops_file).into_data_processor_result(
+                let new_laptops:Vec<LaptopsFileEntry> = serde_json::de::from_reader(laptops_file).into_data_processor_result(
                     DataProcessorErrorKind::FailedToDeserializeLaptopsFile { name: file_name.to_string() },
                 )?;
-                informations.append(&mut new_laptop_informations);
+                
+                for new_laptop in new_laptops{
+                    laptops.update(new_laptop);
+                }
             }
         }
     }
 
-    // remove duplicate laptops
-    informations.sort_unstable();
-    informations.dedup();
-
-    Ok(informations)
+    Ok(laptops.laptop_infos_by_name())
 }
 
 /// saves the given price limits to the database, if it actually contains the price limits

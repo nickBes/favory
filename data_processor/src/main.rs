@@ -1,6 +1,7 @@
 mod cli;
 mod commands;
 mod errors;
+mod laptop_set;
 
 use std::{time::Instant};
 
