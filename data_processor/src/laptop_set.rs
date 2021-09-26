@@ -70,7 +70,7 @@ impl LaptopSet {
 
                 // get the fields that we need from the new laptop's information
                 let LaptopInformation{
-                    image_urls: new_image_urls, price: new_price, ..
+                    image_urls: new_image_urls, price: new_price, url: new_url, ..
                 } = new_laptop_information;
 
                 // if the new laptop has image urls, while the existing one doesn't,
@@ -81,8 +81,11 @@ impl LaptopSet {
 
                 // if the new laptop's price is lower than the existing laptop's price,
                 // use the price of the new laptop, which is the lower price.
+                // if we use the price of the new laptop, we must also update the url
+                // to the url of the new laptop
                 if new_price < existing_laptop.price{
-                    existing_laptop.price = new_price
+                    existing_laptop.price = new_price;
+                    existing_laptop.url = new_url;
                 }
             }
             Entry::Vacant(vacant_entry) => {
