@@ -19,6 +19,7 @@ interface CategoryAndSliderValues {
 const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
     // refrence of the actuall slider component
     const rangeRef = useRef<HTMLDivElement>(null)
+    // using useState because we want the component to rerender when the width is changed
     const [rangeWidth, setRangeWidth] = useState(0)
     // use state is only called once, to update the categoryAndSliderValues so we need to use useEffect
     // that is called when tags are changed
