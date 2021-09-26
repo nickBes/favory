@@ -71,7 +71,7 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 		return (
 			<>
 				<Navbar path={router.pathname}></Navbar>
-				<Error message={(pageProps as ResultsPagePropsFailure).error.type}></Error>
+				<Error message={getErrorMessage(pageProps.error)}></Error>
 			</>
 		)
 	}
@@ -92,6 +92,24 @@ type SelectionRequestExtractionResultFailure = {
 type SelectionRequestExtractionResult =
 	| SelectionRequestExtractionResultSuccess
 	| SelectionRequestExtractionResultFailure
+
+// returns a human readable error message for the given error
+function getErrorMessage(error: ResultsPageError): string {
+	if (error.type == "invalidField") {
+		return `invalid value for field "${error.fieldName}"`
+	} else if (error.type == "missingField") {
+		return `missing field "${error.fieldName}"`
+	} else if (error.type == "tooManyRequests") {
+		return `you have reached your requests limit`
+	} else if (error.type == "invalidMethod") {
+		return `invalid HTTP method`
+	} else if (error.type == "selectionError"){
+		return `internal server error`
+	} else{
+		return "";
+	}
+}
+
 
 // extracts the selection request from the query
 async function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): Promise<SelectionRequestExtractionResult> {
@@ -209,7 +227,7 @@ async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<Resu
 export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
 	let result: ResultsPageProps;
 	if (req.method == 'POST') {
-		if (await hasExceededRateLimit(req.socket.remoteAddress as string)){
+		if (await hasExceededRateLimit(req.socket.remoteAddress as string)) {
 			console.log('exceeded rate limit')
 			result = {
 				success: false,
@@ -239,10 +257,10 @@ export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
 		if (previousResults) {
 			result = JSON.parse(previousResults)
 		} else {
-			result = {
-				success: false,
-				error: {
-					type: 'invalidMethod'
+			return {
+				redirect: {
+					destination: '/',
+					permanent: false,
 				}
 			}
 		}
