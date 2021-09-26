@@ -19,9 +19,20 @@ interface CategoryAndSliderValues {
 const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
     // refrence of the actuall slider component
     const rangeRef = useRef<HTMLDivElement>(null)
+    // using useState because we want the component to rerender when the width is changed
+    const [rangeWidth, setRangeWidth] = useState(0)
     // use state is only called once, to update the categoryAndSliderValues so we need to use useEffect
     // that is called when tags are changed
     const [categoryAndSliderValues, setcategoryAndSliderValues] = useState<CategoryAndSliderValues>({categories: {}, values: []})
+
+
+    useEffect(() => {
+        setRangeWidth(rangeRef.current?.clientWidth ?? 0)
+        window.addEventListener('resize', () => {
+            setRangeWidth(rangeRef.current?.clientWidth ?? 0)
+        })
+    }, [])
+
     useEffect(() => {
         const generateDefaultValues = () => {
             let defaultValues = new Array<number>()
@@ -105,7 +116,7 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
                         allowCross={false}
                         pushable={true}
                 />
-                {createTooltipFromCategoryAndSliderValues(categoryAndSliderValues, max, min, rangeRef.current?.clientWidth ?? 0)}
+                {createTooltipFromCategoryAndSliderValues(categoryAndSliderValues, max, min, rangeWidth)}
             </div>
             {/* Range doesn't create ibputs, so we need to create them ourselves as
                 the values are passed with a <form> */}
