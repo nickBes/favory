@@ -37,6 +37,7 @@ table! {
     laptop (id) {
         id -> Int4,
         name -> Text,
+        url -> Text,
         price -> Float4,
         cpu -> Text,
         gpu -> Text,
