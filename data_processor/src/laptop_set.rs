@@ -6,6 +6,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 pub struct LaptopsFileEntry {
     name: String,
+    url: String,
     price: f32,
     cpu: String,
     cpu_bench: LaptopPuBenchmarksData,
@@ -17,6 +18,7 @@ impl LaptopsFileEntry {
     fn name_and_information(self) -> (String, LaptopInformation) {
         let LaptopsFileEntry {
             name,
+            url,
             price,
             cpu,
             cpu_bench,
@@ -25,13 +27,14 @@ impl LaptopsFileEntry {
             image_urls,
         } = self;
         (name, LaptopInformation{
-            price,cpu,cpu_bench, gpu,gpu_bench, image_urls
+            url,price,cpu,cpu_bench, gpu,gpu_bench, image_urls
         })
     }
 }
 
 #[derive(Debug)]
 pub struct LaptopInformation {
+    pub url: String,
     pub price: f32,
     pub cpu: String,
     pub cpu_bench: LaptopPuBenchmarksData,

@@ -12,6 +12,7 @@ pub enum PuType{
 pub struct Laptop {
     pub id: i32,
     pub name: String,
+    pub url: String,
     pub price: f32,
     pub cpu: String,
     pub gpu: String,
@@ -20,11 +21,12 @@ pub struct Laptop {
 
 #[derive(Debug, Insertable)]
 #[table_name="laptop"]
-pub struct NewLaptop<'a, 'b, 'c> {
+pub struct NewLaptop<'a, 'b, 'c, 'd> {
     pub name: &'a str,
+    pub url: &'b str,
     pub price: f32,
-    pub cpu: &'b str,
-    pub gpu: &'c str,
+    pub cpu: &'c str,
+    pub gpu: &'d str,
 }
 
 #[derive(Debug, Queryable, Identifiable)]

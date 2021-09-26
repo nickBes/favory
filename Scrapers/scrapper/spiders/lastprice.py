@@ -176,11 +176,14 @@ class LastPriceSpider(NotebookCheckSpider):
         # key value data
         laptop_data = self.extract_laptop_key_value_data(response)
 
-        # images
-        laptop_data['image_urls'] = self.extract_laptop_images(response)
-
 
         # additional fields that are not in key value pairs
+
+        # url
+        laptop_data['url'] = response.url
+
+        # images
+        laptop_data['image_urls'] = self.extract_laptop_images(response)
 
         # brand
         # extracting the brand from the url to the brand's lastprice page

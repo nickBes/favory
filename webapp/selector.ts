@@ -27,6 +27,7 @@ export type SelectorRequest =
 
 export type SelectedLaptop = {
 	name: string,
+	url: string,
 	price: number,
 	cpu: string,
 	gpu: string,
@@ -50,9 +51,8 @@ export type PriceLimits = {
 	min: number
 }
 
-// a mutex over the socket and the connected variables.
-// it's initiated before the exported functions
-// as they are using this variable
+// a mutex over the socket.
+// it's initialized before the exported functions as they are using it.
 const mutex = new Mutex();
 
 let socket: net.Socket;
