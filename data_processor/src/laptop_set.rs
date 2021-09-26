@@ -94,8 +94,13 @@ impl LaptopSet {
             }
         }
     }
+    
+    fn remove_laptops_without_image_urls(&mut self){
+        self.laptop_infos_by_name.retain(|_,laptop_info| !laptop_info.image_urls.is_empty())
+    }
 
-    pub fn laptop_infos_by_name(self)->HashMap<String, LaptopInformation>{
+    pub fn laptop_infos_by_name(mut self)->HashMap<String, LaptopInformation>{
+        self.remove_laptops_without_image_urls();
         self.laptop_infos_by_name
     }
 }

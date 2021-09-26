@@ -158,7 +158,11 @@ fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnect
     use schema::benchmark;
     use schema::global_benchmark;
     use schema::laptop;
+    use schema::laptop_image;
 
+    diesel::delete(laptop_image::table)
+        .execute(db_connection)
+        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
     diesel::delete(benchmark::table)
         .execute(db_connection)
         .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
