@@ -7,9 +7,13 @@
     @media (max-width: 768px) {
         scroll-snap-type: y mandatory;
     }
+
+    > * {
+        scroll-snap-align: start;
+    }
 }
 
-.scrollable_v > * {
+.scrollable_v > :not(footer) {
     height: 100vh;
     display: flex;
     position: relative;
@@ -26,17 +30,17 @@
 
 .scrollable_h {
     scroll-snap-type: x none;
-    overflow-x: scroll;
+    overflow-x: hidden;
     width: 100vw;
     overflow-y: hidden;
     display: flex;
 
-    @media (max-width: 768px) {
-        scroll-snap-type: x mandatory;
+    > * {
+        scroll-snap-align: start;
     }
 }
 
-.scrollable_h > * {
+.scrollable_h > :not(footer){
     flex: none;
     width: 100vw;
     height: 100vh;
