@@ -6,7 +6,7 @@ from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
 PAGE_AMOUNT = 1
-ITEM_AMOUNT = 2
+ITEM_AMOUNT = 7
 
 LABELS_MAP = {
         'מעבד': 'cpu',
@@ -108,6 +108,14 @@ class BugSpider(NotebookCheckSpider):
                     # extract the weight float from the weight string
                     if mapped_key == 'weight':
                         value = float(WEIGHT_REGEX.findall(value)[0])
+                    # extract the ram integer from the ram string
+                    if mapped_key == 'ram':
+                        ram_text = RAM_REGEX.findall(value)[0]
+
+                        # remove the 'GB' string from the ram text
+                        ram_text = ram_text[:-len('GB')]
+
+                        value = int(ram_text)
 
                     laptop_data[mapped_key] = value
 
