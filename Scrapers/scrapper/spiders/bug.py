@@ -70,6 +70,13 @@ class BugSpider(NotebookCheckSpider):
                                 'laptop_urls': laptop_urls,
                             })
 
+    def extract_laptop_images(self, response)->str:
+        image_relative_urls = response.css('#image-gallery > li > img::attr(src)').getall()
+
+        # convert the relative urls to actual urls
+        return [create_url_from_relative_url(relative_url) for relative_url in image_relative_urls]
+
+
     def extract_laptop_data(self, response)->dict:
         '''
         Extracts a dictionary of laptop data from the laptop's page
@@ -111,6 +118,9 @@ class BugSpider(NotebookCheckSpider):
 
         # url
         laptop_data['url'] = response.url
+
+        # image urls
+        laptop_data['image_urls'] = self.extract_laptop_images(response)
 
         return laptop_data
 
