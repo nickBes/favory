@@ -40,17 +40,17 @@ interface HomeProps{
 const categoryMap : CategoryMap = {
   'dev': {
     title: 'תכנות',
-    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות.',
     image: devIcon
   },
   'design': {
     title: 'עיצוב דיגיטלי',
-    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן.',
     image: designIcon
   },
   'gaming': {
     title: 'גיימינג או עיצוב תלת מימדי',
-    description: ' בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי ',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי.',
     image: gamingIcon
   },
   'study': {

@@ -52,3 +52,31 @@
     transition: .1s cubic-bezier(0.66, 0.25, 0.32, 0.74);
     background-color: theme.$secondary_background;
 }
+
+.descIcon {
+    border: 1px solid theme.$secondary_text;
+    width: 15px;
+    line-height: 15px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 25px;
+    transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+    color: theme.$secondary_text;
+}
+
+.descIcon:hover {
+    transition: .1s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+    background-color: theme.$light_gray;
+}
+
+.descIconWrapper {
+    position: relative;
+    right: 15px;
+    top: 15px;
+    width: fit-content;
+    cursor: pointer;
+    .activeDesc {
+        transition: .1s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+        background-color: theme.$light_gray;
+    }
+}
