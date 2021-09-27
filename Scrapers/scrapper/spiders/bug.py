@@ -2,7 +2,7 @@ import scrapy
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.ivory import get_laptop_dict_from_response
 from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
-from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX
+from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
 PAGE_AMOUNT = 1
@@ -121,6 +121,18 @@ class BugSpider(NotebookCheckSpider):
 
         # image urls
         laptop_data['image_urls'] = self.extract_laptop_images(response)
+
+        # price
+        price_label = response.css('#product-price-container > ins:nth-child(1)::text').get()
+
+        # extract the price text from the price label
+        price_text = PRICE_REGEX.findall(price_label)[0]
+
+        # remove the ',' from the price text
+        price_text = price_text.replace(',','')
+
+        laptop_data['price'] = float(price_text)
+
 
         return laptop_data
 
