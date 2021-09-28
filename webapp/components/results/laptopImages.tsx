@@ -1,5 +1,6 @@
 import ImageGallery from 'react-image-gallery';
 import "react-image-gallery/styles/css/image-gallery.css";
+import styles from './laptopImages.module.scss'
 
 interface LaptopImagesProps {
 	imageUrls: string[],
@@ -14,7 +15,14 @@ const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {
 	})
 	return (
 		<>
-			<ImageGallery items={imageAndThumbnailUrls} showFullscreenButton={false} showPlayButton={false} isRTL={true} />
+			<ImageGallery 
+				items={imageAndThumbnailUrls} 
+				showFullscreenButton={false} 
+				showPlayButton={false} 
+				showThumbnails={false} 
+				showBullets={true}
+				isRTL={true} 
+				additionalClass={styles.behindNavbar}/>
 		</>
 	)
 }
