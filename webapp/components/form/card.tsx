@@ -18,18 +18,18 @@ interface CardProps extends CategoryData {
 
 const Card : React.FC<CardProps> = ({category, title, description, image, onCardClick}) => {
     const [isActive, setIsActive] = useState(false)
-    const [descOn, setDescOn] = useState(false)
+    const [isDescriptionOn, setIsDescriptionOn] = useState(false)
     const updateActivity = () => {
         setIsActive(prevIsActive => !prevIsActive)
         onCardClick(category)
     }
-    const updateDesc = () => setDescOn(prev => !prev)
+    const toggleDescription = () => setIsDescriptionOn(prev => !prev)
     return (
         <div className={`${styles.cardWrapper} ${isActive ? styles.activeCardWrapper : ''}`} >
             <Popover 
-                isOpen={descOn} 
+                isOpen={isDescriptionOn} 
                 padding={10}
-                onClickOutside={updateDesc}
+                onClickOutside={toggleDescription}
                 content={({position, childRect, popoverRect}) => (
                     <ArrowContainer 
                         position={position}
@@ -50,7 +50,7 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
                         {description}</div>
                     </ArrowContainer>
                 )}>
-                <div className={styles.descIconWrapper}><div className={`${styles.descIcon} ${descOn ? styles.activeDesc : ''}`} onClick={updateDesc}>?</div></div>
+                <div className={styles.descIconWrapper}><div className={`${styles.descIcon} ${isDescriptionOn ? styles.activeDesc : ''}`} onClick={toggleDescription}>?</div></div>
             </Popover>
             <figure onClick={updateActivity} className={styles.card}>
                 <div className={styles.cardIcon}><Image src={image} alt={title}></Image></div>
