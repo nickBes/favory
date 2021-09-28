@@ -3,6 +3,9 @@
 body {
     margin: 0;
     scroll-behavior: smooth;
+    background-image: 
+        radial-gradient(at 47% 33%, hsl(0.00, 10%, 95%) 0, transparent 59%), 
+        radial-gradient(at 82% 65%, hsl(60.00, 100%, 96%) 0, transparent 55%);
 }
 
 * {

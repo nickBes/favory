@@ -1,5 +1,5 @@
 // __styles__
-import styles from '@/styles/index/index.module.scss'
+import styles from '@/styles/index.module.scss'
 
 // __next & react__
 import React, { useState, useRef, MutableRefObject } from 'react'

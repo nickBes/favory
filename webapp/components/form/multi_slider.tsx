@@ -28,10 +28,11 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
 
     useEffect(() => {
         setRangeWidth(rangeRef.current?.clientWidth ?? 0)
-        window.addEventListener('resize', () => {
-            setRangeWidth(rangeRef.current?.clientWidth ?? 0)
-        })
-    }, [])
+        const handleResize = () =>  setRangeWidth(rangeRef.current?.clientWidth ?? 0)
+        window.addEventListener('resize', handleResize)
+        // don't fucking know why im doing this but it fixes the a cleanup issue or something 🤷🏻‍♂️
+        return () => window.removeEventListener('resize', handleResize)
+    })
 
     useEffect(() => {
         const generateDefaultValues = () => {
