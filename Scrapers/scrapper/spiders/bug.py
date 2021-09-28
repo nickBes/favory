@@ -89,6 +89,9 @@ class BugSpider(NotebookCheckSpider):
         # using find('div') because beautifulsoup appends html and body tags 
         # to the given html document if it doesn't have these tags.
         properties_container = BeautifulSoup(response.css('#product-properties-container').get(), 'html5lib').find('div')
+
+        # the properties container contains multiple property lists, we should scrape
+        # data from each of them
         for property_list in properties_container.children:
             for key_elem,value_elem in iterate_in_pairs(property_list.children):
                 key = key_elem.text
