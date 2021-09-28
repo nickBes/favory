@@ -3,7 +3,7 @@ import Navbar from '@/components/navbar/navbar'
 import { useRouter } from 'next/router'
 import styles from '@/styles/article.module.scss'
 
-const Team : React.FC = () => {
+const WhyUS : React.FC = () => {
     const router = useRouter()
     return (
         <article className={styles.article}>    
@@ -19,4 +19,4 @@ const Team : React.FC = () => {
     )
 }
 
-export default Team
+export default WhyUS

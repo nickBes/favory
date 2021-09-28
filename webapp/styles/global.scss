@@ -4,8 +4,9 @@ body {
     margin: 0;
     scroll-behavior: smooth;
     background-image: 
-        radial-gradient(at 47% 33%, hsl(0.00, 10%, 95%) 0, transparent 59%), 
-        radial-gradient(at 82% 65%, hsl(60.00, 100%, 96%) 0, transparent 55%);
+        radial-gradient(at 47% 33%, rgb(205, 209, 255) 0, transparent 59%), 
+        radial-gradient(at 82% 65%, rgb(255, 255, 255) 0, transparent 70%),
+        radial-gradient(at 30% 45%, rgb(255, 124, 216) 0, transparent 70%);
 }
 
 * {
