@@ -118,17 +118,13 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 						<section ref={ratingRef} hidden={tags.length < 2}>
 							<div>
 								<h1>דרגו את הקטגוריות שבחרתם.</h1>
-								{/* {tags.map(tag => {
-                  return (
-                    <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
-                  )
-                })} */}
 								<MultiSlider
 									min={0}
 									max={100}
 									bonesAmount={tags.length}
 									inputNames={tags}
 									minDistanceInPixelsBetweenJoints={20}
+									direction="vertical"
 									jointTooltipsRenderer={
 										(_,distanceFromStart)=>{
 											return (
@@ -147,7 +143,6 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 											)
 										}
 									} />
-								{/*<MultiSlider tags={tags} min={0} max={100}></MultiSlider>*/}
 								<a onClick={scrollToRef(tagRef)}>Prev</a>
 								<a onClick={scrollToRef(priceRef)}>Next</a>
 							</div>

@@ -1,13 +1,15 @@
 import React from 'react'
 import { Popover, ArrowContainer, PopoverPosition} from 'react-tiny-popover'
+import Direction from './multi-slider/direction'
 
 interface TooltipProps {
+	direction: Direction,
     content: JSX.Element
-    distanceFromLeft: number
+    distanceFromStart: number
     position: PopoverPosition
 }
 
-const Tooltip : React.FC<TooltipProps> = ({content, distanceFromLeft, position}) => {
+const Tooltip : React.FC<TooltipProps> = ({content, distanceFromStart, position, direction}) => {
     return (
         <Popover 
             isOpen={true}
@@ -28,8 +30,8 @@ const Tooltip : React.FC<TooltipProps> = ({content, distanceFromLeft, position})
             <div style={{
                 visibility: 'hidden',
                 position: 'absolute',
-                left: distanceFromLeft,
-                top: '50%',
+                [direction=='horizontal'?'left':'top']: distanceFromStart,
+                [direction=='horizontal'?'top':'left']: '50%',
                 transform: 'translate(-50%, -50%)'
             }}></div>
     </Popover>

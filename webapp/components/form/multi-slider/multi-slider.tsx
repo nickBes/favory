@@ -2,13 +2,7 @@ import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import Bone from './bone'
 import Joint from './joint'
 import Tooltip from '../tooltip'
-/*
- * inputs:
- * min, max, amount of bones, input names, tooltips on bones, tooltip on joints, marks: number[]
- *
- * value - size of each bone, between to the min and max values
- * 
- */
+import Direction from './direction'
 
 interface MultiSliderProps {
 	min: number,
@@ -19,6 +13,7 @@ interface MultiSliderProps {
 	// boneWidth is between 0 and 1
 	boneTooltipsRenderer?: (boneIndex: number, boneWidth: number) => JSX.Element,
 	jointTooltipsRenderer?: (jointIndex: number, distanceFromStart: number) => JSX.Element,
+	direction: Direction,
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -31,7 +26,16 @@ function clamp(value: number, min: number, max: number): number {
 	}
 }
 
-const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNames, minDistanceInPixelsBetweenJoints, boneTooltipsRenderer, jointTooltipsRenderer}) => {
+const MultiSlider: React.FC<MultiSliderProps> = ({
+	min,
+	max,
+	bonesAmount,
+	inputNames,
+	minDistanceInPixelsBetweenJoints,
+	boneTooltipsRenderer,
+	jointTooltipsRenderer,
+	direction
+}) => {
 	const emptyRect = {x: 0, y: 0, width: 0, height: 0}
 
 	const containerRef = useRef<HTMLDivElement>(null)
@@ -51,6 +55,12 @@ const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNa
 			width: rect.width,
 			height: rect.height,
 		})
+	}
+
+	// returns the currentRect's width or height, according to to the 
+	// direction property
+	function getLength():number{
+		return direction=='horizontal'?currentRect.width:currentRect.height
 	}
 
 	useEffect(() => {
@@ -76,12 +86,13 @@ const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNa
 
 			const boneElement = (<Bone
 				inputName={boneIndex < inputNames.length ? inputNames[boneIndex] : undefined}
-				width={boneWidth * currentRect.width}
+				direction={direction}
+				size={boneWidth * getLength()}
 				key={boneIndex} />);
 			if (boneTooltipsRenderer !== undefined) {
 				return (
 					<div key={boneIndex}>
-						<Tooltip position="top" distanceFromLeft={boneCenterDistanceFromStart * currentRect.width}
+						<Tooltip direction={direction} position={direction=='horizontal'?"top":"left"} distanceFromStart={boneCenterDistanceFromStart * getLength()}
 							content={boneTooltipsRenderer(boneIndex, boneWidth)} />
 						{boneElement}
 					</div>)
@@ -102,18 +113,22 @@ const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNa
 		return boneWidths.slice(0, index + 1).reduce((total, cur) => total + cur)
 	}
 
-	function handleJointDrag(index: number, {x}: MouseEvent) {
+	function handleJointDrag(index: number, {x,y}: MouseEvent) {
 		const rect = containerRef.current?.getBoundingClientRect();
 		if (rect === undefined) {
 			return;
 		}
 
-		const mouseDistanceFromStartPixels = x - rect.x
+		const rectOffset = direction=='horizontal'?rect.x:rect.y;
+		const rectLength = direction=='horizontal'?rect.width:rect.height;
+		const mouseOffset = direction=='horizontal'?x:y;
+
+		const mouseDistanceFromStartPixels = mouseOffset-rectOffset
 
 		// from 0 to 1
-		const mouseDistanceFromStart = clamp(mouseDistanceFromStartPixels / rect.width, 0, 1)
+		const mouseDistanceFromStart = clamp(mouseDistanceFromStartPixels / rectLength, 0, 1)
 
-		const minDistanceBetweenJoints = minDistanceInPixelsBetweenJoints / rect.width;
+		const minDistanceBetweenJoints = minDistanceInPixelsBetweenJoints / rectLength;
 
 		const prevBoneEnd = getBoneEnd(index - 1);
 		const nextBoneEnd = getBoneEnd(index + 1);
@@ -143,7 +158,8 @@ const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNa
 			accumulatedWidth += boneWidth;
 			const jointElement = (
 				<Joint
-					distanceFromStart={accumulatedWidth * currentRect.width}
+					direction={direction}
+					distanceFromStart={accumulatedWidth * getLength()}
 					onDrag={
 						(event) => handleJointDrag(index, event)
 					}
@@ -152,7 +168,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNa
 			if (jointTooltipsRenderer !== undefined) {
 				return (
 					<div key={index}>
-						<Tooltip position="top" distanceFromLeft={accumulatedWidth*currentRect.width}
+						<Tooltip direction={direction} position={direction=='horizontal'?"top":"left"} distanceFromStart={accumulatedWidth * getLength()}
 							content={jointTooltipsRenderer(index, accumulatedWidth)} />
 						{jointElement}
 					</div>)
@@ -166,10 +182,12 @@ const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNa
 		<div ref={containerRef} style={
 			{
 				display: 'flex',
-				maxWidth: 500,
-				minHeight: 10,
+				[direction=='horizontal'?'maxWidth':'minHeight']: 500,
+				[direction=='horizontal'?'maxHeight':'maxWidth']: 10,
+				justifyContent: 'center',
+				alignItems: 'center',
 				position: 'relative',
-				flexDirection: 'row-reverse'
+				flexDirection: direction == 'horizontal' ? 'row-reverse' : 'column-reverse'
 			}
 		}>
 			{renderBones()}

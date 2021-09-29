@@ -1,20 +1,27 @@
 import React from "react"
+import Direction from "./direction";
 
 interface BoneProps {
 	inputName?: string,
-	// width in pixels
-	width: number,
+	direction: Direction,
+	// size in pixels.
+	// represents the width or height of the Bone, depending on the `direction` property
+	size: number,
 }
 
-const Bone: React.FC<BoneProps> = ({inputName, width}) => {
+const Bone: React.FC<BoneProps> = ({inputName, direction, size}) => {
+	let style: React.CSSProperties = {
+		backgroundColor: 'red',
+	}
+	if (direction == 'horizontal') {
+		style.width = size;
+		style.height = 10;
+	} else {
+		style.height = size;
+		style.width = 10;
+	}
 	return (
-		<div style={
-			{
-				width: width,
-				height: 10,
-				backgroundColor: `rgb(${Math.random() * 256}, ${Math.random() * 256}, ${Math.random() * 256})`,
-			}
-		}>
+		<div style={style}>
 		</div>
 	)
 }
