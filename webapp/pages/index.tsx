@@ -129,7 +129,8 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
             <section ref={priceRef}>
               <div>
                 <h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
-                <PriceSlider max={priceLimits.max} min={priceLimits.min} defaultValue={500} />
+                {console.log(priceLimits.min)}
+                <PriceSlider max={priceLimits.max} min={priceLimits.min} defaultValue={1000} />
                 <a onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)}>Prev</a>
                 <input type="submit" />
               </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import {SelectedLaptop} from 'selector';
 import LaptopCard from './laptopCard';
+import styles from './laptop_list.module.scss'
 
 interface LaptopResultsListProps {
 	laptops: SelectedLaptop[],
@@ -8,17 +9,17 @@ interface LaptopResultsListProps {
 
 const LaptopResultsList: React.FC<LaptopResultsListProps> = ({laptops}) => {
 	return (
-		<ul>
+		<main className={styles.laptopList}>
 			{
 				laptops.map((laptop, index) => {
 					return (
-						<li key={index}>
+						<figure key={index} className={styles.laptopCard}>
 							<LaptopCard {...laptop} />
-						</li>
+						</figure>
 					)
 				})
 			}
-		</ul>
+		</main>
 	)
 }
 

@@ -9,6 +9,7 @@ import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, ge
 import cookie from 'cookie'
 import LaptopResultsList from '@/components/results/laptopResultsList'
 import hasExceededRateLimit from 'rateLimit'
+import styles from '@/styles/results.module.scss'
 
 type ResultsPageInvalidFieldError = {
 	type: "invalidField",
@@ -59,11 +60,10 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 	console.log('selection result:', pageProps)
 	if (pageProps.success) {
 		return (
-			<section>
+			<section className={styles.mainContent}>
 				<Navbar path={router.pathname}></Navbar>
-				<div>
-					<LaptopResultsList laptops={pageProps.laptops} />
-				</div>
+				<h1>תוצאות השאלון</h1>
+				<LaptopResultsList laptops={pageProps.laptops} />
 			</section>
 		)
 	} else {
