@@ -9,7 +9,7 @@ type CollapseUrlObject = {[title: string]: string}
 const globalCollapseUrlObject : CollapseUrlObject = {
     '/': 'ראשי',
     '/about': 'אודות',
-    '/team': 'הצוות',
+    '/why-us': 'למה אנחנו',
     '/contact': 'צרו קשר'
 }
 

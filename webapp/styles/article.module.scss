@@ -1,0 +1,68 @@
+@use '@/styles/theme';
+
+.article {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    > .articleSection {
+        max-width: 1200px;
+        display: flex;
+        flex-direction: column;
+        padding: 75px;
+        text-align: justify;
+        text-justify: distribute;
+        justify-content: center;
+
+        @media (max-width: 769px) {
+            max-width: 600px;
+            padding: 45px;
+        }
+
+        i { 
+            cursor: pointer;
+        }
+
+
+        h1 {
+            font: theme.$big_text_font;
+            color: theme.$primary_text;
+            margin: 0%;
+            text-align: right;
+
+            @media (max-width: 769px) {
+                font: theme.$big_text_font_mobile;
+                font-size: 50px;
+            }
+
+
+            @media (max-width: 400px) {
+                font: theme.$big_text_font_mobile;
+            }
+        }
+
+
+        .title {
+            float: right;
+            padding-right: 15px;
+            border-right: 8px solid theme.$blue;
+        }
+
+        p {
+            font: theme.$medium_text_font;
+            font-size: 30px;
+            color: theme.$primary_text;
+            margin: 15px 0px;
+
+            @media (max-width: 769px) {
+                font: theme.$medium_text_font_mobile;
+                font-size: 28px;
+            }
+
+            @media (max-width: 400px) {
+                font: theme.$medium_text_font_mobile;
+                font-size: 18px;
+            }
+        }
+    }
+}

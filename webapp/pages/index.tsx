@@ -1,5 +1,5 @@
 // __styles__
-import styles from '@/styles/index/index.module.scss'
+import styles from '@/styles/index.module.scss'
 
 // __next & react__
 import React, { useState, useRef, MutableRefObject } from 'react'
@@ -41,17 +41,17 @@ interface HomeProps{
 const categoryMap : CategoryMap = {
   'dev': {
     title: 'תכנות',
-    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות.',
     image: devIcon
   },
   'design': {
     title: 'עיצוב דיגיטלי',
-    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן.',
     image: designIcon
   },
   'gaming': {
     title: 'גיימינג או עיצוב תלת מימדי',
-    description: ' בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי ',
+    description: 'בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי.',
     image: gamingIcon
   },
   'study': {
@@ -107,13 +107,13 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
           <Scrollable direction='horizontal'>
             <section ref={tagRef} className={styles.firstFormSection}>
                   <h1>בחרו בקטגוריות המתאימות לכם</h1>
-                  <p>אנא בחרו לפחות 2 קטגוריות</p>
+                  <p>אנא בחרו לפחות קטגוריה אחת</p>
                   <CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
                   {/* <Tags tags={tags} onTagClick={removeTag}></Tags>
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
-                  <button type='button' onClick={scrollToRef(ratingRef)} disabled={tags.length < 2}>הבא</button>
+                  <button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>
             </section>
-            <section ref={ratingRef}>
+            <section ref={ratingRef} hidden={tags.length < 2}>
               <div>
                 <h1>דרגו את הקטגוריות שבחרתם.</h1>
                 {/* {tags.map(tag => {
@@ -130,7 +130,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
               <div>
                 <h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
                 <PriceSlider max={priceLimits.max} min={priceLimits.min} defaultValue={500} />
-                <a onClick={scrollToRef(ratingRef)}>Prev</a>
+                <a onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)}>Prev</a>
                 <input type="submit" />
               </div>
             </section>
