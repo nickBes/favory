@@ -30,7 +30,7 @@
 
 .scrollable_h {
     scroll-snap-type: x none;
-    overflow-x: hidden;
+    overflow-x: scroll;
     width: 100vw;
     overflow-y: hidden;
     display: flex;

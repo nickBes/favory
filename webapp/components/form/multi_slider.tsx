@@ -35,6 +35,9 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
     })
 
     useEffect(() => {
+        // index page makes the wrapper of this component hidden when there
+        // are less than 1 tags, so the width is dependant on the tags
+        setRangeWidth(rangeRef.current?.clientWidth ?? 0)
         const generateDefaultValues = () => {
             let defaultValues = new Array<number>()
             let step = (max - min) / (tags.length)
