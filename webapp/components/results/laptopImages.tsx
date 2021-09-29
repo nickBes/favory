@@ -7,16 +7,15 @@ interface LaptopImagesProps {
 }
 
 const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {
-	const imageAndThumbnailUrls = imageUrls.map((imageUrl) => {
+	const imageObjects = imageUrls.map((imageUrl) => {
 		return {
 			original: imageUrl,
-			thumbnail: imageUrl
 		}
 	})
 	return (
 		<>
 			<ImageGallery 
-				items={imageAndThumbnailUrls} 
+				items={imageObjects} 
 				showFullscreenButton={false} 
 				showPlayButton={false} 
 				showThumbnails={false} 
