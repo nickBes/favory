@@ -27,10 +27,12 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
 
 
     useEffect(() => {
-        window.addEventListener('resize', () => {
-            setRangeWidth(rangeRef.current?.clientWidth ?? 0)
-        })
-    }, [])
+        setRangeWidth(rangeRef.current?.clientWidth ?? 0)
+        const handleResize = () =>  setRangeWidth(rangeRef.current?.clientWidth ?? 0)
+        window.addEventListener('resize', handleResize)
+        // this cleanup functions ensures that the event listener above is added once
+        return () => window.removeEventListener('resize', handleResize)
+    })
 
     useEffect(() => {
         // index page makes the wrapper of this component hidden when there

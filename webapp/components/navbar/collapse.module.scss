@@ -13,7 +13,12 @@
     display: flex;
     box-sizing: border-box;
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+        width: 40%;
+        right: -40%;
+    }
+
+    @media (max-width: 400px) {
         width: 100%;
         right: -100%;
     }
