@@ -13,7 +13,6 @@ import { PriceLimits, getCategoryNames, getPriceLimits } from '../selector'
 import Image from 'next/image'
 import Navbar from '@/components/navbar/navbar'
 import Form from '@/components/form/form'
-import Slider from '@/components/form/slider'
 import CardSelection, {CategoryMap} from '@/components/form/CardSelection'
 // import Tags from '@/components/form/tags'
 // import SearchBar from '@/components/form/searchbar'
@@ -28,6 +27,8 @@ import designIcon from '@/public/categories/dev.png'
 import gamingIcon from '@/public/categories/gaming.png'
 import studyIcon from '@/public/categories/study.png'
 import MultiSlider from '@/components/form/multi_slider'
+// 3.price selection
+import PriceSlider from '@/components/form/priceSlider'
 
 interface HomeProps{
   categories: string[]
@@ -128,7 +129,7 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
             <section ref={priceRef}>
               <div>
                 <h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
-                <Slider inputName='maxPrice' max={priceLimits.max} min={priceLimits.min} defaultValue={500}></Slider>
+                <PriceSlider max={priceLimits.max} min={priceLimits.min} defaultValue={500} />
                 <a onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)}>Prev</a>
                 <input type="submit" />
               </div>
