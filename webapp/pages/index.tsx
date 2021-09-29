@@ -129,7 +129,15 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 									bonesAmount={tags.length}
 									inputNames={tags}
 									minDistanceInPixelsBetweenJoints={20}
-									isHidden={tags.length < 2}
+									jointTooltipsRenderer={
+										(_,distanceFromStart)=>{
+											return (
+											<div>
+												{distanceFromStart.toString()}
+											</div>
+												   )
+										}
+									}
 									boneTooltipsRenderer={
 										(_, boneWidth) => {
 											return (
