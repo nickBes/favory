@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import Bone from './bone'
 import Joint from './joint'
 import Tooltip from '../tooltip'
@@ -36,6 +36,8 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	jointTooltipsRenderer,
 	direction
 }) => {
+	const valuesRange = max-min;
+
 	const emptyRect = {x: 0, y: 0, width: 0, height: 0}
 
 	const containerRef = useRef<HTMLDivElement>(null)
@@ -87,7 +89,8 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 			const boneElement = (<Bone
 				inputName={boneIndex < inputNames.length ? inputNames[boneIndex] : undefined}
 				direction={direction}
-				size={boneWidth * getLength()}
+				sizeInPixels={boneWidth * getLength()}
+				widthAsValue={boneWidth * valuesRange}
 				key={boneIndex} />);
 			if (boneTooltipsRenderer !== undefined) {
 				return (
@@ -187,7 +190,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 				justifyContent: 'center',
 				alignItems: 'center',
 				position: 'relative',
-				flexDirection: direction == 'horizontal' ? 'row-reverse' : 'column-reverse'
+				flexDirection: direction == 'horizontal' ? 'row-reverse' : 'column'
 			}
 		}>
 			{renderBones()}
