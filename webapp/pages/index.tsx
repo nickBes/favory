@@ -71,12 +71,8 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 	const router = useRouter()
 
 	const scrollToRef = (ref: MutableRefObject<null | HTMLElement>) => {
-		return () => {
-			ref.current?.scrollIntoView({behavior: 'smooth'}).then(() => {
-				setIsScrolled(false)
-			})
-
-		}
+		return () => ref.current?.scrollIntoView({behavior: 'smooth'})
+		
 	}
 
 	// using the card component
@@ -135,7 +131,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 									minDistanceInPixelsBetweenJoints={20}
 									isHidden={tags.length < 2}
 									boneTooltipsRenderer={
-										(boneIndex, boneWidth) => {
+										(_, boneWidth) => {
 											return (
 												<div>
 													{boneWidth.toString()}

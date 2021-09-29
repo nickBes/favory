@@ -108,12 +108,17 @@ const MultiSlider: React.FC<MultiSliderProps> = ({min, max, bonesAmount, inputNa
 	}
 
 	function handleJointDrag(index: number, {x}: MouseEvent) {
-		const mouseDistanceFromStartPixels = x - currentRect.x
+		const rect = containerRef.current?.getBoundingClientRect();
+		if (rect === undefined) {
+			return;
+		}
+
+		const mouseDistanceFromStartPixels = x - rect.x
 
 		// from 0 to 1
-		const mouseDistanceFromStart = clamp(mouseDistanceFromStartPixels / currentRect.width, 0, 1)
+		const mouseDistanceFromStart = clamp(mouseDistanceFromStartPixels / rect.width, 0, 1)
 
-		const minDistanceBetweenJoints = minDistanceInPixelsBetweenJoints / currentRect.width;
+		const minDistanceBetweenJoints = minDistanceInPixelsBetweenJoints / rect.width;
 
 		const prevBoneEnd = getBoneEnd(index - 1);
 		const nextBoneEnd = getBoneEnd(index + 1);
