@@ -2,7 +2,7 @@ import React from 'react'
 import { Popover, ArrowContainer, PopoverPosition} from 'react-tiny-popover'
 
 interface TooltipProps {
-    content: string
+    content: JSX.Element
     distanceFromLeft: number
     position: PopoverPosition
 }
