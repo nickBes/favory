@@ -1,26 +1,18 @@
-@use '@/styles/theme';
+@use '@/styles/_theme.scss';
 
 .card {
-    box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
-    max-width: 230px;
-    margin: 0;
+    margin: auto;
     padding: 15px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
-    aspect-ratio: 12/13;
-    @media (max-width: 769px) {
-        max-width: 200px;
-    }
-    @media (max-width: 600px) {
-        max-width: 100px;
-    }
+    height: auto;
 
     .cardIcon {
         max-width: 40%;
         @media (max-width: 769px) {
-            max-width: 70%;
+            max-width: 60%;
         }
     }
 
@@ -40,9 +32,22 @@
 }
 
 .cardWrapper {
+    position: relative;
+    max-width: 260px;
     border: 2px solid theme.$blue;
     border-radius: 10px;
     transition: .5s cubic-bezier(0.66, 0.25, 0.32, 0.74);
+    aspect-ratio: 12/13;
+    box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media (max-width: 769px) {
+        max-width: 240px;
+    }
+    @media (max-width: 600px) {
+        max-width: 125px;
+    }
 }
 .activeCardWrapper {
     background-color: theme.$secondary_background;
@@ -63,8 +68,10 @@
     border-radius: 25px;
     transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
     color: theme.$secondary_text;
+    font-size: 18px;
 
     @media (max-width: 769px) {
+        font-size: 12px;
         width: 10px;
         line-height: 10px;
     }
@@ -76,7 +83,7 @@
 }
 
 .descIconWrapper {
-    position: relative;
+    position: absolute;
     right: 15px;
     top: 15px;
     @media (max-width: 769px) {
