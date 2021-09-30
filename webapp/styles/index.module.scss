@@ -67,6 +67,15 @@
             height: 80%;
         }
     }
+
+    .multiSlider {
+        padding: 20px;
+
+        @media (max-width: 769px) {
+            padding: 12px;
+        }
+    }
+
     .secondSectionButtons {
         .secondaryButton {
             background-color: theme.$primary_text;
@@ -83,10 +92,8 @@
         }
 
         @media (max-width: 500px) {
-            flex-direction: column-reverse;
             button {
-                margin: 0;
-                margin-top: 10px;
+                margin: 10px;
             }
         }
 

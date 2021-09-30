@@ -45,8 +45,8 @@ const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => 
 		<div ref={jointRef} style={
 			{
 				display: 'block',
-				width: 10,
-				height: 10,
+				width: 15,
+				height: 15,
 				position: 'absolute',
 				[direction == 'horizontal' ? 'left' : 'top']: distanceFromStart,
 				[direction == 'horizontal' ? 'top' : 'left']: '50%',

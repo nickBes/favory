@@ -11,11 +11,14 @@ interface BoneProps {
 	// the width of the bone, converted to the range between min and max,
 	// thus representing the bone's value
 	widthAsValue: number,
+	color?:string
 }
 
-const Bone: React.FC<BoneProps> = ({inputName, direction, sizeInPixels, widthAsValue}) => {
+const defaultColor = '#868686'
+
+const Bone: React.FC<BoneProps> = ({inputName, direction, sizeInPixels, widthAsValue, color}) => {
 	let style: React.CSSProperties = {
-		backgroundColor: `rgb(${Math.random()*256}, ${Math.random()*256}, ${Math.random()*256})`,
+		backgroundColor: color ?? defaultColor,
 	}
 	if (direction == 'horizontal') {
 		style.width = sizeInPixels;

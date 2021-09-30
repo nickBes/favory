@@ -2,7 +2,7 @@
 import styles from '@/styles/index.module.scss'
 
 // __next & react__
-import React, {useState, useRef, MutableRefObject} from 'react'
+import React, {useState, useRef, MutableRefObject, useEffect} from 'react'
 import {GetStaticProps} from 'next'
 import {useRouter} from 'next/router'
 
@@ -43,27 +43,32 @@ const categoryMap: CategoryMap = {
 	'dev': {
 		title: 'תכנות',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות.',
-		image: devIcon
+		image: devIcon,
+    color: '#2ea486'
 	},
 	'design': {
 		title: 'עיצוב דיגיטלי',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן.',
-		image: designIcon
+		image: designIcon,
+    color: '#a42e2e'
 	},
 	'gaming': {
 		title: 'גיימינג או עיצוב תלת מימדי',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי.',
-		image: gamingIcon
+		image: gamingIcon,
+    color: '#402ea4'
 	},
 	'study': {
 		title: 'למידה או עבודה מרחוק',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להשתמש בתוכנות Office למיניהן, לגלוש באינטרנט או לבצע כל פעולה או משימה בסיסית אחרת.',
-		image: studyIcon
+		image: studyIcon,
+    color: '#2e4da4'
 	}
 }
 
 const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 	const [tags, setTags] = useState<string[]>([])
+  const [screenRatio, setScreenRatio] = useState(1)
 	const formRef = useRef<null | HTMLElement>(null)
 	const ratingRef = useRef<null | HTMLElement>(null)
 	const tagRef = useRef<null | HTMLElement>(null)
@@ -74,6 +79,10 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 		return () => ref.current?.scrollIntoView({behavior: 'smooth'})
 		
 	}
+
+  useEffect(() => {
+    setScreenRatio(window.screen.height / window.screen.width)
+  }, [])
 
 	// using the card component
 	const updateTags = (tag: string) => {
@@ -115,7 +124,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
               <button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>
             </section>
-            <section ref={ratingRef} hidden={tags.length < 2} className={styles.secondFormSection}>
+            <section ref={ratingRef}  style={{display: tags.length < 2 ? 'hidden' : 'flex'}} className={styles.secondFormSection} hidden={tags.length < 2}>
               <div className={styles.secondFormContent}>
                   <div>
                     <h1>דרגו את הקטגוריות שבחרתם</h1>
@@ -126,32 +135,33 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                     <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
                   )
                 })} */}
-                <div>
+                <div className={styles.multiSlider}>
                   <MultiSlider
-									min={0}
-									max={100}
-									bonesAmount={tags.length}
-									inputNames={tags}
-									minDistanceInPixelsBetweenJoints={20}
-									direction="vertical"
-									jointTooltipsRenderer={
-										(_,distanceFromStart)=>{
-											return (
-											<div>
-												{distanceFromStart.toString()}
-											</div>
-												   )
-										}
-									}
-									boneTooltipsRenderer={
-										(_, boneWidth) => {
-											return (
-												<div>
-													{boneWidth.toString()}
-												</div>
-											)
-										}
-									} />
+                  min={0}
+                  max={100}
+                  bonesAmount={tags.length}
+                  inputNames={tags}
+                  minDistanceInPixelsBetweenJoints={20}
+                  colors={tags.map(category => categoryMap[category].color ?? undefined)}
+                  direction={screenRatio > 4/3 ? 'vertical' : 'horizontal'}
+                  // jointTooltipsRenderer={
+                  //   (_,distanceFromStart)=>{
+                  //     return (
+                  //     <div>
+                  //       {distanceFromStart.toString()}
+                  //     </div>
+                  //           )
+                  //   }
+                  // }
+                  boneTooltipsRenderer={
+                    (_, boneWidth) => {
+                      return (
+                        <div>
+                          {boneWidth.toString()}
+                        </div>
+                      )
+                    }
+                  } />
                 </div>
                 <div className={styles.secondSectionButtons}>
                   <button type='button' onClick={scrollToRef(tagRef)} className={styles.secondaryButton}>קודם</button>

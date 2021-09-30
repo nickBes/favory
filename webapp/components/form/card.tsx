@@ -6,7 +6,8 @@ import { Popover, ArrowContainer, PopoverPosition} from 'react-tiny-popover'
 export interface CategoryData {
     title : string,
     description: string,
-    image: StaticImageData
+    image: StaticImageData,
+    color?: string
 }
 
 export type CardClickCallback = (category : string) => void

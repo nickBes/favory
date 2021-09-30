@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css'
 
 interface PriceSliderProps {
 	max: number,
@@ -8,7 +9,7 @@ interface PriceSliderProps {
 }
 
 const PriceSlider: React.FC<PriceSliderProps> = ({max, min, defaultValue}) => {
-	const [userSelectedMaxPrice, setUserSelectedMaxPrice] = useState(0)
+	const [userSelectedMaxPrice, setUserSelectedMaxPrice] = useState(defaultValue)
 	function handleSliderChange(value: number) {
 		setUserSelectedMaxPrice(value)
 	}

@@ -3,12 +3,15 @@ import Bone from './bone'
 import Joint from './joint'
 import Tooltip from '../tooltip'
 import Direction from './direction'
+import styles from './multi-slider.module.scss'
+import { PopoverPosition } from 'react-tiny-popover'
 
 interface MultiSliderProps {
 	min: number,
 	max: number,
 	bonesAmount: number,
 	inputNames: string[],
+	colors: (string | undefined)[],
 	minDistanceInPixelsBetweenJoints: number,
 	// boneWidth is between 0 and 1
 	boneTooltipsRenderer?: (boneIndex: number, boneWidth: number) => JSX.Element,
@@ -31,6 +34,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	max,
 	bonesAmount,
 	inputNames,
+	colors,
 	minDistanceInPixelsBetweenJoints,
 	boneTooltipsRenderer,
 	jointTooltipsRenderer,
@@ -81,13 +85,18 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 
 	function renderBones() {
 		let accumulatedWidth = 0;
+		const positions : PopoverPosition[] = direction == 'horizontal' ? ['top', 'bottom'] : ['left', 'right']
+		let firstPosition = true
 		return boneWidths.map((boneWidth, boneIndex) => {
 			const distanceFromStart = accumulatedWidth;
 			accumulatedWidth += boneWidth;
+			const position = firstPosition ? positions[0] : positions[1]
+			firstPosition = !firstPosition
 			const boneCenterDistanceFromStart = distanceFromStart + boneWidth / 2;
 
 			const boneElement = (<Bone
 				inputName={boneIndex < inputNames.length ? inputNames[boneIndex] : undefined}
+				color={boneIndex < colors.length ? colors[boneIndex] : undefined}
 				direction={direction}
 				sizeInPixels={boneWidth * getLength()}
 				widthAsValue={boneWidth * valuesRange}
@@ -95,7 +104,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 			if (boneTooltipsRenderer !== undefined) {
 				return (
 					<div key={boneIndex}>
-						<Tooltip direction={direction} position={direction=='horizontal'?"top":"left"} distanceFromStart={boneCenterDistanceFromStart * getLength()}
+						<Tooltip direction={direction} position={position} distanceFromStart={boneCenterDistanceFromStart * getLength()}
 							content={boneTooltipsRenderer(boneIndex, boneWidth)} />
 						{boneElement}
 					</div>)
@@ -182,17 +191,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	}
 
 	return (
-		<div ref={containerRef} style={
-			{
-				display: 'flex',
-				[direction=='horizontal'?'maxWidth':'minHeight']: 500,
-				[direction=='horizontal'?'maxHeight':'maxWidth']: 10,
-				justifyContent: 'center',
-				alignItems: 'center',
-				position: 'relative',
-				flexDirection: direction == 'horizontal' ? 'row-reverse' : 'column'
-			}
-		}>
+		<div ref={containerRef} className={direction=='horizontal' ? styles.horizontalSlider : styles.verticalSlider}>
 			{renderBones()}
 			{renderJoints()}
 		</div>
