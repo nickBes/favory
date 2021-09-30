@@ -20,7 +20,7 @@ import Scrollable from '@/components/navigation/scrollable'
 
 // __images__
 // 1.landing page
-import laptopImage from '@/public/laptop_mockup.png'
+import laptopImage from '@/public/laptop.png'
 // 2.category selection
 import devIcon from '@/public/categories/dev.png'
 import designIcon from '@/public/categories/dev.png'
@@ -105,7 +105,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 				<header className={styles.main}>
 					<div className={styles.mainTextArea}>
 						<h1>מצאו את המחשב הנייד האידיאלי שהכי מתאים לכם</h1>
-						<p>ענו על שאלון קצר וקבלו את המחשב הנייד המתאים ביותר תוך שניות</p>
+						<p>ענו על שאלון קצר וקבלו את המחשב הנייד המתאים ביותר תוך שניות אחדות</p>
 						<button onClick={scrollToRef(formRef)} className={styles.primaryButton}>התחלה</button>
 					</div>
 					<div className={styles.laptopImage}>
