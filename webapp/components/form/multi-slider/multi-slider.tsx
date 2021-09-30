@@ -4,7 +4,7 @@ import Joint from './joint'
 import Tooltip from '../tooltip'
 import Direction from './direction'
 import styles from './multi-slider.module.scss'
-import { PopoverPosition } from 'react-tiny-popover'
+import {PopoverPosition} from 'react-tiny-popover'
 
 interface MultiSliderProps {
 	min: number,
@@ -40,12 +40,14 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	jointTooltipsRenderer,
 	direction
 }) => {
-	const valuesRange = max-min;
+	const valuesRange = max - min;
 
 	const emptyRect = {x: 0, y: 0, width: 0, height: 0}
 
 	const containerRef = useRef<HTMLDivElement>(null)
-	const [currentRect, setCurrentRect] = useState(emptyRect)
+	const [currentRect, setCurrentRect] = useState(() => {
+		return containerRef?.current?.getBoundingClientRect() ?? emptyRect
+	})
 
 	// the widths of the bones in values between 0 and 1
 	const [boneWidths, setBoneWidths] = useState([] as number[])
@@ -75,8 +77,8 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 
 	// returns the currentRect's width or height, according to to the 
 	// direction property
-	function getLength():number{
-		return direction=='horizontal'?currentRect.width:currentRect.height
+	function getLength(): number {
+		return direction == 'horizontal' ? currentRect.width : currentRect.height
 	}
 
 	useEffect(() => {
@@ -88,7 +90,6 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	}, [containerRef])
 
 	useEffect(() => {
-		console.log('bones amount use effect', bonesAmount)
 		updateCurrentRect();
 		// generate initial bone widths, where all bones have the same width
 		generateDefaultWidths()
@@ -96,9 +97,8 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 
 	function renderBones() {
 		let accumulatedWidth = 0;
-		const positions : PopoverPosition[] = direction == 'horizontal' ? ['top', 'bottom'] : ['left', 'right']
+		const positions: PopoverPosition[] = direction == 'horizontal' ? ['top', 'bottom'] : ['left', 'right']
 		let firstPosition = true
-		console.log('boneWidths', boneWidths)
 		return boneWidths.map((boneWidth, boneIndex) => {
 			const distanceFromStart = accumulatedWidth;
 			accumulatedWidth += boneWidth;
@@ -137,17 +137,17 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 		return boneWidths.slice(0, index + 1).reduce((total, cur) => total + cur)
 	}
 
-	function handleJointDrag(index: number, {x,y}: MouseEvent) {
+	function handleJointDrag(index: number, {x, y}: {x:number,y:number}) {
 		const rect = containerRef.current?.getBoundingClientRect();
 		if (rect === undefined) {
 			return;
 		}
 
-		const rectOffset = direction=='horizontal'?rect.x:rect.y;
-		const rectLength = direction=='horizontal'?rect.width:rect.height;
-		const mouseOffset = direction=='horizontal'?x:y;
+		const rectOffset = direction == 'horizontal' ? rect.x : rect.y;
+		const rectLength = direction == 'horizontal' ? rect.width : rect.height;
+		const mouseOffset = direction == 'horizontal' ? x : y;
 
-		const mouseDistanceFromStartPixels = mouseOffset-rectOffset
+		const mouseDistanceFromStartPixels = mouseOffset - rectOffset
 
 		// from 0 to 1
 		const mouseDistanceFromStart = clamp(mouseDistanceFromStartPixels / rectLength, 0, 1)
@@ -192,7 +192,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 			if (jointTooltipsRenderer !== undefined) {
 				return (
 					<div key={index}>
-						<Tooltip direction={direction} position={direction=='horizontal'?"top":"left"} distanceFromStart={accumulatedWidth * getLength()}
+						<Tooltip direction={direction} position={direction == 'horizontal' ? "top" : "left"} distanceFromStart={accumulatedWidth * getLength()}
 							content={jointTooltipsRenderer(index, accumulatedWidth)} />
 						{jointElement}
 					</div>)
@@ -201,10 +201,9 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 			}
 		})
 	}
-	{console.log('bones', bonesAmount)}
 	return (
 		<div className={styles.multiSliderWrapper}>
-			<div ref={containerRef} className={direction=='horizontal' ? styles.horizontalSlider : styles.verticalSlider}>
+			<div ref={containerRef} className={direction == 'horizontal' ? styles.horizontalSlider : styles.verticalSlider}>
 				{renderBones()}
 			</div>
 			{renderJoints()}

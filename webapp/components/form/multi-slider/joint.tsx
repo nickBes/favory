@@ -7,7 +7,7 @@ interface JointProps {
 	direction: Direction,
 	// the distance in pixels from the start of the slider
 	distanceFromStart: number,
-	onDrag: (event: MouseEvent) => void,
+	onDrag: (event: {x:number, y: number}) => void,
 }
 
 const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => {
@@ -15,36 +15,65 @@ const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => 
 	const [isMouseDown, setIsMouseDown] = useState(false);
 	const [isMouseDragging, setisMouseDragging] = useState(false);
 
-	function handleMouseMove(event: MouseEvent) {
-		onDrag(event)
+	function handleAnyMove(){
 		setisMouseDragging(true)
 		document.body.style.cursor = 'grabbing'
 	}
 
-	function handleMouseDown() {
+	function handleMouseMove(event: MouseEvent) {
+		handleAnyMove();
+		onDrag(event)
+	}
+
+	function handleTouchMove(event: TouchEvent) {
+		handleAnyMove();
+		onDrag({x: event.touches[0].pageX, y: event.touches[0].pageY})
+	}
+
+	function handleMouseDown(event: Event) {
+		// in case of a touch event, prevent it from scrolling.
+		event.preventDefault();
+
+		window.addEventListener('mouseup', handleMouseUp);
+		window.addEventListener('touchend', handleMouseUp);
+
 		window.addEventListener('mousemove', handleMouseMove);
-		window.addEventListener('mouseup', handleMouseUp)
+		window.addEventListener('touchmove', handleTouchMove);
+
 		setIsMouseDown(true)
 	}
 	function handleMouseUp() {
 		window.removeEventListener('mousemove', handleMouseMove);
+		window.removeEventListener('touchmove', handleTouchMove);
+
 		setisMouseDragging(false)
 		setIsMouseDown(false)
+
 		document.body.style.cursor = 'auto'
 	}
 
 	useEffect(() => {
 		jointRef.current?.addEventListener('mousedown', handleMouseDown);
+		jointRef.current?.addEventListener('touchstart', handleMouseDown);
+
+		window.addEventListener('mouseup', handleMouseUp)
+		window.addEventListener('touchend', handleMouseUp)
+
 		if (isMouseDown) {
 			window.addEventListener('mousemove', handleMouseMove);
-			window.addEventListener('mouseup', handleMouseUp)
+			window.addEventListener('touchmove', handleTouchMove);
 		}
 
 		return () => {
 			jointRef.current?.removeEventListener('mousedown', handleMouseDown);
+			jointRef.current?.removeEventListener('touchstart', handleMouseDown);
+
 			if (isMouseDown) {
 				window.removeEventListener('mouseup', handleMouseUp);
+				window.removeEventListener('touchend', handleMouseUp);
+
 				window.removeEventListener('mousemove', handleMouseMove);
+				window.removeEventListener('touchmove', handleTouchMove);
 			}
 		}
 	})
