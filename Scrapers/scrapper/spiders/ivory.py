@@ -3,9 +3,9 @@ from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.ivory import get_laptop_dict_from_response
 
 IVORY_PAGE_URL = 'https://www.ivory.co.il/catalog.php?act=cat&id=2590&pg=%s'
-IVORY_PAGE_AMOUNT = 1
+IVORY_PAGE_AMOUNT = 4
 IVORY_ITEM_URL = 'https://www.ivory.co.il/catalog.php?id=%s'
-IVORY_ITEM_AMOUNT = 7
+IVORY_ITEM_AMOUNT = -1
 
 class IvorySpider(NotebookCheckSpider):
     name = 'ivory'
@@ -28,8 +28,11 @@ class IvorySpider(NotebookCheckSpider):
     def parse_pages(self, response):
         laptop_ids = response.css('a::attr(data-product-id)').getall()
 
-        # Limiting the laptops ids amount and picking the first id,
-        laptop_ids = laptop_ids[:IVORY_ITEM_AMOUNT]
+        # Limiting the amount of laptops (-1 means no limit)
+        if ITEM_AMOUNT!=-1:
+            laptop_ids = laptop_ids[:ITEM_AMOUNT]
+
+        # get the first id
         last_id = laptop_ids.pop()
         yield scrapy.Request(url=IVORY_ITEM_URL%last_id,
                             callback=self.parse_laptops, meta={

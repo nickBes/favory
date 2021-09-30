@@ -5,7 +5,7 @@ from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
 from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
-PAGE_AMOUNT = 1
+PAGE_AMOUNT = 10
 ITEM_AMOUNT = 7
 
 LABELS_MAP = {
@@ -62,8 +62,11 @@ class BugSpider(NotebookCheckSpider):
         # convert the relative urls to actual urls
         laptop_urls = [create_url_from_relative_url(relative_url) for relative_url in laptop_relative_urls]
 
-        # Limiting the laptops url amount and picking the first url,
-        laptop_urls = laptop_urls[:ITEM_AMOUNT]
+        # Limiting the amount of laptops (-1 means no limit)
+        if ITEM_AMOUNT!=-1:
+            laptop_urls = laptop_urls[:ITEM_AMOUNT]
+
+        # get the first url
         url = laptop_urls.pop()
         yield scrapy.Request(url=url,
                             callback=self.parse_laptops, meta={

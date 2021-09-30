@@ -6,8 +6,8 @@ from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX, WEIGHT_REGEX, DEV
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
-PAGE_AMOUNT = 1
-ITEM_AMOUNT = 7
+PAGE_AMOUNT = 4
+ITEM_AMOUNT = -1
 
 LABELS_MAP = {
         'מעבד': 'cpu',
@@ -42,8 +42,11 @@ class LastPriceSpider(NotebookCheckSpider):
     def parse_page(self, response):
         laptop_urls = response.css('a.prodLink::attr(href)').getall()
 
-        # Limiting the laptops url amount and picking the first url,
-        laptop_urls = laptop_urls[:ITEM_AMOUNT]
+        # Limiting the amount of laptops (-1 means no limit)
+        if ITEM_AMOUNT!=-1:
+            laptop_urls = laptop_urls[:ITEM_AMOUNT]
+
+        # get the first url
         url = laptop_urls.pop()
         yield scrapy.Request(url=url,
                             callback=self.parse_laptops, meta={
