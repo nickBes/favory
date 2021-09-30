@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {useRouter} from 'next/router'
 import Error from '../components/error/error'
 import {GetServerSideProps} from 'next'
@@ -6,7 +6,6 @@ import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
 import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
-import cookie from 'cookie'
 import LaptopResultsList from '@/components/results/laptopResultsList'
 import hasExceededRateLimit from 'rateLimit'
 import styles from '@/styles/results.module.scss'
@@ -42,7 +41,9 @@ type ResultsPageError =
 
 type ResultsPagePropsSuccess = {
 	success: true,
-	laptops: SelectedLaptop[]
+	// if `laptops` is undefined, the results page will try to 
+	// load the laptops from local storage
+	laptops: SelectedLaptop[] | null,
 }
 
 type ResultsPagePropsFailure = {
@@ -57,13 +58,48 @@ type ResultsPageProps =
 const Results: React.FC<ResultsPageProps> = (pageProps) => {
 	const router = useRouter()
 
-	console.log('selection result:', pageProps)
+	// using useState here because we need access to the window.localStorage property, and we only 
+	// have access to it inside callbacks to useState and useEffect
+	const [laptops, _] = useState<SelectedLaptop[] | null>(() => {
+		// make sure this code has acces to the window variable, since it needs to use the window.localStorage
+		// property. for some reason this callback also sometimes gets called on the server side, in which
+		// case it doesn't have access to window.localStorage.
+		if (typeof window === 'undefined') {
+			return null;
+		}
+		
+		// make sure the result was successfull, otherwise we don't care about the laptops
+		if (!pageProps.success) {
+			return null;
+		}
+
+		if (pageProps.laptops === null) {
+			// if no laptops were given, try to load them from local storage
+			const cachedLaptops = window.localStorage.getItem('laptops');
+			if (cachedLaptops === null) {
+				// no laptops found in local storage, redirect
+				window.location.replace("/");
+				return null;
+			}
+			return JSON.parse(cachedLaptops);
+		} else {
+			// if the laptops were loaded from the selector, cache them
+			window.localStorage.setItem('laptops', JSON.stringify(pageProps.laptops))
+
+			return pageProps.laptops;
+		}
+	});
+
 	if (pageProps.success) {
+		if (laptops === null) {
+			// if no laptops were be found, return an empty element just to let the redirect happen.
+			return (<></>);
+		}
 		return (
 			<section className={styles.mainContent}>
 				<Navbar path={router.pathname}></Navbar>
 				<h1>תוצאות השאלון</h1>
-				<LaptopResultsList laptops={pageProps.laptops} />
+				<LaptopResultsList laptops={laptops} />
 			</section>
 		)
 	} else {
@@ -103,9 +139,9 @@ function getErrorMessage(error: ResultsPageError): string {
 		return `you have reached your requests limit`
 	} else if (error.type == "invalidMethod") {
 		return `invalid HTTP method`
-	} else if (error.type == "selectionError"){
+	} else if (error.type == "selectionError") {
 		return `internal server error`
-	} else{
+	} else {
 		return "";
 	}
 }
@@ -224,7 +260,7 @@ async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<Resu
 	}
 }
 
-export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
+export const getServerSideProps: GetServerSideProps = async ({req}) => {
 	let result: ResultsPageProps;
 	if (req.method == 'POST') {
 		if (await hasExceededRateLimit(req.socket.remoteAddress as string)) {
@@ -237,32 +273,14 @@ export const getServerSideProps: GetServerSideProps = async ({req, res}) => {
 			}
 		} else {
 			let query = qs.parse(await getRawBody(req, {encoding: 'utf-8'}))
-
 			result = await performRequestedSelection(query);
-
-			// when the user sends a new selection request, we should cache the results of the 
-			// request, so that if he returns to the page using a GET request, we can present him
-			// with his previous results.
-			const cookie_data = cookie.serialize('previousResults', JSON.stringify(result), {
-				httpOnly: true,
-				secure: process.env.NODE_ENV === 'production',
-				maxAge: 60 * 60 * 24,
-				sameSite: 'strict',
-				path: '/results'
-			})
-			res.setHeader('set-cookie', cookie_data)
 		}
 	} else if (req.method == 'GET') {
-		const previousResults: string | undefined = cookie.parse(req.headers.cookie || '').previousResults
-		if (previousResults) {
-			result = JSON.parse(previousResults)
-		} else {
-			return {
-				redirect: {
-					destination: '/',
-					permanent: false,
-				}
-			}
+		result = {
+			success: true,
+
+			// a value of null tells the results page to try and load the laptops from localStorage.
+			laptops: null,
 		}
 	} else {
 		result = {
