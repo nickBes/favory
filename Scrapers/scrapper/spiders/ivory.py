@@ -14,7 +14,8 @@ class IvorySpider(NotebookCheckSpider):
         'FEEDS': {
             'ivory-laptops.json': {'format': 'json'}
         },
-        'DUPEFILTER_DEBUG': True
+        'DUPEFILTER_DEBUG': True,
+        'DUPEFILTER_CLASS': 'scrapy.dupefilters.BaseDupeFilter'
     }
 
     # Request all of the pages use the parse callback

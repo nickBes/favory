@@ -139,8 +139,13 @@ def detect_pu_ids_in_laptop_data(laptop_data):
     # detecting device's ids that are relevant to notebookcheck
     # there might be a better way of accessing these parameters
     # using map functionalities, but for now it'll do the work
-    gpu_id = detect_gpu_id(laptop_data['gpu'], laptop_data['cpu'])
-    laptop_data['gpu'] = gpu_id
-    laptop_data['integrated'] = is_integrated_gpu(gpu_id)
+
+    # if the device has no gpu, it probably has an integrated gpu
+    if 'gpu' not in laptop_data:
+        laptop_data['integrated'] = True
+    else:
+        gpu_id = detect_gpu_id(laptop_data['gpu'], laptop_data['cpu'])
+        laptop_data['gpu'] = gpu_id
+        laptop_data['integrated'] = is_integrated_gpu(gpu_id)
     laptop_data['cpu'] = detect_cpu_id(laptop_data['cpu'])
 
