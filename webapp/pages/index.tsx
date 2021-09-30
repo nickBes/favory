@@ -155,6 +155,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   // }
                   boneTooltipsRenderer={
                     (index, boneWidth) => {
+                      console.log(index, tags, tags[index], categoryMap)
                       const image = categoryMap[tags[index]].image
                       return (
                         <div>

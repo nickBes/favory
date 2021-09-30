@@ -50,6 +50,16 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	// the widths of the bones in values between 0 and 1
 	const [boneWidths, setBoneWidths] = useState([] as number[])
 
+	const generateDefaultWidths = () => setBoneWidths(new Array(bonesAmount).fill(1 / bonesAmount))
+
+	// use effect is only after render so when rendering after bones amount has changed
+	// we will try to render bones that don't exist anymore which cause an error
+	// this somehow prevents by waiting for the next update if the bones widths are not updated
+	if (bonesAmount != boneWidths.length) {
+		generateDefaultWidths()
+		return <></>
+	}
+
 	const updateCurrentRect = () => {
 		if (containerRef.current == null) {
 			return;
@@ -78,15 +88,17 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	}, [containerRef])
 
 	useEffect(() => {
+		console.log('bones amount use effect', bonesAmount)
 		updateCurrentRect();
 		// generate initial bone widths, where all bones have the same width
-		setBoneWidths(new Array(bonesAmount).fill(1 / bonesAmount))
+		generateDefaultWidths()
 	}, [min, max, bonesAmount])
 
 	function renderBones() {
 		let accumulatedWidth = 0;
 		const positions : PopoverPosition[] = direction == 'horizontal' ? ['top', 'bottom'] : ['left', 'right']
 		let firstPosition = true
+		console.log('boneWidths', boneWidths)
 		return boneWidths.map((boneWidth, boneIndex) => {
 			const distanceFromStart = accumulatedWidth;
 			accumulatedWidth += boneWidth;
@@ -189,7 +201,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 			}
 		})
 	}
-
+	{console.log('bones', bonesAmount)}
 	return (
 		<div className={styles.multiSliderWrapper}>
 			<div ref={containerRef} className={direction=='horizontal' ? styles.horizontalSlider : styles.verticalSlider}>
