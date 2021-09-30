@@ -48,7 +48,6 @@ const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => 
 			}
 		}
 	})
-	console.log(isMouseDragging)
 	return (
 		<div ref={jointRef} className={`${styles.joint} ${isMouseDown || isMouseDragging ? styles.activeJoint : ''}`} style={
 			{

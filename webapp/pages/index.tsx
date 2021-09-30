@@ -154,10 +154,14 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   //   }
                   // }
                   boneTooltipsRenderer={
-                    (_, boneWidth) => {
+                    (index, boneWidth) => {
+                      const image = categoryMap[tags[index]].image
                       return (
                         <div>
-                          {boneWidth.toString()}
+                          <figure className={styles.sliderTooltip}>
+                            <div className={styles.sliderTooltipImage}><Image src={image}></Image></div>
+                            <figcaption>{Math.round(boneWidth * 100)}%</figcaption>
+                          </figure>
                         </div>
                       )
                     }
