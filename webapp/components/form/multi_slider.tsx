@@ -98,7 +98,7 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
                                     // get the relative (to [max - min]) centred location between 2 values and multiply 
                                     // it by the width of the actuall slider to know how much to move from the left of
                                     // of the slider
-                                    distanceFromLeft={(currentValue + previousValue)/((max - min) * 2) * rangeWidth}
+                                    distanceFromStart={(currentValue + previousValue)/((max - min) * 2) * rangeWidth}
                                     position={top ? 'top' : 'bottom'}
                                     key={i}>
                             </Tooltip>)
