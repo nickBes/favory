@@ -26,7 +26,7 @@ class LastPriceSpider(NotebookCheckSpider):
 
     custom_settings = {
         'FEEDS': {
-            'laptops.json': {'format': 'json'}
+            'lastprice-laptops.json': {'format': 'json'}
         },
         'DUPEFILTER_DEBUG': True
     }

@@ -43,7 +43,7 @@ class BugSpider(NotebookCheckSpider):
 
     custom_settings = {
         'FEEDS': {
-            'laptops.json': {'format': 'json'}
+            'bug-laptops.json': {'format': 'json'}
         },
         'DUPEFILTER_DEBUG': True
     }

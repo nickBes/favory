@@ -12,7 +12,7 @@ class IvorySpider(NotebookCheckSpider):
 
     custom_settings = {
         'FEEDS': {
-            'laptops.json': {'format': 'json'}
+            'ivory-laptops.json': {'format': 'json'}
         },
         'DUPEFILTER_DEBUG': True
     }
