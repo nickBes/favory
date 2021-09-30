@@ -1,0 +1,22 @@
+.joint {
+    display: 'block';
+    width: 25;
+    height: 25;
+    position: 'absolute';
+    background-color: white;
+    user-select: none;
+    border-radius: 20px;
+    box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
+}
+
+.joint:hover {
+    cursor: grab;
+}
+
+.activeJoint {
+    cursor: grabbing;
+}
+
+.activeJoint:hover {
+    cursor: grabbing;
+}

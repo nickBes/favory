@@ -1,5 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import Direction from './direction';
+import styles from './joint.module.scss'
+
 
 interface JointProps {
 	direction: Direction,
@@ -11,9 +13,12 @@ interface JointProps {
 const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => {
 	const jointRef = useRef<HTMLDivElement>(null);
 	const [isMouseDown, setIsMouseDown] = useState(false);
+	const [isMouseDragging, setisMouseDragging] = useState(false);
 
 	function handleMouseMove(event: MouseEvent) {
 		onDrag(event)
+		setisMouseDragging(true)
+		document.body.style.cursor = 'grabbing'
 	}
 
 	function handleMouseDown() {
@@ -23,7 +28,9 @@ const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => 
 	}
 	function handleMouseUp() {
 		window.removeEventListener('mousemove', handleMouseMove);
+		setisMouseDragging(false)
 		setIsMouseDown(false)
+		document.body.style.cursor = 'auto'
 	}
 
 	useEffect(() => {
@@ -41,17 +48,17 @@ const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => 
 			}
 		}
 	})
+	console.log(isMouseDragging)
 	return (
-		<div ref={jointRef} style={
+		<div ref={jointRef} className={`${styles.joint} ${isMouseDown || isMouseDragging ? styles.activeJoint : ''}`} style={
 			{
 				display: 'block',
-				width: 15,
-				height: 15,
+				width: 25,
+				height: 25,
 				position: 'absolute',
 				[direction == 'horizontal' ? 'left' : 'top']: distanceFromStart,
 				[direction == 'horizontal' ? 'top' : 'left']: '50%',
 				transform: 'translate(-50%, -50%)',
-				backgroundColor: 'blue',
 				userSelect: 'none'
 			}
 		}>

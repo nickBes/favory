@@ -191,10 +191,13 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	}
 
 	return (
-		<div ref={containerRef} className={direction=='horizontal' ? styles.horizontalSlider : styles.verticalSlider}>
-			{renderBones()}
+		<div className={styles.multiSliderWrapper}>
+			<div ref={containerRef} className={direction=='horizontal' ? styles.horizontalSlider : styles.verticalSlider}>
+				{renderBones()}
+			</div>
 			{renderJoints()}
 		</div>
+
 	)
 }
 export default MultiSlider

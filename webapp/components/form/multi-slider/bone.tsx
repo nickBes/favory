@@ -22,10 +22,10 @@ const Bone: React.FC<BoneProps> = ({inputName, direction, sizeInPixels, widthAsV
 	}
 	if (direction == 'horizontal') {
 		style.width = sizeInPixels;
-		style.height = 10;
+		style.height = 15;
 	} else {
 		style.height = sizeInPixels;
-		style.width = 10;
+		style.width = 15;
 	}
 	return (
 		<div style={style}>

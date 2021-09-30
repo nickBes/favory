@@ -124,7 +124,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
               <button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>
             </section>
-            <section ref={ratingRef}  style={{display: tags.length < 2 ? 'hidden' : 'flex'}} className={styles.secondFormSection} hidden={tags.length < 2}>
+            <section ref={ratingRef}  style={{display: tags.length < 2 ? 'none' : 'flex'}} className={styles.secondFormSection}>
               <div className={styles.secondFormContent}>
                   <div>
                     <h1>דרגו את הקטגוריות שבחרתם</h1>
@@ -141,7 +141,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   max={100}
                   bonesAmount={tags.length}
                   inputNames={tags}
-                  minDistanceInPixelsBetweenJoints={20}
+                  minDistanceInPixelsBetweenJoints={35}
                   colors={tags.map(category => categoryMap[category].color ?? undefined)}
                   direction={screenRatio > 4/3 ? 'vertical' : 'horizontal'}
                   // jointTooltipsRenderer={
