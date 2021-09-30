@@ -7,7 +7,7 @@
     text-align: center;
     flex-direction: column;
     height: 100vh;
-    > * {
+    * {
         margin: 0%;
     }
     button {
@@ -31,7 +31,7 @@
         cursor: default;
     }
 
-    > h1 {
+    h1 {
         font: theme.$big_text_font;
         font-size: 50px;
         color: theme.$primary_text;
@@ -43,13 +43,55 @@
     }
 
 
-    > p {
+    p {
         text-align: center;
         color: theme.$secondary_text;
         font: theme.$medium_text_font;
 
         @media (max-width: 1000px) {
             font: theme.$medium_text_font_mobile;
+        }
+    }
+}
+
+.secondFormSection {
+    @extend .firstFormSection;
+    .secondFormContent {
+        height: 55%;
+        max-width: 80%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        flex-direction: column;
+        @media (max-width: 769px) {
+            height: 80%;
+        }
+    }
+    .secondSectionButtons {
+        .secondaryButton {
+            background-color: theme.$primary_text;
+        }
+        .secondaryButton:hover {
+            @include theme.primary-button-hover
+        }
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        button {
+            margin: 15px;
+        }
+
+        @media (max-width: 500px) {
+            flex-direction: column-reverse;
+            button {
+                margin: 0;
+                margin-top: 10px;
+            }
+        }
+
+        > div {
+            height: 75%;
         }
     }
 }
