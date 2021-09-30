@@ -1,0 +1,18 @@
+@use '@/styles/theme';
+
+.mainContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: auto;
+
+    > h1 {
+        font: theme.$big_text_font;
+        color: theme.$primary_text;
+
+        @media (max-width: 768px) {
+            font: theme.$big_text_font_mobile;
+        }
+    }
+}

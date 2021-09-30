@@ -29,8 +29,6 @@ export type SelectedLaptop = {
 	name: string,
 	url: string,
 	price: number,
-	cpu: string,
-	gpu: string,
 	score: number,
 	imageUrls: string[],
 }

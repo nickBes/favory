@@ -2,7 +2,7 @@ import {MutexProtected} from "mutexprotected"
 
 const WINDOW_DURATION_SECONDS = 120
 
-const MAX_REQUESTS_PER_WINDOW = 1
+const MAX_REQUESTS_PER_WINDOW = 20
 
 const CLEANUP_EVERY_SECONDS = 30
 
