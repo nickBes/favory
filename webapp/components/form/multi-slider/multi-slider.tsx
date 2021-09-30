@@ -44,23 +44,17 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 
 	const emptyRect = {x: 0, y: 0, width: 0, height: 0}
 
+	const generateDefaultWidths = () => new Array(bonesAmount).fill(1 / bonesAmount)
+
 	const containerRef = useRef<HTMLDivElement>(null)
 	const [currentRect, setCurrentRect] = useState(() => {
 		return containerRef?.current?.getBoundingClientRect() ?? emptyRect
 	})
 
 	// the widths of the bones in values between 0 and 1
-	const [boneWidths, setBoneWidths] = useState([] as number[])
-
-	const generateDefaultWidths = () => setBoneWidths(new Array(bonesAmount).fill(1 / bonesAmount))
-
-	// use effect is only after render so when rendering after bones amount has changed
-	// we will try to render bones that don't exist anymore which cause an error
-	// this somehow prevents by waiting for the next update if the bones widths are not updated
-	if (bonesAmount != boneWidths.length) {
-		generateDefaultWidths()
-		return <></>
-	}
+	const [boneWidths, setBoneWidths] = useState<number[]>(() => {
+		return generateDefaultWidths()
+	});
 
 	const updateCurrentRect = () => {
 		if (containerRef.current == null) {
@@ -87,19 +81,32 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 		return () => {
 			window.removeEventListener('resize', updateCurrentRect);
 		}
-	}, [containerRef])
+	}, [])
 
 	useEffect(() => {
 		updateCurrentRect();
 		// generate initial bone widths, where all bones have the same width
-		generateDefaultWidths()
+		setBoneWidths(generateDefaultWidths())
 	}, [min, max, bonesAmount])
 
 	function renderBones() {
+		let curBoneWidths;
+
+		if (bonesAmount != boneWidths.length) {
+			// if our bone widths are out of sync with the amount of bones, we must
+			// use some tomporary generated boneWidths instead of the current ones, 
+			// until the useEffect will do its thing, which will only happen at the 
+			// end of this render.
+			curBoneWidths = generateDefaultWidths();
+		} else {
+			// our bone widths are in sync, we can use them
+			curBoneWidths = boneWidths;
+		}
+
 		let accumulatedWidth = 0;
 		const positions: PopoverPosition[] = direction == 'horizontal' ? ['top', 'bottom'] : ['left', 'right']
 		let firstPosition = true
-		return boneWidths.map((boneWidth, boneIndex) => {
+		return curBoneWidths.map((boneWidth, boneIndex) => {
 			const distanceFromStart = accumulatedWidth;
 			accumulatedWidth += boneWidth;
 			const position = firstPosition ? positions[0] : positions[1]
@@ -137,7 +144,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 		return boneWidths.slice(0, index + 1).reduce((total, cur) => total + cur)
 	}
 
-	function handleJointDrag(index: number, {x, y}: {x:number,y:number}) {
+	function handleJointDrag(index: number, {x, y}: {x: number, y: number}) {
 		const rect = containerRef.current?.getBoundingClientRect();
 		if (rect === undefined) {
 			return;

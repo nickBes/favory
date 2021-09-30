@@ -1,23 +1,28 @@
-import React, {useState} from 'react'
-import Slider from 'rc-slider'
-import 'rc-slider/assets/index.css'
+import React from 'react'
+import MultiSlider from './multi-slider/multi-slider'
 
 interface PriceSliderProps {
 	max: number,
 	min: number,
-	defaultValue: number
 }
 
-const PriceSlider: React.FC<PriceSliderProps> = ({max, min, defaultValue}) => {
-	const [userSelectedMaxPrice, setUserSelectedMaxPrice] = useState(defaultValue)
-	function handleSliderChange(value: number) {
-		setUserSelectedMaxPrice(value)
-	}
+const PriceSlider: React.FC<PriceSliderProps> = ({max, min}) => {
 	return (
-		<>
-			<Slider onChange={handleSliderChange} max={max} min={min} defaultValue={defaultValue} reverse={true}/>
-			<input type="hidden" name="maxPrice" value={userSelectedMaxPrice} readOnly={true} />
-		</>
+		<MultiSlider
+			min={min}
+			max={max}
+			direction="horizontal"
+			colors={["white", "blue"]}
+			inputNames={["maxPrice"]}
+			bonesAmount={2}
+			minDistanceInPixelsBetweenJoints={0}
+			jointTooltipsRenderer={(_, distanceFromStart) => {
+				return (
+					<div>
+						{distanceFromStart.toString()}
+					</div>
+				)
+			}} />
 	)
 }
 
