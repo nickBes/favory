@@ -1,13 +1,14 @@
 import React, {useState, useEffect} from 'react'
 import styles from './card.module.scss'
 import Image from 'next/image'
-import { Popover, ArrowContainer, PopoverPosition} from 'react-tiny-popover'
+import { Popover, ArrowContainer} from 'react-tiny-popover'
 
 export interface CategoryData {
     title : string,
     description: string,
     image: StaticImageData,
-    color?: string
+    white: StaticImageData
+    color?: string,
 }
 
 export type CardClickCallback = (category : string) => void
@@ -40,7 +41,7 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
                         arrowColor='black'>
                         <div
                             style={{
-                                backgroundColor: 'black',
+                                backgroundColor: '#161616',
                                 textAlign: 'center',
                                 color: 'white',
                                 padding: 10,

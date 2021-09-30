@@ -23,9 +23,13 @@ import Scrollable from '@/components/navigation/scrollable'
 import laptopImage from '@/public/laptop.png'
 // 2.category selection
 import devIcon from '@/public/categories/dev.png'
-import designIcon from '@/public/categories/dev.png'
+import devIconWhite from '@/public/categories/dev-white.png'
+import designIcon from '@/public/categories/design.png'
+import designIconWhite from '@/public/categories/design-white.png'
 import gamingIcon from '@/public/categories/gaming.png'
+import gamingIconWhite from '@/public/categories/gaming-white.png'
 import studyIcon from '@/public/categories/study.png'
+import studyIconWhite from '@/public/categories/study-white.png'
 //import MultiSlider from '@/components/form/multi_slider'
 import MultiSlider from '@/components/form/multi-slider/multi-slider'
 // 3.price selection
@@ -44,24 +48,28 @@ const categoryMap: CategoryMap = {
 		title: 'תכנות',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות.',
 		image: devIcon,
+    white: devIconWhite,
     color: '#2ea486'
 	},
 	'design': {
 		title: 'עיצוב דיגיטלי',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן.',
 		image: designIcon,
+    white: designIconWhite,
     color: '#a42e2e'
 	},
 	'gaming': {
-		title: 'גיימינג או עיצוב תלת מימדי',
+		title: 'גיימינג',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי.',
 		image: gamingIcon,
+    white: gamingIconWhite,
     color: '#402ea4'
 	},
 	'study': {
-		title: 'למידה או עבודה מרחוק',
+		title: 'למידה ועבודה',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להשתמש בתוכנות Office למיניהן, לגלוש באינטרנט או לבצע כל פעולה או משימה בסיסית אחרת.',
 		image: studyIcon,
+    white: studyIconWhite,
     color: '#2e4da4'
 	}
 }
@@ -109,7 +117,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 						<button onClick={scrollToRef(formRef)} className={styles.primaryButton}>התחלה</button>
 					</div>
 					<div className={styles.laptopImage}>
-						<Image src={laptopImage} alt="Jermey"></Image>
+						<Image width={1625} height={1125} src={laptopImage} alt="תמונת מחשב נייד של העמוד הראשי" priority></Image>
 					</div>
 				</header>
 			</section>
@@ -155,11 +163,11 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   // }
                   boneTooltipsRenderer={
                     (index, boneWidth) => {
-                      const image = categoryMap[tags[index]].image
+                      const data = categoryMap[tags[index]]
                       return (
                         <div>
                           <figure className={styles.sliderTooltip}>
-                            <div className={styles.sliderTooltipImage}><Image src={image}></Image></div>
+                            <div className={styles.sliderTooltipImage}><Image width={100} height={100} src={data.white} alt={data.title}></Image></div>
                             <figcaption>{Math.round(boneWidth * 100)}%</figcaption>
                           </figure>
                         </div>

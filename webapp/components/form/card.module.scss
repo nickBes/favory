@@ -34,7 +34,7 @@
 .cardWrapper {
     position: relative;
     max-width: 260px;
-    border: 2px solid theme.$blue;
+    border: 2px solid theme.$green;
     border-radius: 10px;
     transition: .5s cubic-bezier(0.66, 0.25, 0.32, 0.74);
     aspect-ratio: 12/13;
@@ -42,6 +42,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    user-select: none;
     @media (max-width: 769px) {
         max-width: 240px;
     }

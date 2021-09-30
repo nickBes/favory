@@ -3,7 +3,7 @@ $primary_text: #161616;
 $secondary_text: #181818;
 $inactive_text: #464646;
 $background: #f5f5f5;
-$secondary_background: #ececec;
+$secondary_background: #e4e4e4;
 
 $big_text_font: 600 60px/68px 'Poppins', sans-serif;
 $medium_text_font: 300 30px/46px 'Poppins', sans-serif;
@@ -16,7 +16,7 @@ $medium_text: 30px;
 
 $small_text: 24px;
 
-$green: #094119;
+$green: #0a5507;
 $blue: #f0a90f;
 $light_blue: #e8fffd;
 $very_light_blue: #b1eeee;
@@ -42,6 +42,7 @@ $light_gray: #868686;
     transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
     @media (max-width: 769px) {
         width: 150px;
+        font-size: 20px;
     }
 }
 

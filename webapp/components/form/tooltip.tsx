@@ -18,11 +18,11 @@ const Tooltip : React.FC<TooltipProps> = ({content, distanceFromStart, position,
             reposition={false}
             padding={10}
             content={({position, childRect, popoverRect}) => (
-                <ArrowContainer position={position} childRect={childRect} popoverRect={popoverRect} arrowSize={10} arrowColor={'black'}>
+                <ArrowContainer position={position} childRect={childRect} popoverRect={popoverRect} arrowSize={10} arrowColor={'#161616'}>
                     <div style={{
-                        backgroundColor:'black',
+                        backgroundColor:'#161616',
                         color: 'white',
-                        padding: 10,
+                        padding: 12,
                         borderRadius: 10
                     }}>{content}</div>
                 </ArrowContainer>

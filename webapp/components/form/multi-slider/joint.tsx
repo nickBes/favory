@@ -53,8 +53,9 @@ const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => 
 	}
 
 	useEffect(() => {
-		jointRef.current?.addEventListener('mousedown', handleMouseDown);
-		jointRef.current?.addEventListener('touchstart', handleMouseDown);
+		const cur = jointRef.current
+		cur?.addEventListener('mousedown', handleMouseDown);
+		cur?.addEventListener('touchstart', handleMouseDown);
 
 		window.addEventListener('mouseup', handleMouseUp)
 		window.addEventListener('touchend', handleMouseUp)
@@ -65,8 +66,8 @@ const Joint: React.FC<JointProps> = ({direction, distanceFromStart, onDrag}) => 
 		}
 
 		return () => {
-			jointRef.current?.removeEventListener('mousedown', handleMouseDown);
-			jointRef.current?.removeEventListener('touchstart', handleMouseDown);
+			cur?.removeEventListener('mousedown', handleMouseDown);
+			cur?.removeEventListener('touchstart', handleMouseDown);
 
 			if (isMouseDown) {
 				window.removeEventListener('mouseup', handleMouseUp);
