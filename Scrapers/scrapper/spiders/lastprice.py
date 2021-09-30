@@ -33,25 +33,45 @@ class LastPriceSpider(NotebookCheckSpider):
 
     # Request all of the pages use the parse callback
     def start_requests(self):
-        for page_index in range(PAGE_AMOUNT):
-            yield scrapy.Request(url=create_page_url(page_index),
-                                callback=self.parse_page)
+        page_urls = [create_page_url(page_index) for page_index in range(PAGE_AMOUNT)]
 
+        # get the first url
+        url = page_urls.pop()
+        yield scrapy.Request(url=url,
+                            callback=self.collect_pages,
+                            meta={'page_urls':page_urls, 'laptop_urls': []})
 
-    # Collecting laptop urls from each page
-    def parse_page(self, response):
-        laptop_urls = response.css('a.prodLink::attr(href)').getall()
+    def collect_pages(self, response):
+        '''
+        Recursive collection of pages
+        '''
+        page_urls = response.meta['page_urls']
+        laptop_urls = response.meta['laptop_urls']
+
+        laptop_urls_cur_page = response.css('a.prodLink::attr(href)').getall()
 
         # Limiting the amount of laptops (-1 means no limit)
         if ITEM_AMOUNT!=-1:
-            laptop_urls = laptop_urls[:ITEM_AMOUNT]
+            laptop_urls_cur_page = laptop_urls_cur_page[:ITEM_AMOUNT]
 
-        # get the first url
-        url = laptop_urls.pop()
-        yield scrapy.Request(url=url,
-                            callback=self.parse_laptops, meta={
-                                'laptop_urls': laptop_urls,
-                            })
+        # add the laptop urls from the current page
+        laptop_urls.extend(laptop_urls_cur_page)
+
+        if len(page_urls) == 0:
+            # if we finished collecting the pages, start collecting the laptops
+            # get the first url
+            url = laptop_urls.pop()
+            yield scrapy.Request(url=url,
+                                callback=self.parse_laptops, meta={
+                                    'laptop_urls': laptop_urls,
+                                })
+        else:
+            url = page_urls.pop()
+            yield response.follow(url=url,callback=self.collect_pages,
+                                meta={
+                                    'page_urls': page_urls,
+                                    'laptop_urls': laptop_urls
+                                })
 
     def extract_laptop_images(self, response)->str:
         urls = []

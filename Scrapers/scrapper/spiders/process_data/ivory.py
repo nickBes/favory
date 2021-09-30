@@ -44,6 +44,7 @@ def get_laptop_dict_from_response(response)->dict:
     laptop_dict['image_urls'] = []
 
     detect_pu_ids_in_laptop_data(laptop_dict)
+
     return laptop_dict
 
 def get_table_key(key):

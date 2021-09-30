@@ -50,28 +50,57 @@ class BugSpider(NotebookCheckSpider):
 
     # Request all of the pages use the parse callback
     def start_requests(self):
-        for page_index in range(PAGE_AMOUNT):
-            yield scrapy.Request(url=create_page_url(page_index),
-                                callback=self.parse_pages)
+        page_urls = [create_page_url(page_index) for page_index in range(PAGE_AMOUNT)]
+
+        # get the first url
+        url = page_urls.pop()
+        yield scrapy.Request(url=url,
+                            callback=self.collect_pages,
+                            meta={'page_urls':page_urls, 'laptop_urls': []})
+
+    def collect_pages(self, response):
+        '''
+        Recursive collection of pages
+        '''
+        page_urls = response.meta['page_urls']
+        laptop_urls = response.meta['laptop_urls']
+
+        laptop_urls_cur_page = self.extract_laptop_urls_from_page(response)
+
+        # Limiting the amount of laptops (-1 means no limit)
+        if ITEM_AMOUNT!=-1:
+            laptop_urls_cur_page = laptop_urls_cur_page[:ITEM_AMOUNT]
+
+        # add the laptop urls from the current page
+        laptop_urls.extend(laptop_urls_cur_page)
+
+        if len(page_urls) == 0:
+            # if we finished collecting the pages, start collecting the laptops
+            # get the first url
+            url = laptop_urls.pop()
+            yield scrapy.Request(url=url,
+                                callback=self.parse_laptops, meta={
+                                    'laptop_urls': laptop_urls,
+                                })
+        else:
+            url = page_urls.pop()
+            yield response.follow(url=url,callback=self.collect_pages,
+                                meta={
+                                    'page_urls': page_urls,
+                                    'laptop_urls': laptop_urls
+                                })
 
 
-    # Collecting laptop id from each page
-    def parse_pages(self, response):
+    def extract_laptop_urls_from_page(self, response):
+        '''
+        extracts laptop urls from a laptops page
+        '''
         laptop_relative_urls = response.css('div.product-cube > div:nth-child(1) > a:nth-child(2)::attr(href)').getall()
 
         # convert the relative urls to actual urls
         laptop_urls = [create_url_from_relative_url(relative_url) for relative_url in laptop_relative_urls]
 
-        # Limiting the amount of laptops (-1 means no limit)
-        if ITEM_AMOUNT!=-1:
-            laptop_urls = laptop_urls[:ITEM_AMOUNT]
-
-        # get the first url
-        url = laptop_urls.pop()
-        yield scrapy.Request(url=url,
-                            callback=self.parse_laptops, meta={
-                                'laptop_urls': laptop_urls,
-                            })
+        return laptop_urls
 
     def extract_laptop_images(self, response)->str:
         image_relative_urls = response.css('#image-gallery > li > img::attr(src)').getall()
