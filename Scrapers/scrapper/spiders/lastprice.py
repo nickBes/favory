@@ -18,8 +18,13 @@ LABELS_MAP = {
         'מעבד גרפי': 'gpu',
         }
 
+HEBREW_ALPHABET = 'קראטוןםפשדגכעיחלךףזסבהנמצתץ'
+
 def create_page_url(page_index:int)->str:
     return 'https://www.lastprice.co.il/MoreProducts.asp?offset=%s&catcode=85'%page_index
+
+def is_all_hebrew_letters(word:str)->bool:
+    return all([c in HEBREW_ALPHABET for c in word])
 
 class LastPriceSpider(NotebookCheckSpider):
     name = 'lastprice'
@@ -101,15 +106,44 @@ class LastPriceSpider(NotebookCheckSpider):
             for i in range(len(lines)):
                 line = lines[i].strip()
 
-                # the lastprice website uses 2 different separators
-                separator = ':' if ':' in line else '-'
-                parts = line.split(separator, 1)
+                # convert annoying non braking spaces to normal spaces
+                line = line.encode().replace(b"\xc2\xa0", b" ").decode()
 
-                # only take paragraphs with key value structure
-                if len(parts) != 2:
+                # the key is just all the first hebrew words in the line
+                key = ''
+
+                # either a delimiter with an optional space, or a space with
+                # an optional delimiter
+                for word in re.split('(?:[:-][  ]?)|(?:[:-]? )', line):
+                    contained_separator = False
+
+                    # if this word contains a key-value separator, remove it,
+                    # and if it is also a hebrew word, then it must be the last
+                    # word in the key, because after it comes the separator.
+                    if ':' in word or '-' in word:
+                        contained_separator = True
+
+                        # remove the separator so we can check that the rest
+                        # of the string is hebrew only
+                        word = word.replace(':','').replace('-','')
+
+                    if is_all_hebrew_letters(word):
+                        key += word + ' '
+
+                        # if the word contained a separator, it is the last
+                        # word in the key.
+                        if contained_separator:
+                            break
+                    else:
+                        break
+
+                # if the line contained no hebrew words, it is not a key-value
+                # pair.
+                if len(key)==0:
                     continue
 
-                key,value = parts
+                # the rest of the string represents the key's value
+                value = line[len(key):]
 
                 value = value.strip().replace('-',' ')
                 key = key.strip()
@@ -156,8 +190,6 @@ class LastPriceSpider(NotebookCheckSpider):
                     if len(weight_matches) > 0:
                         weight_text = weight_matches[0]
                         laptop_data['weight'] = float(weight_text)
-
-
 
         return laptop_data
 
