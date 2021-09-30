@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, CSSProperties } from 'react'
 import 'rc-slider/assets/index.css'
 import { Range } from 'rc-slider'
 import Tooltip from './tooltip'
@@ -108,7 +108,7 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
     }
 
     return (
-        <>
+        <>  
             <div ref={rangeRef} style={{
                             maxWidth: 700,
                             position: 'relative'
@@ -119,6 +119,13 @@ const MultiSlider : React.FC<MultiSliderProps> = ({tags, min, max}) => {
                         value={categoryAndSliderValues.values.slice(1, categoryAndSliderValues.values.length - 1)} 
                         allowCross={false}
                         pushable={true}
+                        // temporarily hard coding the values cause u can't
+                        railStyle={{
+                            backgroundColor: '#2ea486',
+                            height: 10
+                        }}
+                        trackStyle={(new Array<CSSProperties>(Math.max(categoryAndSliderValues.values.length - 1, 0))).fill({backgroundColor: '#2ea486', height: 10})}
+                        handleStyle={(new Array<CSSProperties>(categoryAndSliderValues.values.length)).fill({height: 20, width: 20, borderColor: 'blueviolet'})}
                 />
                 {createTooltipFromCategoryAndSliderValues(categoryAndSliderValues, max, min, rangeWidth)}
             </div>

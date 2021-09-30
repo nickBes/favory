@@ -3,10 +3,15 @@
     flex-wrap: wrap;
     justify-content: center;
     align-self: center;
-    gap: 60px;
+    gap: 70px;
     padding: 50px;
 
     @media (max-width: 769px) {
+        padding: 35px;
+        gap: 50px;
+    }
+
+    @media (max-width: 500px) {
         padding: 25px;
         gap: 40px;
     }

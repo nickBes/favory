@@ -113,17 +113,22 @@ const Home : React.FC<HomeProps> = ({ categories, priceLimits}) => {
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
                   <button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>
             </section>
-            <section ref={ratingRef} hidden={tags.length < 2}>
-              <div>
-                <h1>דרגו את הקטגוריות שבחרתם.</h1>
+            <section ref={ratingRef} hidden={tags.length < 2} className={styles.secondFormSection}>
+              <div className={styles.secondFormContent}>
+                  <div>
+                    <h1>דרגו את הקטגוריות שבחרתם</h1>
+                    <p>יש לגרור את הסימניות כדי לערוך את המשקל של הקטגוריות</p>
+                  </div>
                 {/* {tags.map(tag => {
                   return (
                     <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
                   )
                 })} */}
-                <MultiSlider tags={tags} min={0} max={100}></MultiSlider>
-                <a onClick={scrollToRef(tagRef)}>Prev</a>
-                <a onClick={scrollToRef(priceRef)}>Next</a>
+                <div><MultiSlider tags={tags} min={0} max={100}></MultiSlider></div>
+                <div className={styles.secondSectionButtons}>
+                  <button type='button' onClick={scrollToRef(tagRef)} className={styles.secondaryButton}>קודם</button>
+                  <button type='button' onClick={scrollToRef(priceRef)}>הבא</button>
+                </div>
               </div>
             </section>
             <section ref={priceRef}>

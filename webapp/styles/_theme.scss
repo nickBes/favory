@@ -23,6 +23,10 @@ $very_light_blue: #b1eeee;
 $gray: #141414;
 $light_gray: #868686;
 
+:export {
+    mainColor: $blue
+}
+
 @mixin primary-button {
     display: block;
     width: 200px;
