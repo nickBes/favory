@@ -100,6 +100,7 @@ class NotebookCheckSpider(scrapy.Spider):
             # page.
             f'{device["pu_type"].get_name()}_fullname': '1',
         }
+        print('search device name:',device)
         meta['device'] = device
         return FormRequest(device['pu_type'].get_notebookcheck_search_url(),
                         formdata=formdata,

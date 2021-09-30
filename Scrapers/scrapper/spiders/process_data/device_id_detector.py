@@ -1,5 +1,7 @@
 import re
 
+from spiders.process_data.regex import RAM_REGEX
+
 ASCII_MAX = 128
 
 # when detecting the id, these words can occur everywhere, even after the id, and these words
@@ -10,6 +12,11 @@ NON_MEANINGFULL_WORDS = set([
     'embedded',
     'ii',
     'ultra'
+])
+
+# words that are just removed from a cpu's name before starting to detect the id
+CPU_REMOVED_WORDS = set([
+    'processor'
 ])
 
 # regex for detecting apple m1 gpus
@@ -33,7 +40,7 @@ class DeviceIdBuilder:
 def word_contains_digits(word:str)->bool:
     return any([c.isdigit() for c in word])
 
-def _detect_id(device_description:str)->str:
+def _detect_id(device_description:str, removed_words: set = set())->str:
     # sometimes the combination of hebrew and english makes it so that the parentheses
     # move to the start of the string, so remove them from the string.
     if device_description[0] == '(':
@@ -60,7 +67,12 @@ def _detect_id(device_description:str)->str:
         if word in NON_MEANINGFULL_WORDS:
             id_builder.add_word(word)
             continue
-        
+
+        if word.lower() in removed_words:
+            # if the word is a removed word, just don't include it in the id
+            # and ignore it completely
+            continue
+
         cur_word_contains_digits = word_contains_digits(word)
         if cur_word_contains_digits:
             found_first_id_word = True
@@ -88,7 +100,7 @@ def _detect_id(device_description:str)->str:
     return result
 
 def detect_cpu_id(cpu_description:str)->str:
-    return _detect_id(cpu_description)
+    return _detect_id(cpu_description, CPU_REMOVED_WORDS)
 
 def detect_gpu_id(gpu_description:str, cpu_description:str)->str:
     # apple M1 gpus have a very weird format that does not work with the _detect_id function, 
@@ -101,8 +113,15 @@ def detect_gpu_id(gpu_description:str, cpu_description:str)->str:
         cores_amount = cores_amount.split('-')[0]
 
         return 'Apple M1 %s'%(cores_amount)
+
+    # for some gpus, the amount of ram the gpu has is included in its in its name.
+    # it is usually added at the end, after the actual name of the gpu, so we should
+    # find where the ram pattern is found, and take everything before it.
+    ram_match = RAM_REGEX.search(gpu_description)
+    if ram_match != None:
+         gpu_description = gpu_description[:ram_match.start(0)]
     return _detect_id(gpu_description)
-        
+
 def is_integrated_gpu(gpu_description:str)->bool:
     '''
     checks if the given gpu description is of an integrated gpu.

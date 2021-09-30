@@ -6,7 +6,7 @@ from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
 PAGE_AMOUNT = 10
-ITEM_AMOUNT = 7
+ITEM_AMOUNT = -1
 
 LABELS_MAP = {
         'מעבד': 'cpu',
@@ -102,14 +102,6 @@ class BugSpider(NotebookCheckSpider):
                 if key in LABELS_MAP:
                     # map the key from its hebrew name to its english name
                     mapped_key = LABELS_MAP[key]
-
-                    # for some gpus, bug decided to incldude the amount of ram the gpu has in its name
-                    # they usually add it at the end, after the actual name of the gpu, so we should find
-                    # where the ram pattern is found, and take everything before it
-                    if mapped_key=='gpu':
-                        ram_match = RAM_REGEX.search(value)
-                        if ram_match != None:
-                            value = value[:ram_match.start(0)]
 
                     # extract the weight float from the weight string
                     if mapped_key == 'weight':

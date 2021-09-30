@@ -2,10 +2,10 @@ import scrapy
 from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.ivory import get_laptop_dict_from_response
 
-IVORY_PAGE_URL = 'https://www.ivory.co.il/catalog.php?act=cat&id=2590&pg=%s'
-IVORY_PAGE_AMOUNT = 4
-IVORY_ITEM_URL = 'https://www.ivory.co.il/catalog.php?id=%s'
-IVORY_ITEM_AMOUNT = -1
+PAGE_URL = 'https://www.ivory.co.il/catalog.php?act=cat&id=2590&pg=%s'
+PAGE_AMOUNT = 4
+ITEM_URL = 'https://www.ivory.co.il/catalog.php?id=%s'
+ITEM_AMOUNT = -1
 
 class IvorySpider(NotebookCheckSpider):
     name = 'ivory'
@@ -19,8 +19,8 @@ class IvorySpider(NotebookCheckSpider):
 
     # Request all of the pages use the parse callback
     def start_requests(self):
-        for pageNum in range(IVORY_PAGE_AMOUNT):
-            yield scrapy.Request(url=IVORY_PAGE_URL%pageNum,
+        for pageNum in range(PAGE_AMOUNT):
+            yield scrapy.Request(url=PAGE_URL%pageNum,
                                 callback=self.parse_pages)
 
 
@@ -34,7 +34,7 @@ class IvorySpider(NotebookCheckSpider):
 
         # get the first id
         last_id = laptop_ids.pop()
-        yield scrapy.Request(url=IVORY_ITEM_URL%last_id,
+        yield scrapy.Request(url=ITEM_URL%last_id,
                             callback=self.parse_laptops, meta={
                                 'laptop_ids': laptop_ids,
                             })
@@ -54,7 +54,7 @@ class IvorySpider(NotebookCheckSpider):
             yield self.with_benchmarks()
         else:
             last_id = laptop_ids.pop()
-            yield response.follow(url=IVORY_ITEM_URL%last_id, callback=self.parse_laptops,
+            yield response.follow(url=ITEM_URL%last_id, callback=self.parse_laptops,
                                 meta={
                                     'laptop_ids': laptop_ids,
                                 })
