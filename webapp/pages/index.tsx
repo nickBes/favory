@@ -113,12 +113,21 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 							<CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
 							{/* <Tags tags={tags} onTagClick={removeTag}></Tags>
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
-							<button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>
-						</section>
-						<section ref={ratingRef} hidden={tags.length < 2}>
-							<div>
-								<h1>דרגו את הקטגוריות שבחרתם.</h1>
-								<MultiSlider
+              <button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>
+            </section>
+            <section ref={ratingRef} hidden={tags.length < 2} className={styles.secondFormSection}>
+              <div className={styles.secondFormContent}>
+                  <div>
+                    <h1>דרגו את הקטגוריות שבחרתם</h1>
+                    <p>יש לגרור את הסימניות כדי לערוך את המשקל של הקטגוריות</p>
+                  </div>
+                {/* {tags.map(tag => {
+                  return (
+                    <Slider key={tag} inputName={tag} max={100} min={0} defaultValue={50}></Slider>
+                  )
+                })} */}
+                <div>
+                  <MultiSlider
 									min={0}
 									max={100}
 									bonesAmount={tags.length}
@@ -143,23 +152,26 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 											)
 										}
 									} />
-								<a onClick={scrollToRef(tagRef)}>Prev</a>
-								<a onClick={scrollToRef(priceRef)}>Next</a>
-							</div>
-						</section>
-						<section ref={priceRef}>
-							<div>
-								<h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
-								<PriceSlider max={priceLimits.max} min={priceLimits.min} defaultValue={500} />
-								<a onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)}>Prev</a>
-								<input type="submit" />
-							</div>
-						</section>
-					</Scrollable>
-				</Form>
-			</main>
-		</>
-	)
+                </div>
+                <div className={styles.secondSectionButtons}>
+                  <button type='button' onClick={scrollToRef(tagRef)} className={styles.secondaryButton}>קודם</button>
+                  <button type='button' onClick={scrollToRef(priceRef)}>הבא</button>
+                </div>
+              </div>
+            </section>
+            <section ref={priceRef}>
+              <div>
+                <h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
+                <PriceSlider max={priceLimits.max} min={priceLimits.min} defaultValue={(priceLimits.max + priceLimits.min)/2} />
+                <a onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)}>Prev</a>
+                <input type="submit" />
+              </div>
+            </section>
+          </Scrollable>
+        </Form>
+      </main>
+    </>
+  )
 }
 
 export default Home
