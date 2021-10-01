@@ -1,3 +1,5 @@
+@use '@/styles/theme';
+
 .laptopList {
     display: flex;
     flex-direction: column;
@@ -17,11 +19,44 @@
 .laptopCard {
     display: flex;
     background-color: white;
-    aspect-ratio: 3/1;
-    justify-content: center;
+    aspect-ratio: 5/1;
+    justify-content: space-evenly;
     align-items: center;
     max-width: 650px;
     margin:0px;
-    padding: 30px;
+    padding: 60px;
     border-radius: 20px;
+    border: 2px solid theme.$green;
+    box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
+    @media (max-width: 769px) {
+       max-width: 300px; 
+       aspect-ratio: 2/1;
+       padding: 20px;
+    }
+
+    a {
+        text-decoration: none;
+        width: fit-content;
+        margin: 0px;
+    }
+    > h1 {
+        color: theme.$primary_text;
+        font: theme.$big_text_font;
+        font-size: 60px;
+        width: 100%;
+        text-align: center;
+        @media (max-width: 769px) {
+            font-size: 40px;
+        }
+    }
+    > h1 > a {
+        text-decoration: none;
+        width: fit-content;
+        margin: 0px;
+        color: theme.$green;
+    }
+
+    > h1 > a:hover {
+        border-bottom: 3px solid theme.$green;
+    }
 }

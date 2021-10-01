@@ -182,18 +182,28 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                 </div>
               </div>
             </section>
-            <section ref={priceRef}>
-			<div style={{
-				display: 'flex',
-				flexDirection: 'column',
-				justifyContent: 'center',
-				alignItems: 'center',
-			}}>
-                <h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
-                <PriceSlider max={priceLimits.max} min={priceLimits.min} />
-                <a onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)}>Prev</a>
-                <input type="submit" />
-              </div>
+            <section ref={priceRef} className={styles.thirdFormSection}>
+				<div style={{
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'center',
+					alignItems: 'center',
+				}}>
+					<h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם</h1>
+					<MultiSlider 
+						colors={['blue']} 
+						max={priceLimits.max} 
+						min={priceLimits.min} 
+						bonesAmount={2} 
+						inputNames={['maxPrice']} 
+						direction='horizontal'
+						jointTooltipsRenderer={(index, distance, value) => (<>{value.toFixed()} ש"ח</>)} 
+						minDistanceInPixelsBetweenJoints={0}/>
+					<div className={styles.thirdSectionButtons}>
+						<button type='button' onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)} className={styles.secondaryButton}>קודם</button>
+						<button type='submit' onClick={scrollToRef(priceRef)} className={styles.primaryButton}>סיום</button>
+					</div>				
+				</div>
             </section>
           </Scrollable>
         </Form>

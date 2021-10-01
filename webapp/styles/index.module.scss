@@ -186,3 +186,39 @@
         max-width: 35%;
     }
 }
+
+.thirdFormSection {
+    @extend .firstFormSection;
+
+    .thirdSectionButtons {
+        .secondaryButton {
+            background-color: theme.$primary_text;
+        }
+        .secondaryButton:hover {
+            @include theme.primary-button-hover
+        }
+        .primaryButton {
+            background-color: theme.$blue;
+        }
+        .primaryButton:hover {
+            @include theme.primary-button-hover
+        }
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        button {
+            margin: 15px;
+        }
+
+        @media (max-width: 500px) {
+            button {
+                margin: 10px;
+            }
+        }
+
+        > div {
+            height: 75%;
+        }
+    }
+}

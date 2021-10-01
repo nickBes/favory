@@ -1,9 +1,9 @@
 import React from "react"
 import Image from 'next/image'
 import styles from './footer.module.scss'
-import fbIcon from '@/public/media/fb.svg'
-import igIcon from '@/public/media/ig.svg'
-import lkIcon from '@/public/media/lk.svg'
+import fbIcon from '@/public/media/fb.png'
+import igIcon from '@/public/media/ig.png'
+import lkIcon from '@/public/media/lk.png'
 
 
 const Footer : React.FC = () => {

@@ -16,3 +16,15 @@
         }
     }
 }
+
+.laptopListWrap {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+    gap: 50px;
+    @media (max-width: 769px) {
+        gap: 20px;
+    }
+}

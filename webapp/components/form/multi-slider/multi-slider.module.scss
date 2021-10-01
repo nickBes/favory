@@ -11,13 +11,13 @@
 .horizontalSlider {
     @include slider;
     flex-direction: row-reverse;
-    width: 200;
+    width: 800px;
     height: 15px;
     @media (max-width: 1000px) {
-        width: 200px;
+        width: 600px;
     }
-    @media (max-width: 769px) {
-        width: 200px;
+    @media (max-width: 600px) {
+        width: 300px;
     }
 }
 

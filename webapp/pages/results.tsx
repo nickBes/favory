@@ -93,16 +93,22 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 	if (pageProps.success) {
 		if (laptops === null) {
 			// if no laptops were be found, return an empty element just to let the redirect happen.
-			return (<section></section>);
+			return (<></>);
 		}
-		const firstThreeLaptops = laptops.slice(3)
-		const otherLaptops = laptops.slice(3, laptops.length)
+		let laptopTrios = []
+		for (let i = 0; i < laptops.length; i += 3) {
+			laptopTrios.push(laptops.slice(i, i + 3))
+		}
 		return (
 			<>
-				<section className={styles.mainContent}>
-					<Navbar path={router.pathname}></Navbar>
-					<div><LaptopResultsList laptops={firstThreeLaptops} /></div>
-				</section>
+				{laptopTrios.map((value, index) => {
+					return (
+						<section key={index + 1}>
+							{index === 0 ? <Navbar path={router.pathname}></Navbar> : ''}
+							<div className={styles.laptopListWrap}><LaptopResultsList displayPopup={index == 1} laptops={value} /></div>
+						</section>
+					)
+				})}
 			</>
 		)
 	} else {
