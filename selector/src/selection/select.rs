@@ -31,11 +31,14 @@ impl Select for SelectorDBConnection {
         let scores_in_categories_of_laptops =
             MappedScoresInCategoriesOfLaptops::load(self, max_price)?;
 
+        let laptop_prices = self.fetch_laptop_prices()?;
+
         // find the top laptops
         let mut top_laptops = TopLaptops::new(TOP_LAPTOPS_AMOUNT);
         top_laptops.find_top_laptops(
             &user_category_scores_by_id,
             &scores_in_categories_of_laptops,
+            &laptop_prices,
         )?;
 
         // we have the ids of the selected laptops, we now need to load the
