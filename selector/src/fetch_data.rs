@@ -43,6 +43,7 @@ pub trait FetchData {
         &self,
         max_price: f32,
     ) -> Result<Vec<LaptopScoreInCategoryInfo>>;
+    fn fetch_laptop_prices(&self) -> Result<HashMap<i32, f32>>;
     fn fetch_selected_laptops(
         &self,
         ids: &[i32],
@@ -99,6 +100,15 @@ impl FetchData for SelectorDBConnection {
             ))
             .load(&self.0)
             .into_selector_result(SelectorErrorKind::DatabaseError)
+    }
+    fn fetch_laptop_prices(&self) -> Result<HashMap<i32, f32>> {
+        use schema::laptop;
+        
+        let laptop_scores:Vec<(i32,f32)> = laptop::table.select((laptop::id, laptop::price)).load(&self.0)
+            .into_selector_result(SelectorErrorKind::DatabaseError)?;
+
+        // convert it to a hashmap mapping each laptop's id to its price
+        Ok(laptop_scores.into_iter().collect())
     }
     fn fetch_selected_laptops(
         &self,

@@ -9,6 +9,7 @@ use crate::errors::*;
 #[derive(Debug)]
 struct TopLaptopsEntry {
     laptop_id: i32,
+    price: f32,
     score: f32,
 }
 
@@ -33,10 +34,12 @@ impl TopLaptops {
         &mut self,
         user_category_scores: &UserCategoryScoresById,
         scores_in_categories_of_laptops: &MappedScoresInCategoriesOfLaptops,
+        laptop_prices: &HashMap<i32, f32>,
     ) -> Result<()> {
         for laptop_with_scores in scores_in_categories_of_laptops.iter() {
             let total_score = laptop_with_scores.calculate_total_score(user_category_scores)?;
-            self.update(laptop_with_scores.laptop_id(), total_score);
+            let price = laptop_prices.get(&laptop_with_scores.laptop_id()).unwrap();
+            self.update(laptop_with_scores.laptop_id(), *price, total_score);
         }
         Ok(())
     }
@@ -44,15 +47,17 @@ impl TopLaptops {
     /// update the top laptops with a new laptop.
     /// if this laptop is better than any of the laptops currently in the
     /// list, it will be inserted before it.
-    pub fn update(&mut self, laptop_id: i32, score: f32) {
+    pub fn update(&mut self, laptop_id: i32, price: f32, score: f32) {
         let mut was_better_than_any_of_top_laptops = false;
         // start from the best laptop, and go down the list, each time checking if the new
         // laptop is better than any laptop that is already in the top laptops list
         for i in 0..self.top_laptops.len() {
             // if the new laptop is better than some laptop in our current top laptops, insert the
             // new laptop right before him.
-            if score > self.top_laptops[i].score {
-                self.insert_laptop_at(i, laptop_id, score);
+            if score > self.top_laptops[i].score
+                || (score == self.top_laptops[i].score && price < self.top_laptops[i].price)
+            {
+                self.insert_laptop_at(i, laptop_id, price, score);
 
                 // the laptop was better than one of the current top laptops
                 was_better_than_any_of_top_laptops = true;
@@ -68,13 +73,17 @@ impl TopLaptops {
         // but we don't yet have the required amount of laptops, add the new laptop as the last
         // laptop, namely the worst one
         if !was_better_than_any_of_top_laptops && self.top_laptops.len() < self.amount {
-            self.top_laptops.push(TopLaptopsEntry { laptop_id, score })
+            self.top_laptops.push(TopLaptopsEntry {
+                laptop_id,
+                price,
+                score,
+            })
         }
     }
 
     /// inserts a laptop at a specific index, while maintaining a correct length
     /// for the top_laptops vector
-    fn insert_laptop_at(&mut self, index: usize, laptop_id: i32, score: f32) {
+    fn insert_laptop_at(&mut self, index: usize, laptop_id: i32, price: f32, score: f32) {
         // if the index is the last index in the top_laptops vector
         // we don't need to perform any more modification to the top_laptops vector other
         // than just updating the last entry according to the new laptop's information.
@@ -84,7 +93,7 @@ impl TopLaptops {
         // and then trying to insert an element in place of it, which would case an error,
         // since it no longer exists.
         if index + 1 == self.amount {
-            self.top_laptops[index] = TopLaptopsEntry { laptop_id, score };
+            self.top_laptops[index] = TopLaptopsEntry { laptop_id, price, score };
             return;
         }
 
@@ -96,7 +105,7 @@ impl TopLaptops {
         }
 
         self.top_laptops
-            .insert(index, TopLaptopsEntry { laptop_id, score })
+            .insert(index, TopLaptopsEntry { laptop_id, price, score })
     }
 
     /// returns the laptop ids of the top laptops, in order
