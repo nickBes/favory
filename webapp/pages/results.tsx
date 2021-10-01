@@ -97,19 +97,25 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 			return (<></>);
 		}
 		const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
-		console.log(clickedPopup)
-		let laptopTrios = []
-		for (let i = 0; i < laptops.length; i += 3) {
-			laptopTrios.push(laptops.slice(i, i + 3))
+		const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
+		// usually there should be 3 laptops per section
+		// but when we want to display the popup there should be 2
+		let laptopLists = []
+		let laptopsPerList = showPopup ? 2 : 3
+		for (let i = 0; i < laptops.length; i += laptopsPerList) {
+			if (i == 1) {
+				laptopsPerList = 3
+			}
+			laptopLists.push(laptops.slice(i, i + laptopsPerList))
 		}
 		return (
 			<>
-				{laptopTrios.map((value, index) => {
+				{laptopLists.map((value, index) => {
 					return (
 						<section key={index + 1}>
 							{index === 0 ? <Navbar path={router.pathname}></Navbar> : ''}
 							<div className={styles.laptopListWrap}>
-								<LaptopResultsList displayPopup={index == 1 && (clickedPopup == 'false' || typeof clickedPopup === 'undefined')} laptops={value} />
+								<LaptopResultsList displayPopup={index == 0 && showPopup} laptops={value} />
 							</div>
 						</section>
 					)
