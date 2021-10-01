@@ -1,7 +1,7 @@
 @use '@/styles/theme';
 
 .laptopImage {
-    max-width: 35%;
+    max-width: 30%;
     @media (max-width: 769px) {
         max-width: 45%;
     }

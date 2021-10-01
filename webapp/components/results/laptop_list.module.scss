@@ -19,7 +19,7 @@
 .laptopCard {
     display: flex;
     background-color: white;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     margin:0px;
@@ -27,7 +27,7 @@
     padding: 65px;
     border: 2px solid theme.$green;
     box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
-    aspect-ratio: 5/1;
+    aspect-ratio: 6/1;
 
     @media (max-aspect-ratio: 16/12) {
         padding:50px;
