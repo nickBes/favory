@@ -6,6 +6,9 @@
 .laptopCardText {
     text-align: right;
     max-width: 50%;
+    @media (max-width: 769px) {
+        max-width: 65%;
+    }
     * {
         margin: 0px;
     }

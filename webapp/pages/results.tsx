@@ -6,9 +6,10 @@ import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
 import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
-import LaptopResultsList from '@/components/results/laptopResultsList'
+import LaptopResultsList, { ClickedPopup } from '@/components/results/laptopResultsList'
 import hasExceededRateLimit from 'rateLimit'
 import styles from '@/styles/results.module.scss'
+import Cookies from 'js-cookie'
 
 type ResultsPageInvalidFieldError = {
 	type: "invalidField",
@@ -95,6 +96,8 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 			// if no laptops were be found, return an empty element just to let the redirect happen.
 			return (<></>);
 		}
+		const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
+		console.log(clickedPopup)
 		let laptopTrios = []
 		for (let i = 0; i < laptops.length; i += 3) {
 			laptopTrios.push(laptops.slice(i, i + 3))
@@ -105,7 +108,9 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 					return (
 						<section key={index + 1}>
 							{index === 0 ? <Navbar path={router.pathname}></Navbar> : ''}
-							<div className={styles.laptopListWrap}><LaptopResultsList displayPopup={index == 1} laptops={value} /></div>
+							<div className={styles.laptopListWrap}>
+								<LaptopResultsList displayPopup={index == 1 && (clickedPopup == 'false' || typeof clickedPopup === 'undefined')} laptops={value} />
+							</div>
 						</section>
 					)
 				})}
