@@ -57,6 +57,7 @@
 
 .secondFormSection {
     @extend .firstFormSection;
+
     .secondFormContent {
         height: 55%;
         max-width: 80%;
@@ -66,6 +67,13 @@
         flex-direction: column;
         @media (max-width: 700px) {
             height: 80%;
+        }
+
+        .secondFormText {
+            max-width: 800px;
+            @media (max-width: 700px) {
+                max-width: 500px;
+            }
         }
     }
 
@@ -189,6 +197,21 @@
 
 .thirdFormSection {
     @extend .firstFormSection;
+    justify-content: space-around;
+
+
+    .thirdSectionText {
+        padding: 10px;
+        max-width: 500px;
+        @media (max-width: 600px) {
+            max-width: 400px;
+        }
+    }
+    .priceSliderWrapper {
+        padding: 10px;
+        margin: 20px;
+        margin-top: 50px;
+    }
 
     .thirdSectionButtons {
         .secondaryButton {

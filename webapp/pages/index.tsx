@@ -134,9 +134,9 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
             </section>
             <section ref={ratingRef}  style={{display: tags.length < 2 ? 'none' : 'flex'}} className={styles.secondFormSection}>
               <div className={styles.secondFormContent}>
-                  <div>
+                  <div className={styles.secondFormText}>
                     <h1>דרגו את הקטגוריות שבחרתם</h1>
-                    <p>יש לגרור את הסימניות כדי לערוך את המשקל של הקטגוריות</p>
+                    <p>יש לגרור את הידיות כדי לערוך את המשקל של הקטגוריות</p>
                   </div>
                 {/* {tags.map(tag => {
                   return (
@@ -189,16 +189,21 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 					justifyContent: 'center',
 					alignItems: 'center',
 				}}>
-					<h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם</h1>
-					<MultiSlider 
-						colors={['blue']} 
-						max={priceLimits.max} 
-						min={priceLimits.min} 
-						bonesAmount={2} 
-						inputNames={['maxPrice']} 
-						direction='horizontal'
-						jointTooltipsRenderer={(index, distance, value) => (<>{value.toFixed()} ש"ח</>)} 
-						minDistanceInPixelsBetweenJoints={0}/>
+					<div className={styles.thirdSectionText}>
+						<h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם</h1>
+						<p>יש לגרור את הידית כדי לבחור את המחיר המקסימלי הרצוי</p>
+					</div>
+					<div className={styles.priceSliderWrapper}>
+						<MultiSlider 
+							colors={['#2e4da4']} 
+							max={priceLimits.max} 
+							min={priceLimits.min} 
+							bonesAmount={2} 
+							inputNames={['maxPrice']} 
+							direction='horizontal'
+							jointTooltipsRenderer={(index, distance, value) => (<>{value.toFixed()} ש"ח</>)} 
+							minDistanceInPixelsBetweenJoints={0}/>
+					</div>
 					<div className={styles.thirdSectionButtons}>
 						<button type='button' onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)} className={styles.secondaryButton}>קודם</button>
 						<button type='submit' onClick={scrollToRef(priceRef)} className={styles.primaryButton}>סיום</button>
