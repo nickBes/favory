@@ -6,7 +6,7 @@ from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
 PAGE_AMOUNT = 1
-ITEM_AMOUNT = 7
+ITEM_AMOUNT = -1
 
 LABELS_MAP = {
         'מעבד': 'cpu',
@@ -43,32 +43,65 @@ class BugSpider(NotebookCheckSpider):
 
     custom_settings = {
         'FEEDS': {
-            'laptops.json': {'format': 'json'}
+            'bug-laptops.json': {'format': 'json'}
         },
-        'DUPEFILTER_DEBUG': True
+        'DUPEFILTER_DEBUG': True,
+        'DUPEFILTER_CLASS': 'scrapy.dupefilters.BaseDupeFilter'
     }
 
     # Request all of the pages use the parse callback
     def start_requests(self):
-        for page_index in range(PAGE_AMOUNT):
-            yield scrapy.Request(url=create_page_url(page_index),
-                                callback=self.parse_pages)
+        page_urls = [create_page_url(page_index) for page_index in range(PAGE_AMOUNT)]
+
+        # get the first url
+        url = page_urls.pop()
+        yield scrapy.Request(url=url,
+                            callback=self.collect_pages,
+                            meta={'page_urls':page_urls, 'laptop_urls': []})
+
+    def collect_pages(self, response):
+        '''
+        Recursive collection of pages
+        '''
+        page_urls = response.meta['page_urls']
+        laptop_urls = response.meta['laptop_urls']
+
+        laptop_urls_cur_page = self.extract_laptop_urls_from_page(response)
+
+        # Limiting the amount of laptops (-1 means no limit)
+        if ITEM_AMOUNT!=-1:
+            laptop_urls_cur_page = laptop_urls_cur_page[:ITEM_AMOUNT]
+
+        # add the laptop urls from the current page
+        laptop_urls.extend(laptop_urls_cur_page)
+
+        if len(page_urls) == 0:
+            # if we finished collecting the pages, start collecting the laptops
+            # get the first url
+            url = laptop_urls.pop()
+            yield scrapy.Request(url=url,
+                                callback=self.parse_laptops, meta={
+                                    'laptop_urls': laptop_urls,
+                                })
+        else:
+            url = page_urls.pop()
+            yield response.follow(url=url,callback=self.collect_pages,
+                                meta={
+                                    'page_urls': page_urls,
+                                    'laptop_urls': laptop_urls
+                                })
 
 
-    # Collecting laptop id from each page
-    def parse_pages(self, response):
+    def extract_laptop_urls_from_page(self, response):
+        '''
+        extracts laptop urls from a laptops page
+        '''
         laptop_relative_urls = response.css('div.product-cube > div:nth-child(1) > a:nth-child(2)::attr(href)').getall()
 
         # convert the relative urls to actual urls
         laptop_urls = [create_url_from_relative_url(relative_url) for relative_url in laptop_relative_urls]
 
-        # Limiting the laptops url amount and picking the first url,
-        laptop_urls = laptop_urls[:ITEM_AMOUNT]
-        url = laptop_urls.pop()
-        yield scrapy.Request(url=url,
-                            callback=self.parse_laptops, meta={
-                                'laptop_urls': laptop_urls,
-                            })
+        return laptop_urls
 
     def extract_laptop_images(self, response)->str:
         image_relative_urls = response.css('#image-gallery > li > img::attr(src)').getall()
@@ -100,14 +133,6 @@ class BugSpider(NotebookCheckSpider):
                     # map the key from its hebrew name to its english name
                     mapped_key = LABELS_MAP[key]
 
-                    # for some gpus, bug decided to incldude the amount of ram the gpu has in its name
-                    # they usually add it at the end, after the actual name of the gpu, so we should find
-                    # where the ram pattern is found, and take everything before it
-                    if mapped_key=='gpu':
-                        ram_match = RAM_REGEX.search(value)
-                        if ram_match != None:
-                            value = value[:ram_match.start(0)]
-
                     # extract the weight float from the weight string
                     if mapped_key == 'weight':
                         value = float(WEIGHT_REGEX.findall(value)[0])
@@ -134,7 +159,10 @@ class BugSpider(NotebookCheckSpider):
         laptop_data['image_urls'] = self.extract_laptop_images(response)
 
         # price
-        price_label = response.css('#product-price-container > ins:nth-child(1)::text').get()
+        price_label_container = response.css('#product-price-container').get()
+
+        # use beautifulsoup to fix broken html
+        price_label = BeautifulSoup(price_label_container, 'html5lib').find('ins').text
 
         # extract the price text from the price label
         price_text = PRICE_REGEX.findall(price_label)[0]

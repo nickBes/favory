@@ -6,8 +6,8 @@ from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX, WEIGHT_REGEX, DEV
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
-PAGE_AMOUNT = 1
-ITEM_AMOUNT = 7
+PAGE_AMOUNT = 4
+ITEM_AMOUNT = -1
 
 LABELS_MAP = {
         'מעבד': 'cpu',
@@ -18,37 +18,66 @@ LABELS_MAP = {
         'מעבד גרפי': 'gpu',
         }
 
+HEBREW_ALPHABET = 'קראטוןםפשדגכעיחלךףזסבהנמצתץ'
+
 def create_page_url(page_index:int)->str:
     return 'https://www.lastprice.co.il/MoreProducts.asp?offset=%s&catcode=85'%page_index
+
+def is_all_hebrew_letters(word:str)->bool:
+    return all([c in HEBREW_ALPHABET for c in word])
 
 class LastPriceSpider(NotebookCheckSpider):
     name = 'lastprice'
 
     custom_settings = {
         'FEEDS': {
-            'laptops.json': {'format': 'json'}
+            'lastprice-laptops.json': {'format': 'json'}
         },
-        'DUPEFILTER_DEBUG': True
+        'DUPEFILTER_DEBUG': True,
+        'DUPEFILTER_CLASS': 'scrapy.dupefilters.BaseDupeFilter'
     }
 
     # Request all of the pages use the parse callback
     def start_requests(self):
-        for page_index in range(PAGE_AMOUNT):
-            yield scrapy.Request(url=create_page_url(page_index),
-                                callback=self.parse_page)
+        page_urls = [create_page_url(page_index) for page_index in range(PAGE_AMOUNT)]
 
-
-    # Collecting laptop urls from each page
-    def parse_page(self, response):
-        laptop_urls = response.css('a.prodLink::attr(href)').getall()
-
-        # Limiting the laptops url amount and picking the first url,
-        laptop_urls = laptop_urls[:ITEM_AMOUNT]
-        url = laptop_urls.pop()
+        # get the first url
+        url = page_urls.pop()
         yield scrapy.Request(url=url,
-                            callback=self.parse_laptops, meta={
-                                'laptop_urls': laptop_urls,
-                            })
+                            callback=self.collect_pages,
+                            meta={'page_urls':page_urls, 'laptop_urls': []})
+
+    def collect_pages(self, response):
+        '''
+        Recursive collection of pages
+        '''
+        page_urls = response.meta['page_urls']
+        laptop_urls = response.meta['laptop_urls']
+
+        laptop_urls_cur_page = response.css('a.prodLink::attr(href)').getall()
+
+        # Limiting the amount of laptops (-1 means no limit)
+        if ITEM_AMOUNT!=-1:
+            laptop_urls_cur_page = laptop_urls_cur_page[:ITEM_AMOUNT]
+
+        # add the laptop urls from the current page
+        laptop_urls.extend(laptop_urls_cur_page)
+
+        if len(page_urls) == 0:
+            # if we finished collecting the pages, start collecting the laptops
+            # get the first url
+            url = laptop_urls.pop()
+            yield scrapy.Request(url=url,
+                                callback=self.parse_laptops, meta={
+                                    'laptop_urls': laptop_urls,
+                                })
+        else:
+            url = page_urls.pop()
+            yield response.follow(url=url,callback=self.collect_pages,
+                                meta={
+                                    'page_urls': page_urls,
+                                    'laptop_urls': laptop_urls
+                                })
 
     def extract_laptop_images(self, response)->str:
         urls = []
@@ -78,15 +107,44 @@ class LastPriceSpider(NotebookCheckSpider):
             for i in range(len(lines)):
                 line = lines[i].strip()
 
-                # the lastprice website uses 2 different separators
-                separator = ':' if ':' in line else '-'
-                parts = line.split(separator, 1)
+                # convert annoying non braking spaces to normal spaces
+                line = line.encode().replace(b"\xc2\xa0", b" ").decode()
 
-                # only take paragraphs with key value structure
-                if len(parts) != 2:
+                # the key is just all the first hebrew words in the line
+                key = ''
+
+                # either a delimiter with an optional space, or a space with
+                # an optional delimiter
+                for word in re.split('(?:[:-][  ]?)|(?:[:-]? )', line):
+                    contained_separator = False
+
+                    # if this word contains a key-value separator, remove it,
+                    # and if it is also a hebrew word, then it must be the last
+                    # word in the key, because after it comes the separator.
+                    if ':' in word or '-' in word:
+                        contained_separator = True
+
+                        # remove the separator so we can check that the rest
+                        # of the string is hebrew only
+                        word = word.replace(':','').replace('-','')
+
+                    if is_all_hebrew_letters(word):
+                        key += word + ' '
+
+                        # if the word contained a separator, it is the last
+                        # word in the key.
+                        if contained_separator:
+                            break
+                    else:
+                        break
+
+                # if the line contained no hebrew words, it is not a key-value
+                # pair.
+                if len(key)==0:
                     continue
 
-                key,value = parts
+                # the rest of the string represents the key's value
+                value = line[len(key):]
 
                 value = value.strip().replace('-',' ')
                 key = key.strip()
@@ -133,8 +191,6 @@ class LastPriceSpider(NotebookCheckSpider):
                     if len(weight_matches) > 0:
                         weight_text = weight_matches[0]
                         laptop_data['weight'] = float(weight_text)
-
-
 
         return laptop_data
 
