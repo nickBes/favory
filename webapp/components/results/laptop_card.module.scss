@@ -2,10 +2,13 @@
 
 .laptopImage {
     max-width: 35%;
+    @media (max-width: 769px) {
+        max-width: 45%;
+    }
 }
 .laptopCardText {
     text-align: right;
-    max-width: 50%;
+    max-width: 40%;
     @media (max-width: 769px) {
         max-width: 65%;
     }
@@ -17,11 +20,13 @@
         font: theme.$medium_text_font;
         font-weight: 600;
         margin: 0px;
+        line-height: 40px;
 
-        @media (max-width: 600px) {
+        @media (max-aspect-ratio: 1/1) {
             font: theme.$medium_text_font_mobile;
             font-weight: 600;
             font-size: 19px;
+            line-height: 30px;
         }
     }
 
@@ -33,10 +38,13 @@
     button {
         @include theme.primary-button;
         z-index: 1;
-        margin-top: 10px;
         @media (max-width: 600px) {
             width: 100px;
+            height: 30px;
         }
+        line-height: 25px;
+        text-align: center;
+        margin-top: 12px;
     }
 
     button:hover {

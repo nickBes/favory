@@ -100,17 +100,18 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 		const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
 		// usually there should be 3 laptops per section
 		// but when we want to display the popup there should be 2
-		let laptopLists = []
+		let laptopListArray = []
 		let laptopsPerList = showPopup ? 2 : 3
 		for (let i = 0; i < laptops.length; i += laptopsPerList) {
-			if (i == 1) {
+			if (i != 0) {
 				laptopsPerList = 3
 			}
-			laptopLists.push(laptops.slice(i, i + laptopsPerList))
+			const laptopList = laptops.slice(i, i + laptopsPerList)
+			laptopListArray.push(laptopList)
 		}
 		return (
 			<>
-				{laptopLists.map((value, index) => {
+				{laptopListArray.map((value, index) => {
 					return (
 						<section key={index + 1}>
 							{index === 0 ? <Navbar path={router.pathname}></Navbar> : ''}

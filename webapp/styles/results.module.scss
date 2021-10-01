@@ -18,13 +18,25 @@
 }
 
 .laptopListWrap {
+    width: 40%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
     margin: auto;
     gap: 50px;
-    @media (max-width: 769px) {
-        gap: 20px;
+    position: relative;
+    @media (max-aspect-ratio: 16/12) {
+        max-height: 60%;
+        gap: 30px;   
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        width: 70%;
+        gap: 15px;
+    }
+    @media (max-aspect-ratio: 9/16) {
+        width: 70%;
+        gap: 10px;
     }
 }

@@ -44,4 +44,8 @@
     a:hover {
         color: theme.$secondary_background;
     }
+
+    > div > p {
+        margin: 0px;
+    }
 }
