@@ -3,7 +3,7 @@ from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.ivory import get_laptop_dict_from_response
 
 PAGE_URL = 'https://www.ivory.co.il/catalog.php?act=cat&id=2590&pg=%s'
-PAGE_AMOUNT = 4
+PAGE_AMOUNT = 1
 ITEM_URL = 'https://www.ivory.co.il/catalog.php?id=%s'
 ITEM_AMOUNT = -1
 

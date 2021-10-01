@@ -20,7 +20,7 @@ CPU_REMOVED_WORDS = set([
 ])
 
 # regex for detecting apple m1 gpus
-APPLE_M1_GPU_RE = re.compile('[0-9]+-( )?core GPU')
+APPLE_M1_GPU_RE = re.compile('([0-9]+)[-]?[ ]?[Cc]ore GPU')
 
 # this is a set of words that are counted as part of the device id even though they appear after 
 # a word with digits and contain letters only.
@@ -76,7 +76,7 @@ def _detect_id(device_description:str, removed_words: set = set())->str:
         cur_word_contains_digits = word_contains_digits(word)
         if cur_word_contains_digits:
             found_first_id_word = True
-        
+
         # if we have already encountered the first id word that contains digits, and we
         # find a word that is non-id after it, then this word is probably not part of the id
         if found_first_id_word and not cur_word_contains_digits:
@@ -100,17 +100,23 @@ def _detect_id(device_description:str, removed_words: set = set())->str:
     return result
 
 def detect_cpu_id(cpu_description:str)->str:
+    # special case for the apple m1 cpu
+    if cpu_description == 'M1':
+        return 'Apple M1'
+
+    # for some reason some cpu names start with this word, and it messes the notebookcheck search,
+    # so remove it
+    if cpu_description.startswith('Dual '):
+        cpu_description = cpu_description[len('Dual '):]
+
     return _detect_id(cpu_description, CPU_REMOVED_WORDS)
 
 def detect_gpu_id(gpu_description:str, cpu_description:str)->str:
     # apple M1 gpus have a very weird format that does not work with the _detect_id function, 
     # so this specialized case is used.
-    if cpu_description.startswith('Apple M1') and APPLE_M1_GPU_RE.match(gpu_description):
-        # the cores amount is always the first word
-        cores_amount = gpu_description.split(' ')[0]
-        # the cores amount contains a '-' character and optionally the string 'cores', but we 
-        # only want the part before the '-'
-        cores_amount = cores_amount.split('-')[0]
+    if cpu_description.startswith('Apple M1') or cpu_description == 'M1':
+        match = APPLE_M1_GPU_RE.fullmatch(gpu_description)
+        cores_amount = match.group(1)
 
         return 'Apple M1 %s'%(cores_amount)
 
@@ -120,6 +126,12 @@ def detect_gpu_id(gpu_description:str, cpu_description:str)->str:
     ram_match = RAM_REGEX.search(gpu_description)
     if ram_match != None:
          gpu_description = gpu_description[:ram_match.start(0)]
+
+    # sometimes the word GTX is used without a space after it which ruins the search 
+    # in notebookecheck
+    gpu_description.replace('GTX','GTX ')
+
+
     return _detect_id(gpu_description)
 
 def is_integrated_gpu(gpu_description:str)->bool:

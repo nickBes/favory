@@ -5,7 +5,7 @@ from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
 from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
-PAGE_AMOUNT = 10
+PAGE_AMOUNT = 1
 ITEM_AMOUNT = -1
 
 LABELS_MAP = {
@@ -159,7 +159,10 @@ class BugSpider(NotebookCheckSpider):
         laptop_data['image_urls'] = self.extract_laptop_images(response)
 
         # price
-        price_label = response.css('#product-price-container > ins:nth-child(1)::text').get()
+        price_label_container = response.css('#product-price-container').get()
+
+        # use beautifulsoup to fix broken html
+        price_label = BeautifulSoup(price_label_container, 'html5lib').find('ins').text
 
         # extract the price text from the price label
         price_text = PRICE_REGEX.findall(price_label)[0]

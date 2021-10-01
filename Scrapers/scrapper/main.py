@@ -10,9 +10,6 @@ if __name__ == '__main__':
         laptops_path.unlink()
 
     process = CrawlerProcess()
-    process.crawl(IvorySpider)
-    process.start()
-
-    process = CrawlerProcess()
     process.crawl(BugSpider)
+    process.crawl(IvorySpider)
     process.start()
