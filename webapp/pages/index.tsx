@@ -182,9 +182,14 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
               </div>
             </section>
             <section ref={priceRef}>
-              <div>
+			<div style={{
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'center',
+				alignItems: 'center',
+			}}>
                 <h1>בחרו במחיר המקסימלי שתהיו מוכנים לשלם.</h1>
-                <PriceSlider max={priceLimits.max} min={priceLimits.min} defaultValue={Math.round((priceLimits.max + priceLimits.min)/2)} />
+                <PriceSlider max={priceLimits.max} min={priceLimits.min} />
                 <a onClick={tags.length <= 1 ? scrollToRef(tagRef) : scrollToRef(ratingRef)}>Prev</a>
                 <input type="submit" />
               </div>

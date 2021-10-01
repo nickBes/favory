@@ -12,17 +12,16 @@ const PriceSlider: React.FC<PriceSliderProps> = ({max, min}) => {
 			min={min}
 			max={max}
 			direction="horizontal"
-			colors={["white", "blue"]}
+			colors={["blue", "white"]}
 			inputNames={["maxPrice"]}
 			bonesAmount={2}
 			minDistanceInPixelsBetweenJoints={0}
-			jointTooltipsRenderer={(_, distanceFromStart) => {
-				return (
-					<div>
-						{distanceFromStart.toString()}
-					</div>
-				)
-			}} />
+			jointTooltipsRenderer={
+				(_index, _dis, value) => {
+					return (<>{value.toFixed(0)}</>)
+				}
+			}
+		/>
 	)
 }
 

@@ -15,7 +15,7 @@ interface MultiSliderProps {
 	minDistanceInPixelsBetweenJoints: number,
 	// boneWidth is between 0 and 1
 	boneTooltipsRenderer?: (boneIndex: number, boneWidth: number) => JSX.Element,
-	jointTooltipsRenderer?: (jointIndex: number, distanceFromStart: number) => JSX.Element,
+	jointTooltipsRenderer?: (jointIndex: number, distanceFromStart: number, jointValue: number) => JSX.Element,
 	direction: Direction,
 }
 
@@ -38,7 +38,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 	minDistanceInPixelsBetweenJoints,
 	boneTooltipsRenderer,
 	jointTooltipsRenderer,
-	direction
+	direction,
 }) => {
 	const valuesRange = max - min;
 
@@ -85,6 +85,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 
 	useEffect(() => {
 		updateCurrentRect();
+
 		// generate initial bone widths, where all bones have the same width
 		setBoneWidths(generateDefaultWidths())
 	}, [min, max, bonesAmount])
@@ -118,7 +119,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 				color={boneIndex < colors.length ? colors[boneIndex] : undefined}
 				direction={direction}
 				sizeInPixels={boneWidth * getLength()}
-				widthAsValue={boneWidth * valuesRange}
+				widthAsValue={boneWidth * valuesRange + min}
 				key={boneIndex} />);
 			if (boneTooltipsRenderer !== undefined) {
 				return (
@@ -199,9 +200,13 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 			if (jointTooltipsRenderer !== undefined) {
 				return (
 					<div key={index}>
-						<Tooltip direction={direction} position={direction == 'horizontal' ? "top" : "left"} distanceFromStart={accumulatedWidth * getLength()}
-							content={jointTooltipsRenderer(index, accumulatedWidth)} />
-						{jointElement}
+						<div>
+							<Tooltip direction={direction} position={direction == 'horizontal' ? "top" : "left"} distanceFromStart={accumulatedWidth * getLength()}
+								content={jointTooltipsRenderer(index, accumulatedWidth, accumulatedWidth * valuesRange + min)} />
+						</div>
+						<div>
+							{jointElement}
+						</div>
 					</div>)
 			} else {
 				return jointElement
