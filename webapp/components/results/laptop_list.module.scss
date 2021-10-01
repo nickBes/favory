@@ -4,21 +4,24 @@
     align-items: center;
     gap: 50px;
 
-    .laptopCard {
-        display: flex;
-        background-color: white;
-        aspect-ratio: 3/1;
-        justify-content: center;
-        align-items: center;
-        max-width: 500px;
-        margin:0px;
-        padding: 20px;
-    }
+    height: 80%;
+
 
     :first-child {
         max-width: 845px;
     }
-
+    margin-bottom: 50px;
 }
 
 
+.laptopCard {
+    display: flex;
+    background-color: white;
+    aspect-ratio: 3/1;
+    justify-content: center;
+    align-items: center;
+    max-width: 650px;
+    margin:0px;
+    padding: 30px;
+    border-radius: 20px;
+}

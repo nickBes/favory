@@ -9,7 +9,8 @@ interface LaptopResultsListProps {
 
 const LaptopResultsList: React.FC<LaptopResultsListProps> = ({laptops}) => {
 	return (
-		<main className={styles.laptopList}>
+
+		<>
 			{
 				laptops.map((laptop, index) => {
 					return (
@@ -19,7 +20,7 @@ const LaptopResultsList: React.FC<LaptopResultsListProps> = ({laptops}) => {
 					)
 				})
 			}
-		</main>
+		</>
 	)
 }
 

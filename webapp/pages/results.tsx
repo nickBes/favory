@@ -93,14 +93,17 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 	if (pageProps.success) {
 		if (laptops === null) {
 			// if no laptops were be found, return an empty element just to let the redirect happen.
-			return (<></>);
+			return (<section></section>);
 		}
+		const firstThreeLaptops = laptops.slice(3)
+		const otherLaptops = laptops.slice(3, laptops.length)
 		return (
-			<section className={styles.mainContent}>
-				<Navbar path={router.pathname}></Navbar>
-				<h1>תוצאות השאלון</h1>
-				<LaptopResultsList laptops={laptops} />
-			</section>
+			<>
+				<section className={styles.mainContent}>
+					<Navbar path={router.pathname}></Navbar>
+					<div><LaptopResultsList laptops={firstThreeLaptops} /></div>
+				</section>
+			</>
 		)
 	} else {
 		// somehow include information about the error
