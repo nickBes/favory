@@ -167,7 +167,8 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                       return (
                         <div>
                           <figure className={styles.sliderTooltip}>
-                            <div className={styles.sliderTooltipImage}><Image width={100} height={100} src={data.white} alt={data.title}></Image></div>
+							{/* make sure data.white is not undefined */}
+                            <div className={styles.sliderTooltipImage}><Image width={100} height={100} src={data.white as StaticImageData} alt={data.title}></Image></div>
                             <figcaption>{Math.round(boneWidth * 100)}%</figcaption>
                           </figure>
                         </div>

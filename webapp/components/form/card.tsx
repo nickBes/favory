@@ -7,7 +7,7 @@ export interface CategoryData {
     title : string,
     description: string,
     image: StaticImageData,
-    white: StaticImageData
+    white?: StaticImageData
     color?: string,
 }
 
