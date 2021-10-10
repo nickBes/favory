@@ -4,13 +4,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 50px;
+    gap: 30px;
 
     height: 80%;
 
 
     :first-child {
-        max-width: 845px;
+        max-width: 800px;
     }
     margin-bottom: 50px;
 }
@@ -24,14 +24,14 @@
     width: 100%;
     margin:0px;
     border-radius: 20px;
-    padding: 65px;
+    padding: 35px;
     border: 2px solid theme.$green;
     box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
-    aspect-ratio: 6/1;
+    aspect-ratio: 3/1;
 
     @media (max-aspect-ratio: 16/12) {
         padding:50px;
-        aspect-ratio: 4/1;
+        aspect-ratio: 3/1;
     }
     @media (max-aspect-ratio: 1/1) {
         aspect-ratio: 2/1;
@@ -52,6 +52,8 @@
     figure > h1 {
         color: theme.$primary_text;
         font: theme.$big_text_font;
+        font-size: 50px;
+        line-height: 45px;
         font-size: 60px;
         width: 100%;
         text-align: center;

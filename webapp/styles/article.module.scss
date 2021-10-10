@@ -15,8 +15,12 @@
         justify-content: center;
 
         @media (max-width: 769px) {
-            max-width: 600px;
-            padding: 45px;
+            max-width: 500px;
+            padding: 35px;
+        }
+
+        @media (max-width: 400px) {
+            max-width: 375px;
         }
 
         i { 
@@ -52,6 +56,11 @@
             @media (max-width: 769px) {
                 font-size: 26px;
                 margin: 0;
+                text-align: center;
+            }
+            @media (max-width: 450px) {
+                font-size: 22px;
+                text-align: center;
             }
         }
 

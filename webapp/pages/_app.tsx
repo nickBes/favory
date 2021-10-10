@@ -44,6 +44,7 @@ const App : React.FC <AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     window.history.scrollRestoration = 'manual'
     document.documentElement.lang = 'he'
+    window.scrollTo(0,1)
   }, [])
 
   return (

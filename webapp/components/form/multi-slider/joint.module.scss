@@ -1,12 +1,18 @@
 .joint {
     display: 'block';
-    width: 25;
-    height: 25;
+    width: 25px;
+    height: 25px;
     position: 'absolute';
     background-color: white;
     user-select: none;
     border-radius: 20px;
     box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
+    @media (max-aspect-ratio: 1/1) {
+        width: 305px;
+        height: 3050px;
+    }
+    cursor: grab;
+    cursor: -webkit-grab;
 }
 
 .joint:hover {

@@ -41,7 +41,7 @@ $light_gray: #868686;
     font-size: 26px;
     color: $background;
     transition: .3s cubic-bezier(0.66, 0.25, 0.32, 0.74);
-    @media (max-width: 769px) {
+    @media (max-aspect-ratio: 1/1) {
         width: 150px;
         font-size: 20px;
     }

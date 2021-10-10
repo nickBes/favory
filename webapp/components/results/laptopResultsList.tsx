@@ -16,7 +16,7 @@ const LaptopResultsList: React.FC<LaptopResultsListProps> = ({laptops, displayPo
 
 		<>
 			
-			{displayPopup ? <div  className={styles.laptopCard}><figure><h1>נשמח אם תענו על הסקר <a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
+			{displayPopup ? <div  className={styles.laptopCard}><figure><h1 style={{lineHeight: '55px'}}>נשמח אם תענו על הסקר <a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
 			href='https://docs.google.com/forms/d/e/1FAIpQLSeOFRwkxqDLHSrSqW0qFpobOPEsl4qnsswWHocAtnljVW-Efg/viewform?usp=sf_link'>הזה :)</a></h1></figure></div> : ''}
 			{
 				laptops.map((laptop, index) => {

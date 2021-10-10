@@ -1,22 +1,19 @@
 @use '@/styles/theme';
 
 .laptopImage {
-    max-width: 30%;
+    max-width: 40%;
     @media (max-width: 769px) {
         max-width: 45%;
     }
 }
 .laptopCardText {
     text-align: right;
-    max-width: 40%;
-    @media (max-width: 769px) {
-        max-width: 65%;
-    }
+    max-width: 65%;
     * {
         margin: 0px;
     }
 
-    h1 {
+    > h1 {
         font: theme.$medium_text_font;
         font-weight: 600;
         margin: 0px;
@@ -26,7 +23,12 @@
             font: theme.$medium_text_font_mobile;
             font-weight: 600;
             font-size: 19px;
-            line-height: 30px;
+            line-height: 20px;
+        }
+
+        @media (max-aspect-ratio: 1/2) {
+            line-height: 20px;
+            font-size: 15px;
         }
     }
 
@@ -37,6 +39,8 @@
     }
     button {
         @include theme.primary-button;
+        max-width: 150px;
+        height: 35px;
         z-index: 1;
         @media (max-width: 600px) {
             width: 100px;
