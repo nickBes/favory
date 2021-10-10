@@ -117,7 +117,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 						<button onClick={scrollToRef(formRef)} className={styles.primaryButton}>התחלה</button>
 					</div>
 					<div className={styles.laptopImage}>
-						<Image width={1625} height={1125} src={laptopImage} alt="תמונת מחשב נייד של העמוד הראשי" priority></Image>
+						<Image width={1625} height={1125} src={laptopImage} layout='responsive' alt="תמונת מחשב נייד של העמוד הראשי" priority></Image>
 					</div>
 				</header>
 			</section>

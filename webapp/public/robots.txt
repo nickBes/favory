@@ -1,2 +1,6 @@
 User-agent: *
 Disallow: /results/
+Allow: /
+Allow: /about/
+Allow: /why-us/
+Allow: /contact/
