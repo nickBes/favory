@@ -6,7 +6,7 @@ from spiders.process_data.regex import PRICE_REGEX, RAM_REGEX, WEIGHT_REGEX, DEV
 from w3lib.html import remove_tags
 from bs4 import BeautifulSoup
 
-PAGE_AMOUNT = 4
+PAGE_AMOUNT = 1
 ITEM_AMOUNT = -1
 
 LABELS_MAP = {

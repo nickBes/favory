@@ -51,7 +51,8 @@ class BugSpider(NotebookCheckSpider):
 
     # Request all of the pages use the parse callback
     def start_requests(self):
-        page_urls = [create_page_url(page_index) for page_index in range(PAGE_AMOUNT)]
+        # bug's page enumeration starts with 1
+        page_urls = [create_page_url(page_index) for page_index in range(1, PAGE_AMOUNT + 1)]
 
         # get the first url
         url = page_urls.pop()
