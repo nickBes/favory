@@ -203,6 +203,9 @@ class NotebookCheckSpider(scrapy.Spider):
             else:
                 next_integrated_gpu = meta['integrated'].pop()
                 integrated_gpu_url = self.integrated_urls[next_integrated_gpu['cpu']]
+                if integrated_gpu_url == None:
+                    continue
+
                 if integrated_gpu_url not in self.integrated_benches:
                     meta['device'] = next_integrated_gpu
                     yield Request(url=integrated_gpu_url, meta=meta, callback=self._with_benchmarks_recursive)
@@ -214,12 +217,14 @@ class NotebookCheckSpider(scrapy.Spider):
         as renaming the devices to more accurate names and yields them
         '''
         for laptop in self.laptops:
+            print(laptop)
             cpu_name = laptop['cpu']
             laptop['cpu_bench'] = self.dedicated_benches[cpu_name]['benchmarks']
             laptop['cpu'] = self.dedicated_benches[cpu_name]['name']
-
             if laptop['integrated']:
                 key = self.integrated_urls[cpu_name]
+                if key == None:
+                    continue
                 laptop['gpu_bench'] = self.integrated_benches[key]['benchmarks']
                 laptop['gpu'] = self.integrated_benches[key]['name']
             else:
@@ -227,18 +232,23 @@ class NotebookCheckSpider(scrapy.Spider):
                 laptop['gpu_bench'] = self.dedicated_benches[gpu_name]['benchmarks']
                 laptop['gpu'] = self.dedicated_benches[gpu_name]['name']
 
-            # find the laptop's name using the brand and model
-            laptop['name'] = laptop['brand'] + ' ' + laptop['model']
+            # sometimes model and model or weight don't exist
+            # the fast fix for that is ignore the laptop that doesnt have these properties
+            try: 
+                # find the laptop's name using the brand and model
+                laptop['name'] = laptop['brand'] + ' ' + laptop['model']
 
-            # assign the laptop's weight and ram as benchmarks
-            laptop['cpu_bench']['ram'] = laptop['ram']
-            del laptop['ram']
+                # assign the laptop's weight and ram as benchmarks
+                laptop['cpu_bench']['ram'] = laptop['ram']
+                del laptop['ram']
 
-            # using the weight in the denominator because we want the score to get higher
-            # as the weight grows smaller, and the 1000 to avoid using numbers that are 
-            # too small, to avoid percision issues
-            laptop['cpu_bench']['weight'] = 1000/laptop['weight']
-            del laptop['weight']
+                # using the weight in the denominator because we want the score to get higher
+                # as the weight grows smaller, and the 1000 to avoid using numbers that are 
+                # too small, to avoid percision issues
+                laptop['cpu_bench']['weight'] = 1000/laptop['weight']
+                del laptop['weight']
+            except:
+                continue
 
             yield laptop
 
@@ -287,7 +297,10 @@ class NotebookCheckSpider(scrapy.Spider):
                 # an <a> tag with a link to the integrated GPU's page. values contain
                 # html tags, and we still want to parse them. this is also the
                 # reason why the remove_tags function is used.
-                return remove_tags(info_table_row.css('td:nth-child(2) > a::attr(href)').get())
+                unfixed_url = info_table_row.css('td:nth-child(2) > a::attr(href)').get()
+
+                # the url might not exist so we return none if there's no url
+                return None if unfixed_url == None else remove_tags(unfixed_url)
         
     def _parse_device_benchmarks(self, response:HtmlResponse)->dict:
         '''
