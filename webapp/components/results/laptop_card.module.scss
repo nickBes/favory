@@ -1,7 +1,7 @@
 @use '@/styles/theme';
 
 .laptopImage {
-    width: 60%;
+    width: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,13 +22,13 @@
         @media (max-aspect-ratio: 1/1) {
             font: theme.$medium_text_font_mobile;
             font-weight: 600;
-            font-size: 19px;
+            font-size: 16px;
             line-height: 20px;
         }
 
         @media (max-aspect-ratio: 1/2) {
             line-height: 20px;
-            font-size: 15px;
+            font-size: 13px;
         }
     }
 
