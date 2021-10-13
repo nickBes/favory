@@ -11,7 +11,9 @@
 			"Mozilla Kraken": 5,
 			"WebXPRT": 3,
 			"Power Consumption": 1,
-			"*": 1
+			"*": 1,
+			"ram": 9,
+			"weight": 2
 		},
 		"gpu": {
 			"*": 0.3
@@ -25,6 +27,8 @@
 			"Mozzila Kraken": 10,
 			"WebXPRT": 10,
 			"Power Consumption": 7,
+			"ram": 5,
+			"weight": 7,
 			"*": 0.001
 		},
 		"gpu": {
@@ -42,7 +46,9 @@
 			"Geekbench": 4,
 			"Mozilla Kraken": 2,
 			"WebXPRT": 2,
-			"Power Consumption": 1
+			"Power Consumption": 1,
+			"ram": 8,
+			"weight": 4
 		},
 		"gpu": {
 			"3DMark": 6
@@ -54,7 +60,8 @@
 			"Blender": 5,
 			"3D Mark": 10,
 			"geekbench": 5,
-			"*": 3
+			"*": 3,
+			"ram": 5
 		},
 		"gpu": {
 			"3D Mark": 10,
