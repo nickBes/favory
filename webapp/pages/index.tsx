@@ -76,7 +76,7 @@ const categoryMap: CategoryMap = {
 
 const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 	const [tags, setTags] = useState<string[]>([])
-  const [screenRatio, setScreenRatio] = useState(1)
+  	const [screenRatio, setScreenRatio] = useState(1)
 	const formRef = useRef<null | HTMLElement>(null)
 	const ratingRef = useRef<null | HTMLElement>(null)
 	const tagRef = useRef<null | HTMLElement>(null)
@@ -127,7 +127,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 						<section ref={tagRef} className={styles.firstFormSection}>
 							<h1>בחרו בקטגוריות המתאימות לכם</h1>
 							<p>אנא בחרו לפחות קטגוריה אחת</p>
-							<CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags}></CardSelection>
+							<CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags} toolTipBoundaryElement={tagRef}></CardSelection>
 							{/* <Tags tags={tags} onTagClick={removeTag}></Tags>
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
               <button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>

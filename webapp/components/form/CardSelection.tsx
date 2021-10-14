@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styles from './card-selection.module.scss'
 import Card, { CategoryData, CardClickCallback } from './card'
 
@@ -8,9 +8,10 @@ interface CardSelectionProps {
     categoryMap: CategoryMap,
     categories: string[]
     onCardClick: CardClickCallback
+    toolTipBoundaryElement: React.RefObject<HTMLElement>
 }
 
-const CardSelection : React.FC<CardSelectionProps> = ({categoryMap, categories, onCardClick}) => {
+const CardSelection : React.FC<CardSelectionProps> = ({categoryMap, categories, onCardClick, toolTipBoundaryElement}) => {
     return (
         <div className={styles.cardSelection}>
             {categories.map((category, index) => {
@@ -23,7 +24,8 @@ const CardSelection : React.FC<CardSelectionProps> = ({categoryMap, categories, 
                         image={categoryMap[category].image} 
                         description={categoryMap[category].description} 
                         onCardClick={onCardClick}
-                        key={index}>
+                        key={index}
+                        toolTipBoundaryElement={toolTipBoundaryElement}>
                 </Card>
                 )
             }
