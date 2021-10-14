@@ -18,7 +18,7 @@
 
     > div > figcaption {
         font: theme.$medium_text_font;
-        @media (max-width: 769px) {
+        @media (max-aspect-ratio: 1/1) {
             font: theme.$medium_text_font_mobile;
             font-size: 20px;
             line-height: 20px;

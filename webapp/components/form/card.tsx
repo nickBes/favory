@@ -41,7 +41,7 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
                         childRect={childRect}
                         popoverRect={popoverRect}
                         arrowSize={10}
-                        arrowColor='black'>
+                        arrowColor='#161616'>
                         <div
                             style={{
                                 backgroundColor: '#161616',

@@ -10,7 +10,7 @@ const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {
 	const imageObjects = imageUrls.map((imageUrl) => {
 		return {
 			original: imageUrl,
-			originalHeight: window.innerHeight/4,
+			originalHeight: window.innerHeight/5,
 		}
 	})
 	return (
