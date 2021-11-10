@@ -18,7 +18,7 @@
 
     > div > figcaption {
         font: theme.$medium_text_font;
-        @media (max-width: 769px) {
+        @media (max-aspect-ratio: 1/1) {
             font: theme.$medium_text_font_mobile;
             font-size: 20px;
             line-height: 20px;
@@ -33,7 +33,7 @@
 
 .cardWrapper {
     position: relative;
-    max-width: 260px;
+    max-width: 15%;
     border: 2px solid theme.$green;
     border-radius: 10px;
     transition: .5s cubic-bezier(0.66, 0.25, 0.32, 0.74);
@@ -43,7 +43,7 @@
     justify-content: center;
     align-items: center;
     user-select: none;
-    @media (max-width: 769px) {
+    @media (max-aspect-ratio: 1/1) {
         max-width: 240px;
     }
     @media (max-width: 600px) {

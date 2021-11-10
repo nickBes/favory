@@ -44,12 +44,13 @@ const App : React.FC <AppProps> = ({ Component, pageProps }) => {
   useEffect(() => {
     window.history.scrollRestoration = 'manual'
     document.documentElement.lang = 'he'
-    window.scrollTo(0,1)
+    window.scrollTo(0, 0)
   }, [])
 
   return (
       <>
         <Head>
+          <link rel="shortcut icon" href="/favicon.ico"/>
           <title>
             {title ?? 'פייבורי | favory'}
           </title>

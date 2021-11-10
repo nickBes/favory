@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, RefObject} from 'react'
 import styles from './card.module.scss'
 import Image from 'next/image'
 import { Popover, ArrowContainer} from 'react-tiny-popover'
@@ -14,13 +14,15 @@ export interface CategoryData {
 export type CardClickCallback = (category : string) => void
 
 interface CardProps extends CategoryData {
-    category: string,
+    category: string
     onCardClick: CardClickCallback
+    toolTipBoundaryElement: React.RefObject<HTMLElement>
 }
 
-const Card : React.FC<CardProps> = ({category, title, description, image, onCardClick}) => {
+const Card : React.FC<CardProps> = ({category, title, description, image, onCardClick, toolTipBoundaryElement}) => {
     const [isActive, setIsActive] = useState(false)
     const [isDescriptionOn, setIsDescriptionOn] = useState(false)
+
     const updateActivity = () => {
         setIsActive(prevIsActive => !prevIsActive)
         onCardClick(category)
@@ -29,6 +31,7 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
     return (
         <div className={`${styles.cardWrapper} ${isActive ? styles.activeCardWrapper : ''}`} >
             <Popover 
+                boundaryElement={toolTipBoundaryElement.current ?? undefined}
                 isOpen={isDescriptionOn} 
                 padding={10}
                 onClickOutside={toggleDescription}
@@ -38,7 +41,7 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
                         childRect={childRect}
                         popoverRect={popoverRect}
                         arrowSize={10}
-                        arrowColor='black'>
+                        arrowColor='#161616'>
                         <div
                             style={{
                                 backgroundColor: '#161616',
@@ -49,7 +52,8 @@ const Card : React.FC<CardProps> = ({category, title, description, image, onCard
                                 maxWidth: 400,
                                 direction: 'rtl'
                             }}>
-                        {description}</div>
+                            {description}
+                        </div>
                     </ArrowContainer>
                 )}>
                 <div className={styles.descIconWrapper}><div className={`${styles.descIcon} ${isDescriptionOn ? styles.activeDesc : ''}`} onClick={toggleDescription}>?</div></div>

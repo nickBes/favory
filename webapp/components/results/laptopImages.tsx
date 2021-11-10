@@ -10,17 +10,17 @@ const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {
 	const imageObjects = imageUrls.map((imageUrl) => {
 		return {
 			original: imageUrl,
-			originalHeight: 250
+			originalHeight: window.innerHeight/5,
 		}
 	})
 	return (
 		<>
-			<ImageGallery 
-				items={imageObjects} 
-				showFullscreenButton={false} 
-				showPlayButton={false} 
-				showThumbnails={false} 
-				isRTL={true} 
+			<ImageGallery
+				items={imageObjects}
+				showFullscreenButton={false}
+				showPlayButton={false}
+				showThumbnails={false}
+				isRTL={true}
 				additionalClass={styles.behindNavbar} />
 		</>
 	)
