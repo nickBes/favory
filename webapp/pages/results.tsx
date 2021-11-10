@@ -1,15 +1,17 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {useRouter} from 'next/router'
-import Error from '../components/error/error'
+import Error from '@/components/error/error'
 import {GetServerSideProps} from 'next'
 import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
 import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
-import LaptopResultsList, { ClickedPopup } from '@/components/results/laptopResultsList'
+import LaptopCard from '@/components/results/laptopCard'
 import hasExceededRateLimit from 'rateLimit'
 import styles from '@/styles/results.module.scss'
 import Cookies from 'js-cookie'
+
+type ClickedPopup = 'true' | 'false'
 
 type ResultsPageInvalidFieldError = {
 	type: "invalidField",
@@ -98,29 +100,21 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 		}
 		const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
 		const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
-		// usually there should be 3 laptops per section
-		// but when we want to display the popup there should be 2
-		let laptopListArray = []
-		let laptopsPerList = showPopup ? 2 : 3
-		for (let i = 0; i < laptops.length; i += laptopsPerList) {
-			if (i != 0) {
-				laptopsPerList = 3
-			}
-			const laptopList = laptops.slice(i, i + laptopsPerList)
-			laptopListArray.push(laptopList)
-		}
 		return (
 			<>
-				{laptopListArray.map((value, index) => {
-					return (
-						<section key={index + 1}>
-							{index === 0 ? <Navbar path={router.pathname}></Navbar> : ''}
-							<div className={styles.laptopListWrap}>
-								<LaptopResultsList displayPopup={index == 0 && showPopup} laptops={value} />
-							</div>
-						</section>
-					)
-				})}
+				<Navbar path={router.pathname}></Navbar>
+				<section className={styles.laptopCardWrapper}>
+					{showPopup ? <div  className={styles.laptopCard}>
+										<figure>
+											<h1>נשמח אם תענו על הסקר&nbsp;
+												<a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
+													href='https://docs.google.com/forms/d/e/1FAIpQLSeOFRwkxqDLHSrSqW0qFpobOPEsl4qnsswWHocAtnljVW-Efg/viewform?usp=sf_link'>הזה :)
+												</a>
+											</h1>
+										</figure>
+									</div> : ''}
+					{laptops.map((value, index) => <LaptopCard key={index} {...value}></LaptopCard>)}
+				</section>
 			</>
 		)
 	} else {

@@ -85,7 +85,6 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 
 	const scrollToRef = (ref: MutableRefObject<null | HTMLElement>) => {
 		return () => ref.current?.scrollIntoView({behavior: 'smooth'})
-		
 	}
 
   useEffect(() => {
@@ -201,7 +200,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 							bonesAmount={2} 
 							inputNames={['maxPrice']} 
 							direction='horizontal'
-							jointTooltipsRenderer={(index, distance, value) => (<>{value.toFixed()} ש"ח</>)} 
+							jointTooltipsRenderer={(index, distance, value) => (<>{value.toFixed()} ש&quot;ח</>)} 
 							minDistanceInPixelsBetweenJoints={0}/>
 					</div>
 					<div className={styles.thirdSectionButtons}>
