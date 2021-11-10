@@ -219,6 +219,9 @@ class NotebookCheckSpider(scrapy.Spider):
         for laptop in self.laptops:
             print(laptop)
             cpu_name = laptop['cpu']
+            # continue if cpu wasn't scrapped
+            if cpu_name not in self.dedicated_benches:
+                continue
             laptop['cpu_bench'] = self.dedicated_benches[cpu_name]['benchmarks']
             laptop['cpu'] = self.dedicated_benches[cpu_name]['name']
             if laptop['integrated']:
@@ -229,6 +232,9 @@ class NotebookCheckSpider(scrapy.Spider):
                 laptop['gpu'] = self.integrated_benches[key]['name']
             else:
                 gpu_name = laptop['gpu']
+                # will continue if gpu wasn't scraped
+                if gpu_name not in self.dedicated_benches:
+                    continue
                 laptop['gpu_bench'] = self.dedicated_benches[gpu_name]['benchmarks']
                 laptop['gpu'] = self.dedicated_benches[gpu_name]['name']
 

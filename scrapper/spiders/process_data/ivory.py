@@ -28,16 +28,19 @@ def get_laptop_dict_from_response(response)->dict:
 
     laptop_dict['price'] = float(price_text)
 
-    # apply the ram regex to the ram string
-    ram_text = RAM_REGEX.findall(laptop_dict['ram'])[0]
+    try:
+        # apply the ram regex to the ram string
+        ram_text = RAM_REGEX.findall(laptop_dict['ram'])[0]
 
-    # remove the 'GB' at the end
-    ram_text = ram_text[:-len('GB')]
-    laptop_dict['ram'] = int(ram_text)
+        # remove the 'GB' at the end
+        ram_text = ram_text[:-len('GB')]
+        laptop_dict['ram'] = int(ram_text)
 
-    # apply the weight regex to the weight string
-    weight_text = WEIGHT_REGEX.findall(laptop_dict['weight'])[0]
-    laptop_dict['weight'] = float(weight_text)
+        # apply the weight regex to the weight string
+        weight_text = WEIGHT_REGEX.findall(laptop_dict['weight'])[0]
+        laptop_dict['weight'] = float(weight_text)
+    except:
+        return None    
 
     # the `image_urls` field is required by the data processor, 
     # but the ivory spider doesn't support images scraping

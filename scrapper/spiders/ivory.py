@@ -68,7 +68,9 @@ class IvorySpider(NotebookCheckSpider):
         laptop_ids = response.meta['laptop_ids']
 
         laptop_data = get_laptop_dict_from_response(response)
-        self.laptops.append(laptop_data)
+        # get_laptop_dict_from_response returns none if response throws errors
+        if laptop_data != None:
+            self.laptops.append(laptop_data)
 
         if len(laptop_ids) == 0:
             yield self.with_benchmarks()
