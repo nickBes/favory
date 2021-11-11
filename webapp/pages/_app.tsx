@@ -47,6 +47,15 @@ const App : React.FC <AppProps> = ({ Component, pageProps }) => {
     window.scrollTo(0, 0)
   }, [])
 
+  const getBodyData = () => {
+    return (
+      <>
+        <Component {...pageProps}/>
+        <Footer/>
+      </>
+    )
+  }
+
   return (
       <>
         <Head>
@@ -56,10 +65,8 @@ const App : React.FC <AppProps> = ({ Component, pageProps }) => {
           </title>
           <meta name='description' content={description ?? ''}/>
         </Head>
-        <Scrollable direction='vertical'>
-          <Component {...pageProps}/>
-          <Footer/>
-        </Scrollable>
+        {/* temporary solution for weird scroll to bottom in results */}
+        {router.pathname != "/results" ? <Scrollable direction='vertical'>{getBodyData()}</Scrollable> : getBodyData()}
       </>
     )
 }
