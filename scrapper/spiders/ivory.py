@@ -71,6 +71,8 @@ class IvorySpider(NotebookCheckSpider):
         # get_laptop_dict_from_response returns none if response throws errors
         if laptop_data != None:
             self.laptops.append(laptop_data)
+        else:
+            print(f"\nWARNING: Ivory spider failed on parsing this laptop: {response.url}\n")
 
         if len(laptop_ids) == 0:
             yield self.with_benchmarks()

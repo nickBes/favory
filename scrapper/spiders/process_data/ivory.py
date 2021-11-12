@@ -22,13 +22,15 @@ def get_laptop_dict_from_response(response)->dict:
         laptop_dict[key] = value
 
     price_text = response.css('.print-actual-price::text').get()
-
-    # remove the ',' from the price
-    price_text = price_text.replace(',','')
-
-    laptop_dict['price'] = float(price_text)
-
+    
+    # using try except because the price css might change when there are discounts,
+    # and ram/weights might be missing from the table
     try:
+        # remove the ',' from the price
+        price_text = price_text.replace(',','')
+
+        laptop_dict['price'] = float(price_text)
+
         # apply the ram regex to the ram string
         ram_text = RAM_REGEX.findall(laptop_dict['ram'])[0]
 
