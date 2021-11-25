@@ -2,6 +2,7 @@ mod load_categories;
 mod load_laptops;
 mod calculate_scores;
 mod reload_all;
+mod recalculate;
 
 use diesel::PgConnection;
 use diesel::prelude::*;
@@ -12,6 +13,7 @@ pub use load_categories::*;
 pub use load_laptops::*;
 pub use calculate_scores::*;
 pub use reload_all::*;
+pub use recalculate::*;
 
 // this function is placed in this file because 2 different commands are using it 
 /// deletes all categories and all documents that depend on it from the database

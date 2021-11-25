@@ -3,9 +3,9 @@ mod commands;
 mod errors;
 mod laptop_set;
 
-use std::{time::Instant};
+use std::time::Instant;
 
-use commands::{calculate_scores, load_categories, load_laptops, reload_all};
+use commands::{calculate_scores, load_categories, load_laptops, recalculate, reload_all};
 
 use crate::cli::{DataProcessorCliCommand, create_data_processor_cli};
 
@@ -26,6 +26,7 @@ fn main() {
             DataProcessorCliCommand::LoadLaptops => load_laptops(&db_connection),
             DataProcessorCliCommand::CalculateScores => calculate_scores(&db_connection),
             DataProcessorCliCommand::ReloadAll => reload_all(&db_connection),
+            DataProcessorCliCommand::Recalculate => recalculate(&db_connection),
             DataProcessorCliCommand::Exit => break
         };
 
