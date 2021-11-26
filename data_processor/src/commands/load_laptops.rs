@@ -4,8 +4,8 @@ use crate::laptop_set::LaptopInfosByName;
 use crate::laptop_set::LaptopPuBenchmarksData;
 use crate::laptop_set::LaptopSet;
 use crate::laptop_set::LaptopsFileEntry;
-use bigdecimal::BigDecimal;
 use bigdecimal::Zero;
+use bigdecimal::{BigDecimal, ToPrimitive};
 use db_access::models::NewLaptopImage;
 use db_access::{models, schema};
 use diesel::prelude::*;
@@ -41,8 +41,13 @@ impl GlobalBenchmarkInfo {
             amount: 0,
         }
     }
-
-    // updates the global benchmark info according to a single benchmark score
+    /// The average score of this benchmark
+    pub fn average(&self) -> f32 {
+        // it is safe to unwrap here since, if the max can be stored as an f32, then the average must be
+        // in the range of f32
+        (&self.sum / self.amount).to_f32().unwrap()
+    }
+    /// updates the global benchmark info according to a single benchmark score
     pub fn update(&mut self, score: f32) {
         self.sum += BigDecimal::from(score);
         self.amount += 1;
@@ -146,7 +151,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     )?;
     println!("inserted {} laptops", laptops.len());
 
-    println!("inserting price limits...");
+    println!("upserting price limits...");
     upsert_price_limits(&price_limits, db_connection)?;
 
     println!("successfully loaded laptops");

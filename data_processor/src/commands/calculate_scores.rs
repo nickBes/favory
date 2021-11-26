@@ -1,41 +1,28 @@
 use std::collections::HashMap;
 
 use crate::errors::*;
-use db_access::{models,schema};
-use bigdecimal::{BigDecimal, ToPrimitive};
+use db_access::{models, schema};
 use diesel::prelude::*;
 
 use diesel::PgConnection;
 
+use super::GlobalBenchmarkInfo;
+
 /// maps the benchmarks by the laptop id, and then by global benchmark id
-type MappedBenchmarks = HashMap<i32, BenchmarksByGlobalBenchmarkId>;
+pub type MappedBenchmarks = HashMap<i32, BenchmarksByGlobalBenchmarkId>;
 
 /// maps the benchmarks by global benchmark id
-type BenchmarksByGlobalBenchmarkId = HashMap<i32, f32>;
+pub type BenchmarksByGlobalBenchmarkId = HashMap<i32, f32>;
 
 /// maps the benchmark scores in categories by category id, and then by global benchmark id
-type MappedBenchmarkScoresInCategories =
+pub type MappedBenchmarkScoresInCategories =
     HashMap<i32, BenchmarkScoresInCategoriesByGlobalBenchmarkId>;
 
 /// maps the benchmark scores in categories by global benchmark id
-type BenchmarkScoresInCategoriesByGlobalBenchmarkId = HashMap<i32, f32>;
-
-/// this is information about each global benchmark that is required for calculating the laptop's score
-struct GlobalBenchmarkInfo {
-    max: f32,
-    sum: BigDecimal,
-    amount: i64,
-}
-impl GlobalBenchmarkInfo {
-    fn average(&self) -> f32 {
-        // it is safe to unwrap here since, if the max can be stored as an f32, then the average must be
-        // in the range of f32
-        (&self.sum / self.amount).to_f32().unwrap()
-    }
-}
+pub type BenchmarkScoresInCategoriesByGlobalBenchmarkId = HashMap<i32, f32>;
 
 /// maps the global benchmarks by global benchmark id
-type MappedGlobalBenchmarks = HashMap<i32, GlobalBenchmarkInfo>;
+pub type MappedGlobalBenchmarks = HashMap<i32, GlobalBenchmarkInfo>;
 
 /// calculates the scores of each laptop in each category and caches it.
 pub fn calculate_scores(db_connection: &PgConnection) -> Result<()> {
@@ -108,7 +95,7 @@ fn load_and_map_global_benchmarks(db_connection: &PgConnection) -> Result<Mapped
 }
 
 /// loads all benchmark scores in categories and maps them by category id and then by global benchmark id
-fn load_and_map_benchmark_scores_in_categories(
+pub fn load_and_map_benchmark_scores_in_categories(
     db_connection: &PgConnection,
 ) -> Result<MappedBenchmarkScoresInCategories> {
     let benchmark_scores_in_categories: Vec<models::BenchmarkScoreInCategory> = {
@@ -133,7 +120,7 @@ fn load_and_map_benchmark_scores_in_categories(
 
 /// performs the actual calculation of the scores of each laptop in each category, and returns a vector
 /// of insertable structs that represent these scores
-fn calculate_laptop_scores_in_each_category(
+pub fn calculate_laptop_scores_in_each_category(
     mapped_benchmarks: &MappedBenchmarks,
     mapped_benchmark_scores_in_categories: &MappedBenchmarkScoresInCategories,
     mapped_global_benchmarks: &MappedGlobalBenchmarks,
@@ -161,7 +148,7 @@ fn calculate_laptop_scores_in_each_category(
                 // when calculating the normalized score, make sure we don't divide by zero
                 let normalized_score_in_benchmark = if global_benchmark_info.max == 0.0 {
                     0.0
-                } else{
+                } else {
                     score_in_benchmark / global_benchmark_info.max
                 };
                 score_in_category += normalized_score_in_benchmark * benchmark_score_in_category;
@@ -177,7 +164,7 @@ fn calculate_laptop_scores_in_each_category(
 }
 
 /// inserts the laptop scores in categories into the database
-fn insert_scores(
+pub fn insert_scores(
     scores: &[models::NewLaptopScoreInCategory],
     db_connection: &PgConnection,
 ) -> Result<()> {

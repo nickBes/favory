@@ -52,7 +52,7 @@ impl GlobalBenchmark{
     }
 }
 
-#[derive(Debug, Insertable)]
+#[derive(Debug, AsChangeset, Insertable)]
 #[table_name="global_benchmark"]
 pub struct NewGlobalBenchmark<'a, 'b> {
     pub name: &'a str,
