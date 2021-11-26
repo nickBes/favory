@@ -360,7 +360,7 @@ fn insert_and_map_global_benchmarks(
 pub fn parse_laptops_files(dir_path: &str) -> Result<LaptopInfosByName> {
     let mut laptops = LaptopSet::new();
 
-    for laptops_dir_entry in read_dir(LAPTOPS_DIR_PATH)
+    for laptops_dir_entry in read_dir(dir_path)
         .into_data_processor_result(DataProcessorErrorKind::FailedToReadLaptopsDirectory)?
     {
         let laptops_dir_entry = laptops_dir_entry
