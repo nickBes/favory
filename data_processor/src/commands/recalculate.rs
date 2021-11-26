@@ -1,7 +1,4 @@
-use crate::commands::{
-    calculate_laptop_scores_in_each_category, insert_scores,
-    load_and_map_benchmark_scores_in_categories, PriceLimits,
-};
+use crate::commands::{PriceLimits, calculate_laptop_scores_in_each_category, insert_scores, load_and_map_benchmark_scores_in_categories, load_and_map_benchmarks};
 use crate::commands::{upsert_price_limits, GlobalBenchmarkInfo};
 use crate::laptop_set::LaptopInfosByName;
 use crate::laptop_set::LaptopPuBenchmarksData;
@@ -49,6 +46,9 @@ impl UpdateableGlobalBenchmark {
 }
 
 pub fn recalculate(db_connection: &PgConnection) -> Result<()> {
+    println!("loading an mapping benchmarks...");
+    let mut mapped_benchmarks = load_and_map_benchmarks(db_connection)?;
+
     println!("loading the laptops file...");
     let laptops = parse_laptops_files(RECALCULATION_LAPTOPS_DIR_PATH)?;
 
@@ -65,10 +65,11 @@ pub fn recalculate(db_connection: &PgConnection) -> Result<()> {
     println!("upserted {} global benchmarks", global_benchmarks.len());
 
     println!("upsering laptops, benchmarks and image urls...");
-    let (price_limits, mapped_benchmarks) = upsert_laptops_benchmarks_and_image_urls(
+    let price_limits = upsert_laptops_benchmarks_and_image_urls(
+        db_connection,
         &laptops,
         &global_benchmarks_id_by_name,
-        db_connection,
+        &mut mapped_benchmarks,
     )?;
     println!("upserted {} laptops", laptops.len());
 
@@ -235,16 +236,16 @@ fn upsert_updated_global_benchmarks(
 /// while iterating through the laptops also finds the laptops price limits, and maps the benchmarks
 /// to avoid iterating over the laptops twice, which improves performance.
 fn upsert_laptops_benchmarks_and_image_urls(
+    db_connection: &PgConnection,
     laptops: &LaptopInfosByName,
     global_benchmarks_id_by_name: &HashMap<String, i32>,
-    db_connection: &PgConnection,
-) -> Result<(PriceLimits, MappedBenchmarks)> {
+    mapped_benchmarks: &mut MappedBenchmarks,
+) -> Result<PriceLimits> {
     use schema::benchmark;
     use schema::laptop;
     use schema::laptop_image;
 
     let mut price_limits = PriceLimits::new();
-    let mut mapped_benchmarks = MappedBenchmarks::new();
 
     for (laptop_name, laptop_info) in laptops {
         // update the price limits according to the laptop's price
@@ -311,5 +312,5 @@ fn upsert_laptops_benchmarks_and_image_urls(
                 .collect(),
         );
     }
-    Ok((price_limits, mapped_benchmarks))
+    Ok(price_limits)
 }

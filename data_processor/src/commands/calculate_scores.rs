@@ -52,7 +52,7 @@ pub fn calculate_scores(db_connection: &PgConnection) -> Result<()> {
 }
 
 /// loads all benchmarks and maps them by global benchmark id and then by laptop id
-fn load_and_map_benchmarks(db_connection: &PgConnection) -> Result<MappedBenchmarks> {
+pub fn load_and_map_benchmarks(db_connection: &PgConnection) -> Result<MappedBenchmarks> {
     let benchmarks: Vec<models::Benchmark> = {
         use schema::benchmark::dsl::*;
         benchmark
