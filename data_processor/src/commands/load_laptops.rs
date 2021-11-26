@@ -147,7 +147,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     println!("inserted {} laptops", laptops.len());
 
     println!("inserting price limits...");
-    insert_price_limits(&price_limits, db_connection)?;
+    upsert_price_limits(&price_limits, db_connection)?;
 
     println!("successfully loaded laptops");
     Ok(())
@@ -396,9 +396,9 @@ pub fn parse_laptops_files(dir_path: &str) -> Result<LaptopInfosByName> {
     Ok(laptops.laptop_infos_by_name())
 }
 
-/// saves the given price limits to the database, if it actually contains the price limits
+/// saves the given price limits to the database, if both ends of the price limits are not `None`
 /// (the min and max fields are not None)
-pub fn insert_price_limits(price_limits: &PriceLimits, db_connection: &PgConnection) -> Result<()> {
+pub fn upsert_price_limits(price_limits: &PriceLimits, db_connection: &PgConnection) -> Result<()> {
     // notice the rename here to avoid conflicting with the argument called price_limits
     use schema::price_limits::dsl::{id, max_price, min_price, price_limits as price_limits_table};
 

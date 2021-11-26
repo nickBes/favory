@@ -1,4 +1,4 @@
-use crate::commands::GlobalBenchmarkInfo;
+use crate::commands::{GlobalBenchmarkInfo, upsert_price_limits};
 use crate::commands::PriceLimits;
 use crate::laptop_set::LaptopInfosByName;
 use crate::laptop_set::LaptopPuBenchmarksData;
@@ -10,7 +10,7 @@ use crate::{
     errors::*,
 };
 use db_access::{models, schema};
-use diesel::prelude::*;
+use diesel::{pg::upsert::excluded, prelude::*};
 
 use diesel::PgConnection;
 use std::collections::HashMap;
@@ -48,6 +48,14 @@ pub fn recalculate(db_connection: &PgConnection) -> Result<()> {
     let laptops = parse_laptops_files(RECALCULATION_LAPTOPS_DIR_PATH)?;
     let mut global_benchmarks = load_global_benchmarks(db_connection)?;
     update_global_benchmarks(&laptops, &mut global_benchmarks);
+    let global_benchmarks_id_by_name =
+        insert_updated_global_benchmarks(db_connection, global_benchmarks)?;
+    let price_limits = upsert_laptops_benchmarks_and_image_urls(
+        &laptops,
+        &global_benchmarks_id_by_name,
+        db_connection,
+    )?;
+    upsert_price_limits(&price_limits, db_connection)?;
 
     Ok(())
 }
@@ -120,7 +128,7 @@ fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     println!("inserted {} laptops", laptops.len());
 
     println!("inserting price limits...");
-    insert_price_limits(&price_limits, db_connection)?;
+    upsert_price_limits(&price_limits, db_connection)?;
 
     println!("successfully loaded laptops");
     Ok(())
@@ -155,12 +163,61 @@ fn update_global_benchmarks(
     }
 }
 
+fn insert_updated_global_benchmarks(
+    db_connection: &PgConnection,
+    global_benchmarks: HashMap<String, UpdateableGlobalBenchmark>,
+) -> Result<HashMap<String, i32>> {
+    // find the new global benchmarks and convert them to insertable structs
+    let mut new_global_benchmarks = Vec::new();
+    for (global_benchmark_name, global_benchmark) in &global_benchmarks {
+        if let UpdateableGlobalBenchmark::NotIntDatabase(info) = global_benchmark {
+            let GlobalBenchmarkInfo { max, sum, amount } = info;
+            new_global_benchmarks.push(models::NewGlobalBenchmark {
+                name: &global_benchmark_name,
+                max: *max,
+                sum,
+                amount: *amount,
+            })
+        }
+    }
+
+    // insert the new global benchmarks
+    let new_global_benchmarks_names_and_ids: Vec<(String, i32)> = {
+        use schema::global_benchmark;
+
+        diesel::insert_into(global_benchmark::table)
+            .values(&new_global_benchmarks)
+            .on_conflict(global_benchmark::name)
+            .do_update()
+            .set((
+                global_benchmark::max.eq(excluded(global_benchmark::max)),
+                global_benchmark::sum.eq(excluded(global_benchmark::sum)),
+                global_benchmark::amount.eq(excluded(global_benchmark::amount)),
+            ))
+            .returning((global_benchmark::name, global_benchmark::id))
+            .get_results(db_connection)
+            .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?
+    };
+
+    // create a map that maps every global benchmark's name to its id.
+    let mut global_benchmarks_id_by_name: HashMap<String, i32> =
+        new_global_benchmarks_names_and_ids.into_iter().collect();
+    global_benchmarks_id_by_name.extend(global_benchmarks.into_iter().filter_map(
+        |(global_benchmark_name, global_benchmark)| match global_benchmark {
+            UpdateableGlobalBenchmark::InDatabase { id, .. } => Some((global_benchmark_name, id)),
+            UpdateableGlobalBenchmark::NotIntDatabase(_) => None,
+        },
+    ));
+
+    Ok(global_benchmarks_id_by_name)
+}
+
 /// upserts each laptops in the laptops file and its corresponding benchmarks
 /// into the database. while iterating through the laptops also finds the laptops price limits,
 /// to avoid iterating over the laptops twice, which improves performance.
 fn upsert_laptops_benchmarks_and_image_urls(
     laptops: &LaptopInfosByName,
-    global_benchmarks: &HashMap<String, UpdateableGlobalBenchmark>,
+    global_benchmarks_id_by_name: &HashMap<String, i32>,
     db_connection: &PgConnection,
 ) -> Result<PriceLimits> {
     use schema::benchmark;
@@ -299,30 +356,3 @@ fn insert_and_map_global_benchmarks(
     Ok(global_benchmarks_map)
 }
 
-/// saves the given price limits to the database, if it actually contains the price limits
-/// (the min and max fields are not None)
-fn insert_price_limits(price_limits: &PriceLimits, db_connection: &PgConnection) -> Result<()> {
-    // notice the rename here to avoid conflicting with the argument called price_limits
-    use schema::price_limits::dsl::{id, max_price, min_price, price_limits as price_limits_table};
-
-    // in case we failed to convert the price limits to an insertable struct, it means that there is no max or min score,
-    // which means that no laptops were inserted. this should never happen, but just in case it does, we should just not
-    // save anything in the database, and return.
-    let insertable_price_limits = match price_limits.to_insertable() {
-        Some(v) => v,
-        None => return Ok(()),
-    };
-    diesel::insert_into(price_limits_table)
-        .values(&insertable_price_limits)
-        // in case there is already a price limits document in the database, we just update the min and max prices
-        .on_conflict(id)
-        .do_update()
-        .set((
-            max_price.eq(insertable_price_limits.max_price),
-            min_price.eq(insertable_price_limits.min_price),
-        ))
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-
-    Ok(())
-}
