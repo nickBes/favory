@@ -1,8 +1,7 @@
-use crate::laptop_set::LaptopInformation;
+use crate::commands::GlobalBenchmarkInfo;
+use crate::commands::PriceLimits;
 use crate::laptop_set::LaptopInfosByName;
 use crate::laptop_set::LaptopPuBenchmarksData;
-use crate::laptop_set::LaptopSet;
-use crate::laptop_set::LaptopsFileEntry;
 use crate::{
     commands::{
         convert_benchmarks_to_insertable_structs, convert_image_urls_to_insertable_structs,
@@ -10,116 +9,80 @@ use crate::{
     },
     errors::*,
 };
-use bigdecimal::BigDecimal;
-use bigdecimal::Zero;
-use db_access::models::NewLaptopImage;
 use db_access::{models, schema};
 use diesel::prelude::*;
 
 use diesel::PgConnection;
-use lazy_static::lazy_static;
-use regex::Regex;
 use std::collections::HashMap;
-use std::fs::read_dir;
-use std::fs::OpenOptions;
-
-lazy_static! {
-    /// the regex used to match laptops files. examples for a valid file name: ivory-laptops.json
-    static ref LAPTOPS_FILES_REGEX:Regex = Regex::new(r"[a-z]+-laptops[.]json").unwrap();
-}
 
 const RECALCULATION_LAPTOPS_DIR_PATH: &str = "recalc";
 
-// the info about each global benchmark info. The name is not included here
-// since this struct is stored in a hashmap that maps each global benchmark's name
-// to this struct which contains its info.
-#[derive(Debug)]
-struct GlobalBenchmarkInfo {
-    max: f32,
-    sum: BigDecimal,
-    amount: i64,
+/// Information about a global benchmark that might be, or might not be in the database.
+enum UpdateableGlobalBenchmark {
+    InDatabase {
+        id: i32,
+        was_modified: bool,
+        info: GlobalBenchmarkInfo,
+    },
+    NotIntDatabase(GlobalBenchmarkInfo),
 }
-impl GlobalBenchmarkInfo {
-    fn new() -> Self {
-        Self {
-            max: 0.0,
-            sum: BigDecimal::zero(),
-            amount: 0,
-        }
+impl UpdateableGlobalBenchmark {
+    pub fn new_not_in_database() -> Self {
+        Self::NotIntDatabase(GlobalBenchmarkInfo::new())
     }
-
-    // updates the global benchmark info according to a single benchmark score
-    fn update(&mut self, score: f32) {
-        self.sum += BigDecimal::from(score);
-        self.amount += 1;
-        if score > self.max {
-            self.max = score;
-        }
-    }
-}
-
-/// the minimum and maximum laptop price
-#[derive(Debug)]
-struct PriceLimits {
-    max: Option<f32>,
-    min: Option<f32>,
-}
-impl PriceLimits {
-    pub fn new() -> Self {
-        Self {
-            max: None,
-            min: None,
-        }
-    }
-    /// updates the min and max fields according to the price if it is bigger than the current max
-    /// or smaller than the current min.
-    pub fn update(&mut self, price: f32) {
-        // if we have no current max price just use the given price as the max,
-        // otherwise check if the given price is bigger than max, and if it is,
-        // update it accordingly
-        match self.max {
-            None => self.max = Some(price),
-            Some(max_price) => {
-                if price > max_price {
-                    self.max = Some(price)
-                }
+    pub fn update(&mut self, score: f32) {
+        match self {
+            UpdateableGlobalBenchmark::InDatabase {
+                info, was_modified, ..
+            } => {
+                info.update(score);
+                *was_modified = true;
             }
+            UpdateableGlobalBenchmark::NotIntDatabase(info) => info.update(score),
         }
-        // if we have no current min price just use the given price as the min,
-        // otherwise check if the given price is smaller than min, and if it is,
-        // update it accordingly
-        match self.min {
-            None => self.min = Some(price),
-            Some(min_price) => {
-                if price < min_price {
-                    self.min = Some(price)
-                }
-            }
-        }
-    }
-    /// attempts to convert this PriceLimits struct to an insertable NewPriceLimits struct
-    pub fn to_insertable(&self) -> Option<models::NewPriceLimits> {
-        Some(models::NewPriceLimits {
-            // note that the id is always 0 since we only want one such struct to exist in the
-            // database at a time, and to use the ON CONFLICT statement to achieve upsert functionality,
-            // the new document must have the same id as the previous one, so we just use a constant
-            // value of 0 for the id.
-            id: 0,
-            max_price: self.max?,
-            min_price: self.min?,
-        })
     }
 }
 
 pub fn recalculate(db_connection: &PgConnection) -> Result<()> {
     println!("loading the laptops file...");
     let laptops = parse_laptops_files(RECALCULATION_LAPTOPS_DIR_PATH)?;
+    let mut global_benchmarks = load_global_benchmarks(db_connection)?;
+    update_global_benchmarks(&laptops, &mut global_benchmarks);
 
     Ok(())
 }
 
-pub fn load_global_benchmarks(db_connection: &PgConnection)->Result<HashMap<String, GlobalBenchmarkInfo>>{
-    
+fn load_global_benchmarks(
+    db_connection: &PgConnection,
+) -> Result<HashMap<String, UpdateableGlobalBenchmark>> {
+    let results: Vec<models::GlobalBenchmark> = {
+        use schema::global_benchmark::dsl::*;
+        global_benchmark
+            .load(db_connection)
+            .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?
+    };
+
+    Ok(results
+        .into_iter()
+        .map(|global_benchmark| {
+            let models::GlobalBenchmark {
+                id,
+                name,
+                max,
+                sum,
+                amount,
+            } = global_benchmark;
+
+            let key = name;
+            let value = UpdateableGlobalBenchmark::InDatabase {
+                id,
+                was_modified: false,
+                info: GlobalBenchmarkInfo { max, sum, amount },
+            };
+
+            (key, value)
+        })
+        .collect())
 }
 
 /// loads the laptops to the database and performs all required calculations
@@ -129,13 +92,6 @@ fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     // with the new benchmarks, so we should delete them, and to delete them
     // we must also delete their dependents.
     super::delete_categories_and_dependents(db_connection)?;
-
-    println!("deleting laptops, benchmarks and global benchmarks...");
-    // delete all laptops, benchmarks and global benchmarks from the database,
-    // so that we don't have duplicates. note that no update mechanism is used here
-    // even though it could increase performance, because the data-processor currently
-    // only needs to run once, and performs no recalculations.
-    delete_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
 
     println!("loading the laptops file...");
     let laptops = parse_laptops_files(RECALCULATION_LAPTOPS_DIR_PATH)?;
@@ -170,26 +126,33 @@ fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     Ok(())
 }
 
-/// deletes all laptops, benchmarks and global benchmarks from the database
-fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnection) -> Result<()> {
-    use schema::benchmark;
-    use schema::global_benchmark;
-    use schema::laptop;
-    use schema::laptop_image;
+fn update_global_benchmarks(
+    laptops: &LaptopInfosByName,
+    global_benchmarks: &mut HashMap<String, UpdateableGlobalBenchmark>,
+) {
+    /// updates the info of the global benchmarks according to each of given the benchmarks
+    /// the prefix is used to specify the pu type of the benchmarks, since we are not using
+    /// 2 different tables, one for each pu type, and instead the first character of the benchmark's
+    /// name specifies its pu type.
+    fn update_info_according_to_benchmarks(
+        benchmarks: &LaptopPuBenchmarksData,
+        global_benchmarks: &mut HashMap<String, UpdateableGlobalBenchmark>,
+        prefix: char,
+    ) {
+        for (benchmark_name, &score) in benchmarks {
+            let global_benchmark_name = format!("{}{}", prefix, benchmark_name);
+            // find the entry or insert a new one if it does not exist, and update it with the benchmark's average score
+            global_benchmarks
+                .entry(global_benchmark_name)
+                .or_insert_with(UpdateableGlobalBenchmark::new_not_in_database)
+                .update(score);
+        }
+    }
 
-    diesel::delete(laptop_image::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-    diesel::delete(benchmark::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-    diesel::delete(laptop::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-    diesel::delete(global_benchmark::table)
-        .execute(db_connection)
-        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
-    Ok(())
+    for laptop_info in laptops.values() {
+        update_info_according_to_benchmarks(&laptop_info.cpu_bench, global_benchmarks, 'c');
+        update_info_according_to_benchmarks(&laptop_info.gpu_bench, global_benchmarks, 'g');
+    }
 }
 
 /// upserts each laptops in the laptops file and its corresponding benchmarks
@@ -197,7 +160,7 @@ fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnect
 /// to avoid iterating over the laptops twice, which improves performance.
 fn upsert_laptops_benchmarks_and_image_urls(
     laptops: &LaptopInfosByName,
-    global_benchmarks_id_by_name: &HashMap<String, i32>,
+    global_benchmarks: &HashMap<String, UpdateableGlobalBenchmark>,
     db_connection: &PgConnection,
 ) -> Result<PriceLimits> {
     use schema::benchmark;
