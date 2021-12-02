@@ -45,7 +45,8 @@ impl Select for SelectorDBConnection {
         // information about them from the database
         let selected_laptop_ids = top_laptops.laptop_ids();
         let id_to_score_map = top_laptops.laptop_id_to_score_map();
-        let mut selected_laptops = self.fetch_selected_laptops(&selected_laptop_ids, &id_to_score_map)?;
+        let category_id_to_name_map = self.fetch_category_names()?;
+        let mut selected_laptops = self.fetch_selected_laptops(&selected_laptop_ids, &id_to_score_map, &category_id_to_name_map)?;
 
         // since these laptops were returned from the database, they are no longer sorted by their
         // score, so we should re-sort them by score
