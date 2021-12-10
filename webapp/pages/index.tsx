@@ -9,11 +9,14 @@ import {useRouter} from 'next/router'
 // __selector__
 import {PriceLimits, getCategoryNames, getPriceLimits} from '@/server/selector'
 
+// categories
+import { defaultCategoryMap } from '@/server/categories'
+
 // __components__
 import Image from 'next/image'
 import Navbar from '@/components/navbar/navbar'
 import Form from '@/components/form/form'
-import CardSelection, {CategoryMap} from '@/components/form/CardSelection'
+import CardSelection from '@/components/form/CardSelection'
 // import Tags from '@/components/form/tags'
 // import SearchBar from '@/components/form/searchbar'
 import Scrollable from '@/components/navigation/scrollable'
@@ -21,15 +24,7 @@ import Scrollable from '@/components/navigation/scrollable'
 // __images__
 // 1.landing page
 import laptopImage from '@/public/laptop.png'
-// 2.category selection
-import devIcon from '@/public/categories/dev.png'
-import devIconWhite from '@/public/categories/dev-white.png'
-import designIcon from '@/public/categories/design.png'
-import designIconWhite from '@/public/categories/design-white.png'
-import gamingIcon from '@/public/categories/gaming.png'
-import gamingIconWhite from '@/public/categories/gaming-white.png'
-import studyIcon from '@/public/categories/study.png'
-import studyIconWhite from '@/public/categories/study-white.png'
+
 //import MultiSlider from '@/components/form/multi_slider'
 import MultiSlider from '@/components/form/multi-slider/multi-slider'
 // 3.price selection
@@ -38,40 +33,6 @@ import MultiSlider from '@/components/form/multi-slider/multi-slider'
 interface HomeProps {
 	categories: string[]
 	priceLimits: PriceLimits
-}
-
-// this object is set manually as we choose the categories
-// after research and it's not automatic yet.
-// also dynamic image imorting is horrible in webpack
-const categoryMap: CategoryMap = {
-	'dev': {
-		title: 'תכנות',
-		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות.',
-		image: devIcon,
-    	white: devIconWhite,
-    	color: '#2ea486'
-	},
-	'design': {
-		title: 'עיצוב דיגיטלי',
-		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן.',
-		image: designIcon,
-    	white: designIconWhite,
-    	color: '#a42e2e'
-	},
-	'gaming': {
-		title: 'גיימינג',
-		description: 'בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי.',
-		image: gamingIcon,
-    	white: gamingIconWhite,
-    	color: '#402ea4'
-	},
-	'study': {
-		title: 'למידה ועבודה',
-		description: 'בחרו באפשרות הזו אם אתם מתכוונים להשתמש בתוכנות Office למיניהן, לגלוש באינטרנט או לבצע כל פעולה או משימה בסיסית אחרת.',
-		image: studyIcon,
-    	white: studyIconWhite,
-    	color: '#2e4da4'
-	}
 }
 
 const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
@@ -126,7 +87,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
 						<section ref={tagRef} className={styles.firstFormSection}>
 							<h1>בחרו בקטגוריות המתאימות לכם</h1>
 							<p>אנא בחרו לפחות קטגוריה אחת</p>
-							<CardSelection categoryMap={categoryMap} categories={categories} onCardClick={updateTags} toolTipBoundaryElement={tagRef}></CardSelection>
+							<CardSelection categoryMap={defaultCategoryMap} categories={categories} onCardClick={updateTags} toolTipBoundaryElement={tagRef}></CardSelection>
 							{/* <Tags tags={tags} onTagClick={removeTag}></Tags>
                   <SearchBar suggestions={categories} onSuggestionClick={addTag} maxDisplayedSuggestions={5}></SearchBar> */}
               <button type='button' onClick={tags.length == 1 ? scrollToRef(priceRef) : scrollToRef(ratingRef)} disabled={tags.length < 1}>הבא</button>
@@ -149,7 +110,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   bonesAmount={tags.length}
                   inputNames={tags}
                   minDistanceInPixelsBetweenJoints={35}
-                  colors={tags.map(category => categoryMap[category].color ?? undefined)}
+                  colors={tags.map(category => defaultCategoryMap[category].color ?? undefined)}
                   direction={screenRatio > 4/3 ? 'vertical' : 'horizontal'}
                   // jointTooltipsRenderer={
                   //   (_,distanceFromStart)=>{
@@ -162,7 +123,7 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                   // }
                   boneTooltipsRenderer={
                     (index, boneWidth) => {
-                      const data = categoryMap[tags[index]]
+                      const data = defaultCategoryMap[tags[index]]
                       return (
                         <div>
                           <figure className={styles.sliderTooltip}>
