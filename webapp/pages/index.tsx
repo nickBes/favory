@@ -7,7 +7,7 @@ import {GetStaticProps} from 'next'
 import {useRouter} from 'next/router'
 
 // __selector__
-import {PriceLimits, getCategoryNames, getPriceLimits} from '../selector'
+import {PriceLimits, getCategoryNames, getPriceLimits} from '@/server/selector'
 
 // __components__
 import Image from 'next/image'
@@ -33,7 +33,7 @@ import studyIconWhite from '@/public/categories/study-white.png'
 //import MultiSlider from '@/components/form/multi_slider'
 import MultiSlider from '@/components/form/multi-slider/multi-slider'
 // 3.price selection
-import PriceSlider from '@/components/form/priceSlider'
+// import PriceSlider from '@/components/form/priceSlider'
 
 interface HomeProps {
 	categories: string[]
@@ -48,29 +48,29 @@ const categoryMap: CategoryMap = {
 		title: 'תכנות',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתכנות.',
 		image: devIcon,
-    white: devIconWhite,
-    color: '#2ea486'
+    	white: devIconWhite,
+    	color: '#2ea486'
 	},
 	'design': {
 		title: 'עיצוב דיגיטלי',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להתעסק בתוכנות Adobe למיניהן או דומות להן.',
 		image: designIcon,
-    white: designIconWhite,
-    color: '#a42e2e'
+    	white: designIconWhite,
+    	color: '#a42e2e'
 	},
 	'gaming': {
 		title: 'גיימינג',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים לשחק במשחקי מחשב או לעסוק בעיצוב תלת מימדי.',
 		image: gamingIcon,
-    white: gamingIconWhite,
-    color: '#402ea4'
+    	white: gamingIconWhite,
+    	color: '#402ea4'
 	},
 	'study': {
 		title: 'למידה ועבודה',
 		description: 'בחרו באפשרות הזו אם אתם מתכוונים להשתמש בתוכנות Office למיניהן, לגלוש באינטרנט או לבצע כל פעולה או משימה בסיסית אחרת.',
 		image: studyIcon,
-    white: studyIconWhite,
-    color: '#2e4da4'
+    	white: studyIconWhite,
+    	color: '#2e4da4'
 	}
 }
 

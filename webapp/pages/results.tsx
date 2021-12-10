@@ -5,9 +5,9 @@ import {GetServerSideProps} from 'next'
 import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
-import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
+import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '@/server/selector'
 import LaptopCard from '@/components/results/laptopCard'
-import hasExceededRateLimit from 'rateLimit'
+import hasExceededRateLimit from '@/server/rateLimit'
 import styles from '@/styles/results.module.scss'
 import Cookies from 'js-cookie'
 
@@ -102,6 +102,7 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 		const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
 		return (
 			<>
+				{console.log(laptops)}
 				<Navbar path={router.pathname}></Navbar>
 				<section className={styles.laptopCardWrapper}>
 					{showPopup ? <div  className={styles.laptopCard}>
