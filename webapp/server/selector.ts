@@ -25,12 +25,15 @@ export type SelectorRequest =
 		type: "fetchCategoryNamesAndPriceLimits",
 	}
 
+
+type CategoryScoreMap = { [category: string]: number }
+
 export type SelectedLaptop = {
 	name: string,
 	url: string,
 	price: number,
 	score: number,
-    scoresInCategories: number[]
+    scoresInCategories: CategoryScoreMap,
 	imageUrls?: string[],
 }
 
@@ -188,7 +191,7 @@ async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): P
     }
 
 
-    await mutex.runExclusive(async ()=>{
+    await mutex.runExclusive(async () => {
         // in development mode, create a new socket for each selection request, and then close
         // it when we're done. This is neccessary since when nextjs recompiles our project
         // it doesn't close the socket from the previous version of the webapp, and thus it blocks
