@@ -3,6 +3,7 @@ import {SelectedLaptop} from '@/server/selector'
 import { matchCategoriesToCategoryMap , defaultCategoryMap} from '@/server/categories'
 import LaptopImages from './laptopImages'
 import styles from './laptop_card.module.scss'
+import CategoryScore from './categoryScore'
 
 interface LaptopCardProps extends SelectedLaptop{
 	categories: string[]
@@ -29,12 +30,17 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, sco
 					</figcaption>
 					<div className={styles.laptopImage}><LaptopImages imageUrls={imageUrls} /></div>
 				</div>
-				<div style={{display: clickedDesc ? 'block' : 'none'}}>
-					{matchCategoriesToCategoryMap(categories, defaultCategoryMap, (category, categoryData, __) => {
-								if (category in scoresInCategories) { 
-									return (<p>{categoryData.title}: {Math.round(scoresInCategories[category] * 100)}%</p>)
-								}
-					})}
+				<div style={{display: clickedDesc ? 'block' : 'none', width: '100%'}} >
+					<div className={styles.informationWrapper}>
+						<h1>ביצועים של המחשב בשימושים שנבחרו</h1>
+						<div className={styles.information} >
+							{matchCategoriesToCategoryMap(categories, defaultCategoryMap, (category, categoryData, index) => {
+										if (category in scoresInCategories) { 
+											return <CategoryScore key={index} color={categoryData.color} name={categoryData.title} score={Math.round(scoresInCategories[category] * 100)}/>
+										}
+							})}
+						</div>
+					</div>
 				</div>
 				<div className={styles.description} onClick={toggleDesc}>{clickedDesc ? 'סגור' : 'קרא עוד'}</div>
 			</figure>

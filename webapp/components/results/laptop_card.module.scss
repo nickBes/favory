@@ -117,3 +117,25 @@
         }
     }
 }
+
+.information {
+    display: flex;
+    flex-direction: row;
+    gap: 2vmin;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.informationWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    h1 { 
+        text-align: center;
+        font-size: clamp(10px, 7vmin, 22px);
+        font-weight: 500;
+    }
+}

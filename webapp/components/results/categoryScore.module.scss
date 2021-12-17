@@ -1,0 +1,30 @@
+@use '@/styles/theme';
+
+.categoryScoreWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+    min-width: 22%;
+    width: 12vh;
+
+
+}
+
+.categoryScoreContent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    border-radius: 50%;
+    background-color: white;
+    width: calc(100% - clamp(3px, 1vmin, 6px));
+    aspect-ratio: 1/1;
+
+    h3 {
+        font-size: clamp(7px, 3.75vmin, 16px);
+        margin: 0%;
+    }
+}
