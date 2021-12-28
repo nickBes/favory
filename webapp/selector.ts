@@ -212,6 +212,13 @@ async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): P
         // decode the data
         let responseString = (await socketData.get())?.toString();
         if(responseString == undefined){
+			// if we're in development mode, we close the socket when we're done,
+			// since in development mode a new socket is created for each selection request.
+			// for more information about this see #25.
+			if (env == "development"){
+			    socket.destroy();
+			}
+
 			// if the onDataEvent was set but no data was recevied then it means
 			// that a socket error occured and we should retry once reconnected
 			return await sendRequestaAndGetResponseContent(request)
