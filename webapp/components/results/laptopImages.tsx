@@ -5,7 +5,7 @@ import notFoundImage from '@/public/image-not-found.png'
 import Image from 'next/image'
 
 interface LaptopImagesProps {
-	imageUrls: string[],
+	imageUrls?: string[],
 }
 
 const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {

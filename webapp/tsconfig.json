@@ -18,6 +18,7 @@
       "@/styles/*": ["styles/*"],
       "@/public/*": ["public/*"],
       "@/components/*": ["components/*"],
+      "@/server/*": ["server/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

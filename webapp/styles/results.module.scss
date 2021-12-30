@@ -18,7 +18,7 @@
 }
 
 .laptopCardWrapper {
-    width: 35%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,8 +26,8 @@
     margin: auto;
     gap: 30px;
     position: relative;
-    padding-bottom: 60px;
-    padding-top: 60px;
+    padding-bottom: 5vh;
+    padding-top: 10vh;
 
     @media (max-aspect-ratio: 16/9) {
         width: 38%;

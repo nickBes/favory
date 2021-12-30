@@ -1,6 +1,8 @@
 .errorImg {
-    @media (max-width: 768px) {
-        width: 80%;
+    max-width: 200px;
+    margin: 2vmin;
+    @media (max-aspect-ratio: 1/1) {
+        width: 25%;
     }
 }
 
@@ -10,4 +12,5 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh;
 }

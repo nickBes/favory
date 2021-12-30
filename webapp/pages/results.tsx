@@ -5,9 +5,9 @@ import {GetServerSideProps} from 'next'
 import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
-import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '../selector'
+import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '@/server/selector'
 import LaptopCard from '@/components/results/laptopCard'
-import hasExceededRateLimit from 'rateLimit'
+import hasExceededRateLimit from '@/server/rateLimit'
 import styles from '@/styles/results.module.scss'
 import Cookies from 'js-cookie'
 
@@ -42,11 +42,16 @@ type ResultsPageError =
 	| ResultsPageInvalidMethodError
 	| ResultsPageTooManyRequestsError
 
+interface ResultSuccessData {
+	categories: string [],
+	laptops: SelectedLaptop []
+}
+
 type ResultsPagePropsSuccess = {
 	success: true,
-	// if `laptops` is undefined, the results page will try to 
+	// if `data` is undefined, the results page will try to 
 	// load the laptops from local storage
-	laptops: SelectedLaptop[] | null,
+	data?: ResultSuccessData
 }
 
 type ResultsPagePropsFailure = {
@@ -63,7 +68,7 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 
 	// using useState here because we need access to the window.localStorage property, and we only 
 	// have access to it inside callbacks to useState and useEffect
-	const [laptops, _] = useState<SelectedLaptop[] | null>(() => {
+	const [resultData, _] = useState<ResultSuccessData | null>(() => {
 		// make sure this code has acces to the window variable, since it needs to use the window.localStorage
 		// property. for some reason this callback also sometimes gets called on the server side, in which
 		// case it doesn't have access to window.localStorage.
@@ -76,9 +81,9 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 			return null;
 		}
 
-		if (pageProps.laptops === null) {
-			// if no laptops were given, try to load them from local storage
-			const cachedLaptops = window.localStorage.getItem('laptops');
+		if (!pageProps.data) {
+			// if no data was given, try to load it from local storage
+			const cachedLaptops = window.localStorage.getItem('resultData');
 			if (cachedLaptops === null) {
 				// no laptops found in local storage, redirect
 				window.location.replace("/");
@@ -87,14 +92,14 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 			return JSON.parse(cachedLaptops);
 		} else {
 			// if the laptops were loaded from the selector, cache them
-			window.localStorage.setItem('laptops', JSON.stringify(pageProps.laptops))
+			window.localStorage.setItem('resultData', JSON.stringify(pageProps.data))
 
-			return pageProps.laptops;
+			return pageProps.data;
 		}
 	});
 
 	if (pageProps.success) {
-		if (laptops === null) {
+		if (!resultData) {
 			// if no laptops were be found, return an empty element just to let the redirect happen.
 			return (<></>);
 		}
@@ -113,7 +118,7 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 											</h1>
 										</figure>
 									</div> : ''}
-					{laptops.map((value, index) => <LaptopCard key={index} {...value}></LaptopCard>)}
+					{resultData.laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData.categories, ...value}}></LaptopCard>)}
 				</section>
 			</>
 		)
@@ -253,10 +258,14 @@ async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<Resu
 	let selectionRequestExtractionResult = await extractSelectionRequestFromQuery(query)
 	if (selectionRequestExtractionResult.success) {
 		try {
-			let laptops = await select(selectionRequestExtractionResult.selectionRequest)
+			let resultData : ResultSuccessData = {
+				laptops: await select(selectionRequestExtractionResult.selectionRequest),
+				categories: Object.keys(selectionRequestExtractionResult.selectionRequest.categoryScores)
+			}
 			return {
 				success: true,
-				laptops
+				// we'll display only the scores in the chosen categories
+				data: resultData
 			}
 		} catch (e) {
 			return {
@@ -293,9 +302,7 @@ export const getServerSideProps: GetServerSideProps = async ({req}) => {
 	} else if (req.method == 'GET') {
 		result = {
 			success: true,
-
-			// a value of null tells the results page to try and load the laptops from localStorage.
-			laptops: null,
+			// undefined data tells the results page to try and load the laptops from localStorage.
 		}
 	} else {
 		result = {

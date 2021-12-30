@@ -2,14 +2,7 @@ import React, {useState, useEffect, RefObject} from 'react'
 import styles from './card.module.scss'
 import Image from 'next/image'
 import { Popover, ArrowContainer} from 'react-tiny-popover'
-
-export interface CategoryData {
-    title : string,
-    description: string,
-    image: StaticImageData,
-    white?: StaticImageData
-    color?: string,
-}
+import { CategoryData } from '@/server/categories'
 
 export type CardClickCallback = (category : string) => void
 
