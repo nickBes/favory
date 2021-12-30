@@ -1,13 +1,18 @@
-import ImageGallery from 'react-image-gallery';
-import "react-image-gallery/styles/css/image-gallery.css";
+import ImageGallery from 'react-image-gallery'
+import "react-image-gallery/styles/css/image-gallery.css"
 import styles from './laptopImages.module.scss'
+import notFoundImage from '@/public/image-not-found.png'
+import Image from 'next/image'
 
 interface LaptopImagesProps {
 	imageUrls?: string[],
 }
 
 const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {
-	if (imageUrls) {
+	// sometimes there are no images
+	// so we need to also return an figure for
+	// not having an image
+	if (imageUrls.length > 0) {
 		const imageObjects = imageUrls.map((imageUrl) => {
 			return {
 				original: imageUrl,
@@ -25,9 +30,12 @@ const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {
 					additionalClass={styles.behindNavbar} />
 			</>
 		)
-	} else {
-		return null
 	}
-
+	return (
+		<figure className={styles.notFound}>
+			<Image width={24} height={24} src={notFoundImage}></Image>
+			<figcaption>לא נמצאה תמונה</figcaption>
+		</figure>
+	)
 }
 export default LaptopImages
