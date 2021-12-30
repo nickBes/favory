@@ -25,7 +25,7 @@ pub struct LaptopScoreInCategoryInfo {
 
 /// information about a selected laptop
 #[derive(Debug, Serialize)]
-#[serde(rename = "camelCase")]
+#[serde(rename_all = "camelCase")]
 pub struct SelectedLaptop {
     pub name: String,
     pub url: String,
