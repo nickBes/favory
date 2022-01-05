@@ -12,7 +12,7 @@ const LaptopImages: React.FC<LaptopImagesProps> = ({imageUrls}) => {
 	// sometimes there are no images
 	// so we need to also return an figure for
 	// not having an image
-	if (imageUrls.length > 0) {
+	if (imageUrls && imageUrls.length > 0) {
 		const imageObjects = imageUrls.map((imageUrl) => {
 			return {
 				original: imageUrl,

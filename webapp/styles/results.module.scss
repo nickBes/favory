@@ -98,6 +98,54 @@
     }
 
     figure > h1 > a:hover {
-        border-bottom: 3px solid theme.$green;
+        text-decoration: underline;
+    }
+}
+
+.ratingCard {
+    background-color: white;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 35vmax;
+    min-height: 25%;
+    border-radius: 20px;
+    padding: 35px;
+    text-align: center;
+
+    @media (max-aspect-ratio: 1/1) {
+        width: 70vmin;
+        gap: 2vmin;
+    }
+
+    border: 2px solid theme.$green;
+    box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
+
+
+    figure > h1 > a {
+        text-decoration: none;
+        width: fit-content;
+        color: theme.$green;
+    }
+
+    figure > h1 > a:hover {
+        text-decoration: underline;
+    }
+
+    font: theme.$small_text_font;
+    font-weight: 600;
+    margin: 0px;
+    line-height: 40px;
+
+    @media (max-aspect-ratio: 1/1) {
+        font: theme.$medium_text_font_mobile;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 20px;
+    }
+
+    @media (max-aspect-ratio: 1/2) {
+        line-height: 20px;
+        font-size: 13px;
     }
 }

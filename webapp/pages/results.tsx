@@ -109,11 +109,11 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 			<>
 				<Navbar path={router.pathname}></Navbar>
 				<section className={styles.laptopCardWrapper}>
-					{showPopup ? <div  className={styles.laptopCard}>
+					{showPopup ? <div  className={styles.ratingCard}>
 										<figure>
 											<h1>נשמח אם תענו על הסקר&nbsp;
 												<a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
-													href='https://docs.google.com/forms/d/e/1FAIpQLSeOFRwkxqDLHSrSqW0qFpobOPEsl4qnsswWHocAtnljVW-Efg/viewform?usp=sf_link'>הזה :)
+													href='https://docs.google.com/forms/d/e/1FAIpQLSeOFRwkxqDLHSrSqW0qFpobOPEsl4qnsswWHocAtnljVW-Efg/viewform?usp=sf_link'>הזה
 												</a>
 											</h1>
 										</figure>
