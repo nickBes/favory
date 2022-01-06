@@ -5,7 +5,7 @@ from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
 from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
-PAGE_AMOUNT = 1
+PAGE_AMOUNT = 8
 ITEM_AMOUNT = -1
 
 LABELS_MAP = {
