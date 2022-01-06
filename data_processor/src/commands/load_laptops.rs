@@ -387,9 +387,8 @@ fn parse_laptops_files() -> Result<LaptopInfosByName> {
             }
         }
     }
-    let x = laptops.laptop_infos_by_name();
-    println!("amount of laptops: {}", x.len());
-    Ok(x)
+
+    Ok(laptops.laptop_infos_by_name())
 }
 
 /// saves the given price limits to the database, if it actually contains the price limits
