@@ -3,7 +3,7 @@ from spiders.notebookcheck import NotebookCheckSpider
 from spiders.process_data.ivory import get_laptop_dict_from_response
 
 PAGE_URL = 'https://www.ivory.co.il/catalog.php?act=cat&id=2590&pg=%s'
-PAGE_AMOUNT = 4
+PAGE_AMOUNT = 5
 ITEM_URL = 'https://www.ivory.co.il/catalog.php?id=%s'
 ITEM_AMOUNT = -1
 
@@ -68,7 +68,11 @@ class IvorySpider(NotebookCheckSpider):
         laptop_ids = response.meta['laptop_ids']
 
         laptop_data = get_laptop_dict_from_response(response)
-        self.laptops.append(laptop_data)
+        # get_laptop_dict_from_response returns none if response throws errors
+        if laptop_data != None:
+            self.laptops.append(laptop_data)
+        else:
+            print(f"\nWARNING: Ivory spider failed on parsing this laptop: {response.url}\n")
 
         if len(laptop_ids) == 0:
             yield self.with_benchmarks()

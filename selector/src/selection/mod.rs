@@ -5,6 +5,6 @@ mod user_category_scores;
 
 pub use select::Select;
 pub use user_category_scores::UserCategoryScoresByName;
+pub use scores_in_categories_of_laptops::ScoresInCategoriesOfLaptop;
 
 pub const TOP_LAPTOPS_AMOUNT: usize = 5;
-

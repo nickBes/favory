@@ -1,5 +1,6 @@
 import scrapy
 from scrapy.http import FormRequest,HtmlResponse
+from spiders.process_data.diff import dice_coefficient
 from enum import Enum
 from scrapy.http.request import Request
 from scrapy.http.response.text import TextResponse
@@ -219,6 +220,9 @@ class NotebookCheckSpider(scrapy.Spider):
         for laptop in self.laptops:
             print(laptop)
             cpu_name = laptop['cpu']
+            # continue if cpu wasn't scrapped
+            if cpu_name not in self.dedicated_benches:
+                continue
             laptop['cpu_bench'] = self.dedicated_benches[cpu_name]['benchmarks']
             laptop['cpu'] = self.dedicated_benches[cpu_name]['name']
             if laptop['integrated']:
@@ -229,6 +233,9 @@ class NotebookCheckSpider(scrapy.Spider):
                 laptop['gpu'] = self.integrated_benches[key]['name']
             else:
                 gpu_name = laptop['gpu']
+                # will continue if gpu wasn't scraped
+                if gpu_name not in self.dedicated_benches:
+                    continue
                 laptop['gpu_bench'] = self.dedicated_benches[gpu_name]['benchmarks']
                 laptop['gpu'] = self.dedicated_benches[gpu_name]['name']
 
@@ -254,10 +261,10 @@ class NotebookCheckSpider(scrapy.Spider):
 
     def _parse_dedicated_search_results(self, response:HtmlResponse):
         # there should only be a single search result, so we follow the first result
-        device_page_url = response.css('td.specs:nth-child(2) > a:nth-child(1)::attr(href)').get()
-
+        device_results = response.css('td.specs:nth-child(2) > a')
+        
         # if no results were found, skip this device
-        if device_page_url == None:
+        if len(device_results) == 0:
             print()
             print('WARNING: no search results for device: ',response.meta['device'])
             print('continuing to next device')
@@ -265,7 +272,22 @@ class NotebookCheckSpider(scrapy.Spider):
 
             yield from self.start_next_device_request(response.meta)
         else:
-            yield Request(url=device_page_url, meta=response.meta, callback=self._with_benchmarks_recursive)
+            device_id = response.meta['device']['id']
+            print()
+            print("GETTING A PAGE URL FOR THIS DEVICE:", response.meta['device']['id'])
+            print()
+            # get the url of the device with the biggest matching score
+            max_score = 0
+            max_url = 0
+            for result in device_results:
+                text = result.css('*::text').get()
+                new_score = dice_coefficient(response.meta['device']['id'], text)
+                print("RESULT TEXT:", text, '\tSCORE:' ,new_score)
+                if new_score > max_score:
+                    max_score = new_score
+                    max_url = result.css('*::attr(href)').get()
+            print()
+            yield Request(url=max_url, meta=response.meta, callback=self._with_benchmarks_recursive)
 
 
     def _fix_response_broken_html(self, response:HtmlResponse)->HtmlResponse:

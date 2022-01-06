@@ -1,4 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react'
+import ResizeObserver from 'resize-observer-polyfill' 
 import Bone from './bone'
 import Joint from './joint'
 import Tooltip from '../tooltip'
@@ -69,6 +70,7 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 		})
 	}
 
+
 	// returns the currentRect's width or height, according to to the 
 	// direction property
 	function getLength(): number {
@@ -77,9 +79,14 @@ const MultiSlider: React.FC<MultiSliderProps> = ({
 
 	useEffect(() => {
 		updateCurrentRect();
-		window.addEventListener('resize', updateCurrentRect);
-		return () => {
-			window.removeEventListener('resize', updateCurrentRect);
+
+		// adds a resize observer, which is like add event listener 'resize'
+		// but it actually works. it'll will call updateCurrentRect method, when the 
+		// observed elements are resized
+		const resizeObserver = new ResizeObserver(() => updateCurrentRect())
+
+		if (containerRef.current) {
+			resizeObserver.observe(containerRef.current)
 		}
 	}, [])
 

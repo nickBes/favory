@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::{errors::*, SelectorDBConnection};
+use crate::{errors::*, selection::ScoresInCategoriesOfLaptop, SelectorDBConnection};
 use db_access::{models, schema};
 use diesel::{BelongingToDsl, ExpressionMethods, QueryDsl, RunQueryDsl};
 use serde::{Deserialize, Serialize};
@@ -25,14 +25,15 @@ pub struct LaptopScoreInCategoryInfo {
 
 /// information about a selected laptop
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SelectedLaptop {
     pub name: String,
     pub url: String,
     pub price: f32,
     pub cpu: String,
     pub gpu: String,
-    #[serde(rename = "imageUrls")]
     pub image_urls: Vec<String>,
+    pub scores_in_categories: HashMap<String, f32>,
     pub score: f32,
 }
 
@@ -47,8 +48,10 @@ pub trait FetchData {
     fn fetch_selected_laptops(
         &self,
         ids: &[i32],
-        id_to_score_map: &HashMap<i32, f32>,
+        id_to_scores_map: &HashMap<i32, (f32, ScoresInCategoriesOfLaptop)>,
+        category_id_to_name_map: &HashMap<i32, String>,
     ) -> Result<Vec<SelectedLaptop>>;
+    fn fetch_category_names(&self) -> Result<HashMap<i32, String>>;
 }
 impl FetchData for SelectorDBConnection {
     fn fetch_category_names_and_price_limits(&self) -> Result<CategoryNamesAndPriceLimitsData> {
@@ -103,8 +106,10 @@ impl FetchData for SelectorDBConnection {
     }
     fn fetch_laptop_prices(&self) -> Result<HashMap<i32, f32>> {
         use schema::laptop;
-        
-        let laptop_scores:Vec<(i32,f32)> = laptop::table.select((laptop::id, laptop::price)).load(&self.0)
+
+        let laptop_scores: Vec<(i32, f32)> = laptop::table
+            .select((laptop::id, laptop::price))
+            .load(&self.0)
             .into_selector_result(SelectorErrorKind::DatabaseError)?;
 
         // convert it to a hashmap mapping each laptop's id to its price
@@ -113,7 +118,8 @@ impl FetchData for SelectorDBConnection {
     fn fetch_selected_laptops(
         &self,
         ids: &[i32],
-        id_to_score_map: &HashMap<i32, f32>,
+        id_to_scores_map: &HashMap<i32, (f32, ScoresInCategoriesOfLaptop)>,
+        category_id_to_name_map: &HashMap<i32, String>,
     ) -> Result<Vec<SelectedLaptop>> {
         if ids.is_empty() {
             return Ok(Vec::new());
@@ -132,16 +138,34 @@ impl FetchData for SelectorDBConnection {
                 .select(laptop_image::image_url)
                 .load(&self.0)
                 .into_selector_result(SelectorErrorKind::DatabaseError)?;
+            let (score, scores_in_categories) = &id_to_scores_map[&laptop.id];
             selected_laptops.push(SelectedLaptop {
                 name: laptop.name,
                 url: laptop.url,
                 cpu: laptop.cpu,
                 gpu: laptop.gpu,
                 price: laptop.price,
-                score: id_to_score_map[&laptop.id],
+                score: *score,
+                scores_in_categories: scores_in_categories
+                    .clone()
+                    .inner()
+                    .into_iter()
+                    .map(|(id, score)| (category_id_to_name_map[&id].clone(), score))
+                    .collect(),
                 image_urls,
             });
         }
         Ok(selected_laptops)
+    }
+
+    fn fetch_category_names(&self) -> Result<HashMap<i32, String>> {
+        let category_ids_and_names: Vec<(i32, String)> = {
+            use schema::category::dsl::*;
+            category
+                .select((id, name))
+                .load(&self.0)
+                .into_selector_result(SelectorErrorKind::DatabaseError)?
+        };
+        Ok(category_ids_and_names.into_iter().collect())
     }
 }

@@ -1,4 +1,4 @@
-import {MutexProtected} from "mutexprotected"
+import {MutexProtected} from "./mutexprotected"
 
 const WINDOW_DURATION_SECONDS = 120
 

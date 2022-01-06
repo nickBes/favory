@@ -38,11 +38,14 @@ impl MappedScoresInCategoriesOfLaptops {
 }
 
 /// the scores in categories of a single laptop, by category id
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ScoresInCategoriesOfLaptop(HashMap<i32, f32>);
 impl ScoresInCategoriesOfLaptop {
     fn score_in_category(&self, category_id: i32) -> Option<&f32> {
         self.0.get(&category_id)
+    }
+    pub fn inner(self)->HashMap<i32, f32>{
+        self.0
     }
 }
 
@@ -84,6 +87,11 @@ impl<'a> LaptopWithScoresInCategories<'a> {
             total_score += laptop_score_in_category * user_category_score;
         }
         Ok(total_score)
+    }
+
+    /// returns the scores in categories of this laptop
+    pub fn scores_in_categories(&self) -> &'a ScoresInCategoriesOfLaptop {
+        self.scores
     }
 }
 

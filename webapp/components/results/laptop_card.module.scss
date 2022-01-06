@@ -55,3 +55,87 @@
         @include theme.primary-button-hover
     }
 }
+
+.laptopCard {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid theme.$green;
+    box-shadow: 1px 1px 14px -1px rgba(0,0,0,0.2);
+    overflow: hidden;
+    width: 35vmax;
+    min-height: 25%;
+    border-radius: 20px;
+    padding: 35px;
+    gap: 3vmin;
+
+    @media (max-aspect-ratio: 1/1) {
+        width: 70vmin;
+        gap: 2vmin;
+    }
+
+    .description {
+        cursor: pointer;
+        justify-self: flex-end;
+        color: theme.$inactive_text;
+    }
+
+    .mainCardInfo {
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        margin:0px;
+
+        a {
+            text-decoration: none;
+            width: fit-content;
+            margin: 0px;
+        }
+        figure > h1 {
+            color: theme.$primary_text;
+            font: theme.$big_text_font;
+            line-height: 50px;
+            font-size: 50px;
+            width: 100%;
+            text-align: center;
+            @media (max-aspect-ratio: 1/1) {
+                font-size: 30px;
+                line-height: 30px;
+            }
+        }
+        figure > h1 > a {
+            text-decoration: none;
+            width: fit-content;
+            margin: 0px;
+            color: theme.$green;
+        }
+    
+        figure > h1 > a:hover {
+            border-bottom: 3px solid theme.$green;
+        }
+    }
+}
+
+.information {
+    display: flex;
+    flex-direction: row;
+    gap: 2vmin;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.informationWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    h1 { 
+        text-align: center;
+        font-size: clamp(10px, 7vmin, 22px);
+        font-weight: 500;
+    }
+}
