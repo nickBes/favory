@@ -13,7 +13,7 @@ const Contact : React.FC = () => {
             }}>
                 <span className={styles.title} style={{
                     cursor: 'pointer'
-                }}><h1 className={styles.mail}>favory.contact@gmail.com</h1></span>
+                }}><h1 className={styles.mail}>contact.favory@gmail.com</h1></span>
                 <p>רוצים לתת לנו ביקורת? להעלות רעיון? או סתם לשאול שאלה?</p>
             </section>
         </article>
