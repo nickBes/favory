@@ -12,6 +12,6 @@ if __name__ == '__main__':
         file.unlink()
 
     process = CrawlerProcess()
-    # process.crawl(BugSpider)
+    process.crawl(BugSpider)
     process.crawl(IvorySpider)
     process.start()
