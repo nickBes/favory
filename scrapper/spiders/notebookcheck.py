@@ -219,29 +219,25 @@ class NotebookCheckSpider(scrapy.Spider):
         '''
         for laptop in self.laptops:
             print(laptop)
-            cpu_name = laptop['cpu']
-            # continue if cpu wasn't scrapped
-            if cpu_name not in self.dedicated_benches:
-                continue
-            laptop['cpu_bench'] = self.dedicated_benches[cpu_name]['benchmarks']
-            laptop['cpu'] = self.dedicated_benches[cpu_name]['name']
-            if laptop['integrated']:
-                key = self.integrated_urls[cpu_name]
-                if key == None:
-                    continue
-                laptop['gpu_bench'] = self.integrated_benches[key]['benchmarks']
-                laptop['gpu'] = self.integrated_benches[key]['name']
-            else:
-                gpu_name = laptop['gpu']
-                # will continue if gpu wasn't scraped
-                if gpu_name not in self.dedicated_benches:
-                    continue
-                laptop['gpu_bench'] = self.dedicated_benches[gpu_name]['benchmarks']
-                laptop['gpu'] = self.dedicated_benches[gpu_name]['name']
-
-            # sometimes model and model or weight don't exist
+            # sometimes model and model or weight don't exist.
+            # also pu data might not exist from not having results
             # the fast fix for that is ignore the laptop that doesnt have these properties
             try: 
+                cpu_name = laptop['cpu']
+                laptop['cpu_bench'] = self.dedicated_benches[cpu_name]['benchmarks']
+                laptop['cpu'] = self.dedicated_benches[cpu_name]['name']
+                if laptop['integrated']:
+                    key = self.integrated_urls[cpu_name]
+                    if key == None:
+                        continue
+                    laptop['gpu_bench'] = self.integrated_benches[key]['benchmarks']
+                    laptop['gpu'] = self.integrated_benches[key]['name']
+                else:
+                    gpu_name = laptop['gpu']
+                    laptop['gpu_bench'] = self.dedicated_benches[gpu_name]['benchmarks']
+                    laptop['gpu'] = self.dedicated_benches[gpu_name]['name']
+
+
                 # find the laptop's name using the brand and model
                 laptop['name'] = laptop['brand'] + ' ' + laptop['model']
 

@@ -21,13 +21,12 @@ def get_laptop_dict_from_response(response)->dict:
         value = row.css(ivory_map.table_map.get('value_css')).get()
         laptop_dict[key] = value
 
-    price_text = response.css('.print-actual-price::text').get()
+    # more accurate source for the price
+    price_text = response.css('#pricetotalitemjs::attr(data-price)').get()
     
     # using try except because the price css might change when there are discounts,
     # and ram/weights might be missing from the table
     try:
-        # remove the ',' from the price
-        price_text = price_text.replace(',','')
 
         laptop_dict['price'] = float(price_text)
 
