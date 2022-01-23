@@ -6,7 +6,7 @@ from spiders.process_data.device_id_detector import detect_pu_ids_in_laptop_data
 from spiders.process_data.regex import RAM_REGEX,WEIGHT_REGEX, PRICE_REGEX
 from bs4 import BeautifulSoup
 
-PAGE_AMOUNT = 8
+PAGE_AMOUNT = 9
 ITEM_AMOUNT = -1
 
 LABELS_MAP = {
@@ -108,13 +108,17 @@ class BugSpider(NotebookCheckSpider):
     def extract_laptop_images(self, response)->str:
         # the slider is dynamicaly loaded so we need to get the data from a specific place
         # and format it
-        slider_data = escape(response.css('#product_page_slider::attr(data-items)').get())
-        image_names = slider_data.split('/images/site')
+        slider_data = response.css('#product_page_slider::attr(data-items)').get()
+        if slider_data != None:
+            image_names = escape(slider_data).split('/images/site')
 
-        filtered_image_names = []
-        for count, value in enumerate(image_names):
-            if "/products/" in value:
-                filtered_image_names.append('/images/site' + value[0:value.find('&')])
+            filtered_image_names = []
+            for count, value in enumerate(image_names):
+                if "/products/" in value:
+                    filtered_image_names.append('/images/site' + value[0:value.find('&')])
+        else:
+            # sometimes there's a specific case where there is only one laptop
+            filtered_image_names = [response.css("#product_page_slider > img::attr(src)").get()]
 
         # convert the relative urls to actual urls
         return [create_url_from_relative_url(relative_url) for relative_url in filtered_image_names]
