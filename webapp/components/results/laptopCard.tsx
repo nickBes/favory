@@ -41,18 +41,18 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, ope
 							})}
 						</div>
 						<div>
-						<h1>מפרט טכני</h1>
-						<table>
-							<tr>
-								<td>מעבד</td>
-								<td>{cpu}</td>
-							</tr>
-							<tr>
-								<td>כרטיס מסך</td>
-								<td>{gpu}</td>
-							</tr>
-						</table>
-					</div>
+							<h1>מפרט טכני</h1>
+							<table>
+								<tr>
+									<td>מעבד</td>
+									<td>{cpu}</td>
+								</tr>
+								<tr>
+									<td>כרטיס מסך</td>
+									<td>{gpu}</td>
+								</tr>
+							</table>
+						</div>
 					</div>
 				</div>
 				<div className={styles.description} onClick={toggleDesc}>{clickedDesc ? 'סגור' : 'קרא עוד'}</div>
