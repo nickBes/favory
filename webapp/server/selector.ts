@@ -31,6 +31,8 @@ type CategoryScoreMap = { [category: string]: number }
 export type SelectedLaptop = {
 	name: string,
 	url: string,
+    cpu: string,
+    gpu: string,
 	price: number,
 	score: number,
     scoresInCategories: CategoryScoreMap,

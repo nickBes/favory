@@ -138,4 +138,19 @@
         font-size: clamp(10px, 7vmin, 22px);
         font-weight: 500;
     }
+
+    table {
+        text-align: center;
+
+        tr:nth-child(even) {
+            background-color: whitesmoke;
+        }
+    }
+    table, td {
+        padding: 1vmin;
+        border: 1px solid black;
+        border-collapse: collapse;
+        font-size: clamp(7px, 3.75vmin, 16px);
+        margin: 0%;
+    }
 }

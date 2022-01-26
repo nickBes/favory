@@ -105,11 +105,12 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 		}
 		const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
 		const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
+		const bestLaptop = resultData.laptops.shift()
 		return (
 			<>
 				<Navbar path={router.pathname}></Navbar>
 				<section className={styles.laptopCardWrapper}>
-					{showPopup ? <div  className={styles.ratingCard}>
+					{/* {showPopup ? <div  className={styles.ratingCard}>
 										<figure>
 											<h1>נשמח אם תענו על הסקר&nbsp;
 												<a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
@@ -117,8 +118,10 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 												</a>
 											</h1>
 										</figure>
-									</div> : ''}
-					{resultData.laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData.categories, ...value}}></LaptopCard>)}
+									</div> : ''} */}
+					{/* Will render only if bestLaptop exists */}
+					{bestLaptop ? <LaptopCard open {...{categories: resultData.categories, ...bestLaptop}}></LaptopCard> : ''}
+					{/* {resultData.laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData.categories, ...value}}></LaptopCard>)} */}
 				</section>
 			</>
 		)
