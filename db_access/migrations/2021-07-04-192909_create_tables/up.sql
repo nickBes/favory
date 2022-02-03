@@ -52,3 +52,10 @@ CREATE TABLE laptop_image (
 	laptop_id INTEGER REFERENCES laptop(id) NOT NULL,
 	image_url TEXT NOT NULL
 );
+
+CREATE TABLE laptop_specs (
+	id SERIAL PRIMARY KEY,
+	laptop_id INTEGER REFERENCES laptop(id) NOT NULL,
+	ram_gigabytes INTEGER NOT NULL,
+	weight_grams REAL NOT NULL
+);

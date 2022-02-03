@@ -162,3 +162,21 @@ pub struct NewLaptopImage<'a>{
     pub laptop_id: i32,
     pub image_url: &'a str,
 }
+
+#[derive(Debug, Identifiable, Queryable, Associations)]
+#[belongs_to(Laptop)]
+#[table_name = "laptop_specs"]
+pub struct LaptopSpecs{
+    pub id: i32,
+    pub laptop_id: i32,
+    pub ram_gigabytes: i32,
+    pub weight_grams: f32,
+}
+
+#[derive(Debug, Insertable)]
+#[table_name = "laptop_specs"]
+pub struct NewLaptopSpecs{
+    pub laptop_id: i32,
+    pub ram_gigabytes: i32,
+    pub weight_grams: f32,
+}

@@ -6,3 +6,4 @@ DROP TABLE laptop;
 DROP TABLE global_benchmark;
 DROP TABLE category;
 DROP TABLE price_limits;
+DROP TABLE laptop_specs;
