@@ -7,10 +7,11 @@ import CategoryScore from './categoryScore'
 
 interface LaptopCardProps extends SelectedLaptop{
 	categories: string[]
+	open?: true
 }
 
-const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, score, scoresInCategories, categories}) => {
-	const [clickedDesc, setClickedDesc] = useState(false)
+const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, open, scoresInCategories, categories, cpu, gpu}) => {
+	const [clickedDesc, setClickedDesc] = useState(open === undefined ? false : true)
 
 	const toggleDesc = () => {
 		setClickedDesc(prev => {
@@ -24,8 +25,7 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, sco
 				<div className={styles.mainCardInfo}> 
 					<figcaption className={styles.laptopCardText}>
 						<h1>{name}</h1>
-						<p>מחיר: {price} ש&quot;ח</p>
-						<p>ציון התאמה: {Math.round(score)}</p>
+						<p>{price} ש&quot;ח</p>
 						<a href={url}><button>צפה</button></a>
 					</figcaption>
 					<div className={styles.laptopImage}><LaptopImages imageUrls={imageUrls} /></div>
@@ -39,6 +39,19 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, sco
 											return <CategoryScore key={index} color={categoryData.color} name={categoryData.title} score={Math.round(scoresInCategories[category] * 100)}/>
 										}
 							})}
+						</div>
+						<div>
+							<h1>מפרט טכני</h1>
+							<table>
+								<tr>
+									<td>מעבד</td>
+									<td>{cpu}</td>
+								</tr>
+								<tr>
+									<td>כרטיס מסך</td>
+									<td>{gpu}</td>
+								</tr>
+							</table>
 						</div>
 					</div>
 				</div>

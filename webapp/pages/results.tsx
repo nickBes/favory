@@ -103,13 +103,19 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 			// if no laptops were be found, return an empty element just to let the redirect happen.
 			return (<></>);
 		}
-		const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
-		const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
+		// not using the popup, see #228
+		// const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
+		// const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
+		const bestLaptop = resultData.laptops.shift()
 		return (
 			<>
 				<Navbar path={router.pathname}></Navbar>
 				<section className={styles.laptopCardWrapper}>
-					{showPopup ? <div  className={styles.ratingCard}>
+					<div className={styles.infoTitle}>
+						<h1>המחשב הנייד שבחרנו</h1>
+						<p>גללו למטה למחשבים דומים</p>
+					</div>
+					{/* {showPopup ? <div  className={styles.ratingCard}>
 										<figure>
 											<h1>נשמח אם תענו על הסקר&nbsp;
 												<a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
@@ -117,7 +123,9 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 												</a>
 											</h1>
 										</figure>
-									</div> : ''}
+									</div> : ''} */}
+					{/* Will render only if bestLaptop exists */}
+					{bestLaptop ? <LaptopCard open {...{categories: resultData.categories, ...bestLaptop}}></LaptopCard> : ''}
 					{resultData.laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData.categories, ...value}}></LaptopCard>)}
 				</section>
 			</>
