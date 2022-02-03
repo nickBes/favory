@@ -33,6 +33,8 @@ pub struct SelectedLaptop {
     pub cpu: String,
     pub gpu: String,
     pub image_urls: Vec<String>,
+    pub ram_gigabytes: i32,
+    pub weight_grams: f32,
     pub scores_in_categories: HashMap<String, f32>,
     pub score: f32,
 }
@@ -134,11 +136,20 @@ impl FetchData for SelectorDBConnection {
             .into_selector_result(SelectorErrorKind::DatabaseError)?;
         let mut selected_laptops = Vec::new();
         for laptop in laptops {
+            // load the image urls
             let image_urls: Vec<String> = models::LaptopImage::belonging_to(&laptop)
                 .select(laptop_image::image_url)
                 .load(&self.0)
                 .into_selector_result(SelectorErrorKind::DatabaseError)?;
+
+            // load the specs
+            let laptop_specs: models::LaptopSpecs = models::LaptopSpecs::belonging_to(&laptop)
+                .first(&self.0)
+                .into_selector_result(SelectorErrorKind::DatabaseError)?;
+
+            // find the score and socres in categories
             let (score, scores_in_categories) = &id_to_scores_map[&laptop.id];
+
             selected_laptops.push(SelectedLaptop {
                 name: laptop.name,
                 url: laptop.url,
@@ -153,6 +164,8 @@ impl FetchData for SelectorDBConnection {
                     .map(|(id, score)| (category_id_to_name_map[&id].clone(), score))
                     .collect(),
                 image_urls,
+                ram_gigabytes: laptop_specs.ram_gigabytes,
+                weight_grams: laptop_specs.weight_grams,
             });
         }
         Ok(selected_laptops)
