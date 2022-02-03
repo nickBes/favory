@@ -13,6 +13,12 @@ pub struct LaptopsFileEntry {
     gpu: String,
     gpu_bench: LaptopPuBenchmarksData,
     image_urls: Vec<String>,
+
+    #[serde(rename = "ram")]
+    ram_gigabytes: i32,
+
+    #[serde(rename = "weight")]
+    weight_grams: f32,
 }
 impl LaptopsFileEntry {
     fn name_and_information(self) -> (String, LaptopInformation) {
@@ -25,10 +31,23 @@ impl LaptopsFileEntry {
             gpu,
             gpu_bench,
             image_urls,
+            weight_grams,
+            ram_gigabytes,
         } = self;
-        (name, LaptopInformation{
-            url,price,cpu,cpu_bench, gpu,gpu_bench, image_urls
-        })
+        (
+            name,
+            LaptopInformation {
+                url,
+                price,
+                cpu,
+                cpu_bench,
+                gpu,
+                gpu_bench,
+                image_urls,
+                ram_gigabytes,
+                weight_grams,
+            },
+        )
     }
 }
 
@@ -41,6 +60,8 @@ pub struct LaptopInformation {
     pub gpu: String,
     pub gpu_bench: LaptopPuBenchmarksData,
     pub image_urls: Vec<String>,
+    pub ram_gigabytes: i32,
+    pub weight_grams: f32,
 }
 
 /// the benchmarks of the cpu or gpu in a laptop object from the laptops.json file,
@@ -69,13 +90,16 @@ impl LaptopSet {
                 let existing_laptop = occupied_entry.get_mut();
 
                 // get the fields that we need from the new laptop's information
-                let LaptopInformation{
-                    image_urls: new_image_urls, price: new_price, url: new_url, ..
+                let LaptopInformation {
+                    image_urls: new_image_urls,
+                    price: new_price,
+                    url: new_url,
+                    ..
                 } = new_laptop_information;
 
                 // if the new laptop has image urls, while the existing one doesn't,
                 // add the image urls of the new one to the existing laptop
-                if existing_laptop.image_urls.is_empty() && !new_image_urls.is_empty(){
+                if existing_laptop.image_urls.is_empty() && !new_image_urls.is_empty() {
                     existing_laptop.image_urls = new_image_urls;
                 }
 
@@ -83,7 +107,7 @@ impl LaptopSet {
                 // use the price of the new laptop, which is the lower price.
                 // if we use the price of the new laptop, we must also update the url
                 // to the url of the new laptop
-                if new_price < existing_laptop.price{
+                if new_price < existing_laptop.price {
                     existing_laptop.price = new_price;
                     existing_laptop.url = new_url;
                 }
@@ -94,8 +118,8 @@ impl LaptopSet {
             }
         }
     }
-    
-    pub fn laptop_infos_by_name(self)->HashMap<String, LaptopInformation>{
+
+    pub fn laptop_infos_by_name(self) -> HashMap<String, LaptopInformation> {
         self.laptop_infos_by_name
     }
 }
