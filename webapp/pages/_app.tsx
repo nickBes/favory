@@ -5,6 +5,7 @@ import type { AppProps } from 'next/app'
 import Scrollable from '../components/navigation/scrollable'
 import Footer from '@/components/footer/footer'
 import { useRouter } from 'next/router'
+import Script from 'next/script'
 
 interface pathData {
   title: string
@@ -58,6 +59,7 @@ const App : React.FC <AppProps> = ({ Component, pageProps }) => {
 
   return (
       <>
+	<Script src="hj.js" />
         <Head>
           <link rel="shortcut icon" href="/favicon.ico"/>
           <title>
