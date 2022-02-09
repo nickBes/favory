@@ -23,25 +23,32 @@ fn reverse (pair : &Pair) -> Pair {
     (b, a)
 }
 
-fn calc_node_score (graph: &TestGraph, scores: &mut ScoreMap, index: &NodeIndex<usize>)  -> isize{
-    let mut sum : isize = 1;
+fn calc_node_score (graph: &TestGraph, scores: &mut ScoreMap, index: &NodeIndex<usize>)  -> isize {
+    let mut sum : isize = 1; // we start from one to include the depth of the graph
+
     for edge in graph.edges_directed(*index, Incoming) {
         let parent_index = edge.source();
 
         match scores.get(&parent_index) {
+            // score exists, add it to the calculation
             Some(score) => sum += *score * edge.weight(),
+            // score doesn't exist, calculate it
             _ => {
                 sum += calc_node_score(graph, scores, &parent_index) * edge.weight();
             }
         }
     }
     scores.insert(*index, sum);
+    // return in case it was called from a target node
+    // to calculate it;s score
     sum
 }
 
 fn calc_scores (graph: &TestGraph, scores: &mut ScoreMap, source_index : &NodeIndex<usize>) {
     for edge in graph.edges_directed(*source_index, Outgoing) {
         calc_node_score(graph, scores, &edge.target());
+        // continue calculating scores for the outgoing edges
+        // of the current edge's target to transverse the whole graph
         calc_scores(graph, scores, &edge.target());
     }
 }
@@ -151,7 +158,7 @@ fn main() {
                                                             .iter()
                                                             .map(|val| (val.follower, val.followed, val.weight)));
 
-    let mut source_indexes  = Vec::new();
+    let mut source_indexes  = Vec::new(); // we might have multiple sources
     for index in graph.node_indices() {
         // sets the labels for the graph
         if let Some(weight) = graph.node_weight_mut(index) {
@@ -168,9 +175,13 @@ fn main() {
     let mut scores : ScoreMap = HashMap::new();
     for index in source_indexes {
         scores.insert(index, 0);
+        // starts calculating the scores from each source
         calc_scores(&graph, &mut scores, &index);
     }
     for (key, value) in scores.iter() {
+        // we're unwraping because we have calculated the scores for each
+        // node inside the graph, we means that the hash ScoreMap includes
+        // nodes that exist in the map
         println!("Node {}: {}", graph.node_weight(*key).unwrap(), value);
     }
     // prints the graph in the dot format
