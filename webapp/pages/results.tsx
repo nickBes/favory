@@ -13,6 +13,7 @@ import { match } from 'ts-pattern'
 
 // type ClickedPopup = 'true' | 'false'
 
+// a mapping of laptop name to laptop value for algorith purposes
 type LaptopMap = { [name: string] : SelectedLaptop }
 
 type ResultsPageInvalidFieldError = {
@@ -87,8 +88,6 @@ function laptopsWithPlacements (data : ResultSuccessData) {
 			}
 		})
 	})
-
-	console.log(map)
 
 	return Object.values(map).sort((first, second) => second.score - first.score)
 }
