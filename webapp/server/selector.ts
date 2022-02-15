@@ -36,7 +36,7 @@ export type SelectedLaptop = {
 	price: number,
 	score: number,
     scoresInCategories: CategoryScoreMap,
-	imageUrls?: string[],
+	imageUrls?: string[]
 }
 
 type SelectorResponse<T> = {
