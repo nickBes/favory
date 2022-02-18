@@ -4,8 +4,8 @@ use crate::laptop_set::LaptopInfosByName;
 use crate::laptop_set::LaptopPuBenchmarksData;
 use crate::laptop_set::LaptopSet;
 use crate::laptop_set::LaptopsFileEntry;
-use bigdecimal::BigDecimal;
 use bigdecimal::Zero;
+use bigdecimal::{BigDecimal, ToPrimitive};
 use db_access::models::NewLaptopImage;
 use db_access::{models, schema};
 use diesel::prelude::*;
@@ -28,22 +28,27 @@ const LAPTOPS_DIR_PATH: &str = "laptops";
 // since this struct is stored in a hashmap that maps each global benchmark's name
 // to this struct which contains its info.
 #[derive(Debug)]
-struct GlobalBenchmarkInfo {
-    max: f32,
-    sum: BigDecimal,
-    amount: i64,
+pub struct GlobalBenchmarkInfo {
+    pub max: f32,
+    pub sum: BigDecimal,
+    pub amount: i64,
 }
 impl GlobalBenchmarkInfo {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             max: 0.0,
             sum: BigDecimal::zero(),
             amount: 0,
         }
     }
-
-    // updates the global benchmark info according to a single benchmark score
-    fn update(&mut self, score: f32) {
+    /// The average score of this benchmark
+    pub fn average(&self) -> f32 {
+        // it is safe to unwrap here since, if the max can be stored as an f32, then the average must be
+        // in the range of f32
+        (&self.sum / self.amount).to_f32().unwrap()
+    }
+    /// updates the global benchmark info according to a single benchmark score
+    pub fn update(&mut self, score: f32) {
         self.sum += BigDecimal::from(score);
         self.amount += 1;
         if score > self.max {
@@ -54,9 +59,9 @@ impl GlobalBenchmarkInfo {
 
 /// the minimum and maximum laptop price
 #[derive(Debug)]
-struct PriceLimits {
-    max: Option<f32>,
-    min: Option<f32>,
+pub struct PriceLimits {
+    pub max: Option<f32>,
+    pub min: Option<f32>,
 }
 impl PriceLimits {
     pub fn new() -> Self {
@@ -121,7 +126,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     delete_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
 
     println!("loading the laptops file...");
-    let laptops = parse_laptops_files()?;
+    let laptops = parse_laptops_files(LAPTOPS_DIR_PATH)?;
 
     println!("calculating global benchmarks...");
     // calculate the global benchmarks
@@ -146,8 +151,8 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     )?;
     println!("inserted {} laptops", laptops.len());
 
-    println!("inserting price limits...");
-    insert_price_limits(&price_limits, db_connection)?;
+    println!("upserting price limits...");
+    upsert_price_limits(&price_limits, db_connection)?;
 
     println!("successfully loaded laptops");
     Ok(())
@@ -175,6 +180,47 @@ fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnect
     Ok(())
 }
 
+/// returns a list of insertable laptop images from the laptop
+pub fn convert_image_urls_to_insertable_structs(
+    laptop: &LaptopInformation,
+    id: i32,
+) -> Vec<NewLaptopImage> {
+    let mut laptop_images = Vec::new();
+    for image_url in &laptop.image_urls {
+        laptop_images.push(models::NewLaptopImage {
+            laptop_id: id,
+            image_url: &image_url,
+        });
+    }
+    laptop_images
+}
+
+/// converts the given benchmarks to the insertable benchmark struct NewBenchmark,
+/// and inserts them into the insertable_structs vector.
+/// the prefix is used to specify the pu type of the benchmarks, since we are not using
+/// 2 different tables, one for each pu type, and instead the first character of the benchmark's
+/// name specifies its pu type.
+pub fn convert_benchmarks_to_insertable_structs(
+    benchmarks: &LaptopPuBenchmarksData,
+    insertable_structs: &mut Vec<models::NewBenchmark>,
+    prefix: char,
+    laptop_id: i32,
+    global_benchmarks_id_by_name: &HashMap<String, i32>,
+) {
+    for (benchmark_name, &score) in benchmarks {
+        let global_benchmark_name = format!("{}{}", prefix, benchmark_name);
+        insertable_structs.push(models::NewBenchmark {
+            laptop_id,
+            // it is safe to unwrap here because the global benchmarks were calculated according to these benchmarks,
+            // so each benchmarks must have a global benchmark.
+            global_benchmark_id: *global_benchmarks_id_by_name
+                .get(&global_benchmark_name)
+                .unwrap(),
+            score,
+        });
+    }
+}
+
 /// inserts each laptops in the laptops file and its corresponding benchmarks
 /// into the database. while iterating through the laptops also finds the laptops price limits,
 /// to avoid iterating over the laptops twice, which improves performance.
@@ -187,50 +233,9 @@ fn insert_laptops_benchmarks_and_image_urls(
     use schema::laptop;
     use schema::laptop_image;
 
-    /// returns a list of insertable laptop images from the laptop
-    fn convert_image_urls_to_insertable_structs(
-        laptop: &LaptopInformation,
-        id: i32,
-    ) -> Vec<NewLaptopImage> {
-        let mut laptop_images = Vec::new();
-        for image_url in &laptop.image_urls {
-            laptop_images.push(models::NewLaptopImage {
-                laptop_id: id,
-                image_url: &image_url,
-            });
-        }
-        laptop_images
-    }
-
-    /// converts the given benchmarks to the insertable benchmark struct NewBenchmark,
-    /// and inserts them into the insertable_structs vector.
-    /// the prefix is used to specify the pu type of the benchmarks, since we are not using
-    /// 2 different tables, one for each pu type, and instead the first character of the benchmark's
-    /// name specifies its pu type.
-    fn convert_benchmarks_to_insertable_structs(
-        benchmarks: &LaptopPuBenchmarksData,
-        insertable_structs: &mut Vec<models::NewBenchmark>,
-        prefix: char,
-        laptop_id: i32,
-        global_benchmarks_id_by_name: &HashMap<String, i32>,
-    ) {
-        for (benchmark_name, &score) in benchmarks {
-            let global_benchmark_name = format!("{}{}", prefix, benchmark_name);
-            insertable_structs.push(models::NewBenchmark {
-                laptop_id,
-                // it is safe to unwrap here because the global benchmarks were calculated according to these benchmarks,
-                // so each benchmarks must have a global benchmark.
-                global_benchmark_id: *global_benchmarks_id_by_name
-                    .get(&global_benchmark_name)
-                    .unwrap(),
-                score,
-            });
-        }
-    }
-
     let mut price_limits = PriceLimits::new();
 
-    for (laptop_name,laptop_info) in laptops {
+    for (laptop_name, laptop_info) in laptops {
         // update the price limits according to the laptop's price
         price_limits.update(laptop_info.price);
 
@@ -281,33 +286,33 @@ fn insert_laptops_benchmarks_and_image_urls(
     Ok(price_limits)
 }
 
+/// updates the info of the global benchmarks according to each of given the benchmarks
+/// the prefix is used to specify the pu type of the benchmarks, since we are not using
+/// 2 different tables, one for each pu type, and instead the first character of the benchmark's
+/// name specifies its pu type.
+pub fn update_info_according_to_benchmarks(
+    benchmarks: &LaptopPuBenchmarksData,
+    info_by_name: &mut HashMap<String, GlobalBenchmarkInfo>,
+    prefix: char,
+) {
+    for (benchmark_name, &score) in benchmarks {
+        let global_benchmark_name = format!("{}{}", prefix, benchmark_name);
+        // find the entry or insert a new one if it does not exist, and update it with the benchmark's average score
+        info_by_name
+            .entry(global_benchmark_name)
+            .or_insert_with(GlobalBenchmarkInfo::new)
+            .update(score);
+    }
+}
+
 /// calculates the information about each global benchmark according to the benchmarks in the laptops file.
 /// this is used to avoid executing a lot of update queries when inserting the benchmarks, to update the global
 /// benchmarks each time, and instead it precalculates them and inserts them in only a single query. Thus, there
 /// is no need to update the global benchmarks when inserting the benchmarks, and the whole process of calculating
 /// the global benchmarks was redurced to a single query.
 fn calculate_global_benchmarks(
-    laptops: &LaptopInfosByName
+    laptops: &LaptopInfosByName,
 ) -> HashMap<String, GlobalBenchmarkInfo> {
-    /// updates the info of the global benchmarks according to each of given the benchmarks
-    /// the prefix is used to specify the pu type of the benchmarks, since we are not using
-    /// 2 different tables, one for each pu type, and instead the first character of the benchmark's
-    /// name specifies its pu type.
-    fn update_info_according_to_benchmarks(
-        benchmarks: &LaptopPuBenchmarksData,
-        info_by_name: &mut HashMap<String, GlobalBenchmarkInfo>,
-        prefix: char,
-    ) {
-        for (benchmark_name, &score) in benchmarks {
-            let global_benchmark_name = format!("{}{}", prefix, benchmark_name);
-            // find the entry or insert a new one if it does not exist, and update it with the benchmark's average score
-            info_by_name
-                .entry(global_benchmark_name)
-                .or_insert_with(GlobalBenchmarkInfo::new)
-                .update(score);
-        }
-    }
-
     let mut info_by_name = HashMap::new();
     for laptop_info in laptops.values() {
         update_info_according_to_benchmarks(&laptop_info.cpu_bench, &mut info_by_name, 'c');
@@ -352,10 +357,10 @@ fn insert_and_map_global_benchmarks(
     Ok(global_benchmarks_map)
 }
 
-fn parse_laptops_files() -> Result<LaptopInfosByName> {
+pub fn parse_laptops_files(dir_path: &str) -> Result<LaptopInfosByName> {
     let mut laptops = LaptopSet::new();
 
-    for laptops_dir_entry in read_dir(LAPTOPS_DIR_PATH)
+    for laptops_dir_entry in read_dir(dir_path)
         .into_data_processor_result(DataProcessorErrorKind::FailedToReadLaptopsDirectory)?
     {
         let laptops_dir_entry = laptops_dir_entry
@@ -369,19 +374,24 @@ fn parse_laptops_files() -> Result<LaptopInfosByName> {
             // if the file's name matches the laptops files regex, load the file
             if LAPTOPS_FILES_REGEX.is_match(&file_name) {
                 // find the path of the file
-                let file_path = format!("{}/{}", LAPTOPS_DIR_PATH, file_name);
+                let file_path = format!("{}/{}", dir_path, file_name);
 
                 let laptops_file = OpenOptions::new()
                     .read(true)
                     .open(&file_path)
                     .into_data_processor_result(
-                        DataProcessorErrorKind::FailedToOpenLaptopsFile { name: file_name.to_string() },
+                        DataProcessorErrorKind::FailedToOpenLaptopsFile {
+                            name: file_name.to_string(),
+                        },
                     )?;
-                let new_laptops:Vec<LaptopsFileEntry> = serde_json::de::from_reader(laptops_file).into_data_processor_result(
-                    DataProcessorErrorKind::FailedToDeserializeLaptopsFile { name: file_name.to_string() },
-                )?;
-                
-                for new_laptop in new_laptops{
+                let new_laptops: Vec<LaptopsFileEntry> = serde_json::de::from_reader(laptops_file)
+                    .into_data_processor_result(
+                        DataProcessorErrorKind::FailedToDeserializeLaptopsFile {
+                            name: file_name.to_string(),
+                        },
+                    )?;
+
+                for new_laptop in new_laptops {
                     laptops.update(new_laptop);
                 }
             }
@@ -391,9 +401,9 @@ fn parse_laptops_files() -> Result<LaptopInfosByName> {
     Ok(laptops.laptop_infos_by_name())
 }
 
-/// saves the given price limits to the database, if it actually contains the price limits
+/// saves the given price limits to the database, if both ends of the price limits are not `None`
 /// (the min and max fields are not None)
-fn insert_price_limits(price_limits: &PriceLimits, db_connection: &PgConnection) -> Result<()> {
+pub fn upsert_price_limits(price_limits: &PriceLimits, db_connection: &PgConnection) -> Result<()> {
     // notice the rename here to avoid conflicting with the argument called price_limits
     use schema::price_limits::dsl::{id, max_price, min_price, price_limits as price_limits_table};
 

@@ -12,6 +12,7 @@ pub enum DataProcessorCliCommand{
     LoadLaptops,
     CalculateScores,
     ReloadAll,
+    Recalculate,
 }
 
 impl CliCommandEnum for DataProcessorCliCommand{}
@@ -23,5 +24,6 @@ pub fn create_data_processor_cli()->Cli<DataProcessorCliCommand>{
         "load laptops".to_string() => DataProcessorCliCommand::LoadLaptops,
         "calculate scores".to_string() => DataProcessorCliCommand::CalculateScores,
         "reload all".to_string() => DataProcessorCliCommand::ReloadAll,
+        "recalculate".to_string() => DataProcessorCliCommand::Recalculate,
     })
 }

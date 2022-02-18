@@ -1,6 +1,6 @@
 CREATE TABLE laptop (
 	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL,
+	name TEXT NOT NULL UNIQUE,
 	url TEXT NOT NULL,
 	price REAL NOT NULL,
 	cpu TEXT NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE category (
 
 CREATE TABLE global_benchmark (
 	id SERIAL PRIMARY KEY,
-	name TEXT NOT NULL,
+	name TEXT NOT NULL UNIQUE,
 	max REAL NOT NULL,
 	sum NUMERIC(18, 3) NOT NULL,
 	amount BIGINT NOT NULL
