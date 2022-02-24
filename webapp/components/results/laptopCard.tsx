@@ -7,7 +7,7 @@ import CategoryScore from './categoryScore'
 import { Group } from '@mantine/core'
 
 interface LaptopCardProps extends SelectedLaptop{
-	categories?: string[]
+	categories: string[]
 	open?: true
 }
 
@@ -36,12 +36,11 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, ope
 						<h1>ביצועים של המחשב בטווח המחירים שנבחר</h1>
 						<div className={styles.information} >
 							<Group position='center' spacing='xl'>
-								{/* ts linter can't tell if it's undefiend in the result page so i made it possible to be undefined to check that here */}
-								{categories ? matchCategoriesToCategoryMap(categories, defaultCategoryMap, (category, categoryData, index) => {
+								{matchCategoriesToCategoryMap(categories, defaultCategoryMap, (category, categoryData, index) => {
 											if (category in scoresInCategories) { 
 												return <CategoryScore key={index} color={categoryData.color} name={categoryData.title} score={scoresInCategories[category]}/>
 											}
-								}) : ''}
+								})}
 							</Group>
 
 						</div>

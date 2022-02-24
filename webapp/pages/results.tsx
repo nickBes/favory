@@ -68,11 +68,11 @@ type ResultsPageProps =
 
 
 // returns a laptop array with placements instead of percentages
-function laptopsWithPlacements (data : ResultSuccessData) {
+function laptopsWithPlacements (data : ResultSuccessData) : SelectedLaptop[]{
 	let map : LaptopMap = {}
 	let laptopsCopy = [...data.laptops]
 	data.categories.forEach(category => {
-		// sort the scores for each category
+		// sort the scores for each category descendingly
 		laptopsCopy.sort((first, second) => {
 			return second.scoresInCategories[category] - first.scoresInCategories[category]
 		})
@@ -82,9 +82,8 @@ function laptopsWithPlacements (data : ResultSuccessData) {
 			if (map[laptop.name]) {
 				map[laptop.name].scoresInCategories[category] = index + 1
 			} else {
-				map[laptop.name] = {...laptop}
-				map[laptop.name].scoresInCategories = {}
-				map[laptop.name].scoresInCategories[category] = index + 1
+				// one liner for re-setting category scores
+				map[laptop.name] = {...laptop, scoresInCategories: {[category] : index + 1}}
 			}
 		})
 	})
@@ -158,7 +157,7 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 										</div> : ''} */}
 						{/* Will render only if bestLaptop exists */}
 						{bestLaptop ? <LaptopCard open {...{categories: resultData.categories, ...bestLaptop}}></LaptopCard> : ''}
-						{laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData?.categories, ...value}}></LaptopCard>)}
+						{laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData.categories, ...value}}></LaptopCard>)}
 					</section>
 				</>
 			)
