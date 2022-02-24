@@ -139,7 +139,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
 
     println!("inserting laptops, benchmarks and image urls...");
     // insert the laptops and benchmarks
-    let price_limits = insert_laptops_and_benchmarks_and_image_urls_and_specs(
+    let price_limits = insert_laptops_and_dependents(
         &laptops,
         &global_benchmarks_id_by_name,
         db_connection,
@@ -182,7 +182,7 @@ fn delete_laptops_and_dependents(db_connection: &PgConnection) -> Result<()> {
 /// inserts each laptops in the laptops file and its corresponding benchmarks, images, and specs.
 /// into the database. while iterating through the laptops also finds the laptops price limits,
 /// to avoid iterating over the laptops twice, which improves performance.
-fn insert_laptops_and_benchmarks_and_image_urls_and_specs(
+fn insert_laptops_and_dependents(
     laptops: &LaptopInfosByName,
     global_benchmarks_id_by_name: &HashMap<String, i32>,
     db_connection: &PgConnection,
