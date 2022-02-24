@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import Error from '@/components/error/error'
 import { GetServerSideProps } from 'next'
@@ -307,6 +307,7 @@ async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<Resu
 				data: resultData
 			}
 		} catch (e) {
+			console.log((e as Error).message)
 			return {
 				success: false,
 				error: {
