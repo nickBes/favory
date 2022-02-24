@@ -128,8 +128,11 @@ const Home: React.FC<HomeProps> = ({categories, priceLimits}) => {
                         <div>
                           <figure className={styles.sliderTooltip}>
 							{/* make sure data.white is not undefined */}
-                            <div className={styles.sliderTooltipImage}><Image width={100} height={100} src={data.white as StaticImageData} alt={data.title}></Image></div>
-                            <figcaption>{Math.round(boneWidth * 100)}%</figcaption>
+							<div className={styles.sliderData}>                        
+								<div className={styles.sliderTooltipImage}><Image width={100} height={100} src={data.white as StaticImageData} alt={data.title}></Image></div>
+								<figcaption>{Math.round(boneWidth * 100)}%</figcaption>
+							</div>
+							<p>{data.title}</p>
                           </figure>
                         </div>
                       )
