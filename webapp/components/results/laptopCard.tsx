@@ -61,7 +61,8 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, ope
 								</tr>
 								<tr>
 									<td>משקל</td>
-									<td>{weightGrams.toFixed(1)} גרם</td>
+									{/* parses weight score into KG */}
+									<td>{(1000/weightGrams).toFixed(2)} קילוגרם</td>
 								</tr>
 							</table>
 						</div>
