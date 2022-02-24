@@ -62,6 +62,15 @@ table! {
 }
 
 table! {
+    laptop_specs (id) {
+        id -> Int4,
+        laptop_id -> Int4,
+        ram_gigabytes -> Int4,
+        weight_grams -> Float4,
+    }
+}
+
+table! {
     price_limits (id) {
         id -> Int4,
         max_price -> Float4,
@@ -76,6 +85,7 @@ joinable!(benchmark_score_in_category -> global_benchmark (global_benchmark_id))
 joinable!(laptop_image -> laptop (laptop_id));
 joinable!(laptop_score_in_category -> category (category_id));
 joinable!(laptop_score_in_category -> laptop (laptop_id));
+joinable!(laptop_specs -> laptop (laptop_id));
 
 allow_tables_to_appear_in_same_query!(
     benchmark,
@@ -85,5 +95,6 @@ allow_tables_to_appear_in_same_query!(
     laptop,
     laptop_image,
     laptop_score_in_category,
+    laptop_specs,
     price_limits,
 );

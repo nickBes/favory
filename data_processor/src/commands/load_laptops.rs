@@ -6,8 +6,8 @@ use crate::laptop_set::LaptopSet;
 use crate::laptop_set::LaptopsFileEntry;
 use bigdecimal::BigDecimal;
 use bigdecimal::Zero;
-use db_access::models::NewLaptopImage;
 use db_access::{models, schema};
+use db_access::models::NewLaptopImage;
 use diesel::prelude::*;
 
 use diesel::PgConnection;
@@ -118,7 +118,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     // so that we don't have duplicates. note that no update mechanism is used here
     // even though it could increase performance, because the data-processor currently
     // only needs to run once, and performs no recalculations.
-    delete_laptops_and_benchmarks_and_global_benchmarks(db_connection)?;
+    delete_laptops_and_dependents(db_connection)?;
 
     println!("loading the laptops file...");
     let laptops = parse_laptops_files()?;
@@ -139,7 +139,7 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
 
     println!("inserting laptops, benchmarks and image urls...");
     // insert the laptops and benchmarks
-    let price_limits = insert_laptops_benchmarks_and_image_urls(
+    let price_limits = insert_laptops_and_dependents(
         &laptops,
         &global_benchmarks_id_by_name,
         db_connection,
@@ -153,13 +153,17 @@ pub fn load_laptops(db_connection: &PgConnection) -> Result<()> {
     Ok(())
 }
 
-/// deletes all laptops, benchmarks and global benchmarks from the database
-fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnection) -> Result<()> {
+/// deletes all laptops, and everything that depends on them.
+fn delete_laptops_and_dependents(db_connection: &PgConnection) -> Result<()> {
     use schema::benchmark;
     use schema::global_benchmark;
     use schema::laptop;
     use schema::laptop_image;
+    use schema::laptop_specs;
 
+    diesel::delete(laptop_specs::table)
+        .execute(db_connection)
+        .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
     diesel::delete(laptop_image::table)
         .execute(db_connection)
         .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
@@ -175,10 +179,10 @@ fn delete_laptops_and_benchmarks_and_global_benchmarks(db_connection: &PgConnect
     Ok(())
 }
 
-/// inserts each laptops in the laptops file and its corresponding benchmarks
+/// inserts each laptops in the laptops file and its corresponding benchmarks, images, and specs.
 /// into the database. while iterating through the laptops also finds the laptops price limits,
 /// to avoid iterating over the laptops twice, which improves performance.
-fn insert_laptops_benchmarks_and_image_urls(
+fn insert_laptops_and_dependents(
     laptops: &LaptopInfosByName,
     global_benchmarks_id_by_name: &HashMap<String, i32>,
     db_connection: &PgConnection,
@@ -186,9 +190,10 @@ fn insert_laptops_benchmarks_and_image_urls(
     use schema::benchmark;
     use schema::laptop;
     use schema::laptop_image;
+    use schema::laptop_specs;
 
     /// returns a list of insertable laptop images from the laptop
-    fn convert_image_urls_to_insertable_structs(
+    fn generate_image_urls_to_insertable_structs(
         laptop: &LaptopInformation,
         id: i32,
     ) -> Vec<NewLaptopImage> {
@@ -230,7 +235,7 @@ fn insert_laptops_benchmarks_and_image_urls(
 
     let mut price_limits = PriceLimits::new();
 
-    for (laptop_name,laptop_info) in laptops {
+    for (laptop_name, laptop_info) in laptops {
         // update the price limits according to the laptop's price
         price_limits.update(laptop_info.price);
 
@@ -271,10 +276,22 @@ fn insert_laptops_benchmarks_and_image_urls(
             .execute(db_connection)
             .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
 
+        // insert the image urls
         let new_image_urls =
-            convert_image_urls_to_insertable_structs(laptop_info, inserted_laptop_id);
+            generate_image_urls_to_insertable_structs(laptop_info, inserted_laptop_id);
         diesel::insert_into(laptop_image::table)
             .values(new_image_urls.as_slice())
+            .execute(db_connection)
+            .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
+
+        // insert the laptop specs
+        let new_specs = models::NewLaptopSpecs {
+            laptop_id: inserted_laptop_id,
+            ram_gigabytes: laptop_info.ram_gigabytes,
+            weight_grams: laptop_info.weight_grams,
+        };
+        diesel::insert_into(laptop_specs::table)
+            .values([new_specs].as_slice())
             .execute(db_connection)
             .into_data_processor_result(DataProcessorErrorKind::DatabaseError)?;
     }
@@ -287,7 +304,7 @@ fn insert_laptops_benchmarks_and_image_urls(
 /// is no need to update the global benchmarks when inserting the benchmarks, and the whole process of calculating
 /// the global benchmarks was redurced to a single query.
 fn calculate_global_benchmarks(
-    laptops: &LaptopInfosByName
+    laptops: &LaptopInfosByName,
 ) -> HashMap<String, GlobalBenchmarkInfo> {
     /// updates the info of the global benchmarks according to each of given the benchmarks
     /// the prefix is used to specify the pu type of the benchmarks, since we are not using
@@ -375,13 +392,18 @@ fn parse_laptops_files() -> Result<LaptopInfosByName> {
                     .read(true)
                     .open(&file_path)
                     .into_data_processor_result(
-                        DataProcessorErrorKind::FailedToOpenLaptopsFile { name: file_name.to_string() },
+                        DataProcessorErrorKind::FailedToOpenLaptopsFile {
+                            name: file_name.to_string(),
+                        },
                     )?;
-                let new_laptops:Vec<LaptopsFileEntry> = serde_json::de::from_reader(laptops_file).into_data_processor_result(
-                    DataProcessorErrorKind::FailedToDeserializeLaptopsFile { name: file_name.to_string() },
-                )?;
-                
-                for new_laptop in new_laptops{
+                let new_laptops: Vec<LaptopsFileEntry> = serde_json::de::from_reader(laptops_file)
+                    .into_data_processor_result(
+                        DataProcessorErrorKind::FailedToDeserializeLaptopsFile {
+                            name: file_name.to_string(),
+                        },
+                    )?;
+
+                for new_laptop in new_laptops {
                     laptops.update(new_laptop);
                 }
             }
