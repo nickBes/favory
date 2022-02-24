@@ -33,7 +33,7 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, ope
 				</div>
 				<div style={{display: clickedDesc ? 'block' : 'none', width: '100%'}} >
 					<div className={styles.informationWrapper}>
-						<h1>ביצועים של המחשב במחיר שנבחר</h1>
+						<h1>ביצועים של המחשב בטווח המחירים שנבחר</h1>
 						<div className={styles.information} >
 							<Group position='center' spacing='xl'>
 								{/* ts linter can't tell if it's undefiend in the result page so i made it possible to be undefined to check that here */}
