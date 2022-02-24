@@ -4,6 +4,7 @@ import { matchCategoriesToCategoryMap , defaultCategoryMap} from '@/server/categ
 import LaptopImages from './laptopImages'
 import styles from './laptop_card.module.scss'
 import CategoryScore from './categoryScore'
+import { Group } from '@mantine/core'
 
 interface LaptopCardProps extends SelectedLaptop{
 	categories: string[]
@@ -32,13 +33,16 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, ope
 				</div>
 				<div style={{display: clickedDesc ? 'block' : 'none', width: '100%'}} >
 					<div className={styles.informationWrapper}>
-						<h1>ביצועים של המחשב בשימושים שנבחרו</h1>
+						<h1>ביצועים של המחשב בטווח המחירים שנבחר</h1>
 						<div className={styles.information} >
-							{matchCategoriesToCategoryMap(categories, defaultCategoryMap, (category, categoryData, index) => {
-										if (category in scoresInCategories) { 
-											return <CategoryScore key={index} color={categoryData.color} name={categoryData.title} score={Math.round(scoresInCategories[category] * 100)}/>
-										}
-							})}
+							<Group position='center' spacing='xl'>
+								{matchCategoriesToCategoryMap(categories, defaultCategoryMap, (category, categoryData, index) => {
+											if (category in scoresInCategories) { 
+												return <CategoryScore key={index} color={categoryData.color} name={categoryData.title} score={scoresInCategories[category]}/>
+											}
+								})}
+							</Group>
+
 						</div>
 						<div>
 							<h1>מפרט טכני</h1>

@@ -1,5 +1,6 @@
+import { Badge, Container, Group, Text } from '@mantine/core'
+import { useMediaQuery } from '@mantine/hooks'
 import React from 'react'
-import styles from './categoryScore.module.scss'
 
 
 interface CategoryScoreProps {
@@ -9,23 +10,23 @@ interface CategoryScoreProps {
 }
 
 const CategoryScore: React.FC<CategoryScoreProps> = ({name, score, color}) => {
+    const matches = useMediaQuery('(min-aspect-ratio:1/1)')
     return (
-        <div className={styles.categoryScoreWrapper}>
-            <div style={{
-                backgroundImage: `conic-gradient(${color ?? '#ffffff'} ${score}%, #e4e4e4 ${score}%)`,
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-                <div className={styles.categoryScoreContent}>
-                    <h3>{name}</h3>
-                    <div>{score}%</div>
-                </div>
-            </div>
-        </div>
+        <Container size='lg'>
+            <Group direction='column' position='center' spacing='xs'>
+                <Text size={matches ? 'lg' : 'sm'}>{name}</Text>
+                <Badge
+                radius='sm'
+                size={matches ? 'xl' : 'lg'} 
+                variant='gradient'
+                gradient={{
+                    from: 'lime',
+                    to: 'green'
+                }}>
+                    מקום #{score}
+                </Badge>
+            </Group>
+        </Container>
     )
 }
 
