@@ -307,7 +307,6 @@ async function performRequestedSelection(query: qs.ParsedUrlQuery): Promise<Resu
 				data: resultData
 			}
 		} catch (e) {
-			console.log((e as Error).message)
 			return {
 				success: false,
 				error: {
