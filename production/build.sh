@@ -1,7 +1,6 @@
 #!/bin/bash
 ./cleanup.sh
-cd favory
-cd selector
+cd ../selector
 . dburl.sh
 cargo build --release
 target/release/selector &

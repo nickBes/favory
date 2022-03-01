@@ -1,6 +1,5 @@
 #!/bin/bash
-cd favory
-cd selector
+cd ../selector
 . dburl.sh
 target/release/selector>stdout 2>stderr &
 cd ../webapp
