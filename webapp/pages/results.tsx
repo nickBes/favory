@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import Error from '@/components/error/error'
 import { GetServerSideProps } from 'next'

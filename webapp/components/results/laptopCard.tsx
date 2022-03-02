@@ -11,7 +11,7 @@ interface LaptopCardProps extends SelectedLaptop{
 	open?: true
 }
 
-const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, open, scoresInCategories, categories, cpu, gpu}) => {
+const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, open, scoresInCategories, categories, cpu, gpu, ramGigabytes, weightGrams}) => {
 	const [clickedDesc, setClickedDesc] = useState(open === undefined ? false : true)
 
 	const toggleDesc = () => {
@@ -54,6 +54,15 @@ const LaptopCard: React.FC<LaptopCardProps> = ({name, price, url, imageUrls, ope
 								<tr>
 									<td>כרטיס מסך</td>
 									<td>{gpu}</td>
+								</tr>
+								<tr>
+									<td>זכרון מחשב</td>
+									<td>{ramGigabytes} ג'יגה בית</td>
+								</tr>
+								<tr>
+									<td>משקל</td>
+									{/* parses weight score into KG */}
+									<td>{(1000/weightGrams).toFixed(2)} קילוגרם</td>
 								</tr>
 							</table>
 						</div>
