@@ -22,3 +22,20 @@ Follow [this](https://gist.github.com/kocisov/2a9567eb51b83dfef48efce02ef3ab06) 
     GRANT favory_readwrite TO data_processor;
     ```
 5. Update your `DATABASE_URL` in each app: `postgres://postgress:username:passwd@localhost/favory`.
+# Starting the server
+1. Go to the production directory:
+	```bash
+	cd ./production/
+	```
+2. Build the project:
+	```bash
+	./build.sh
+	```
+3. Run the server:
+	```bash
+	./run.sh
+	```
+> You might want stop the server using:
+	```bash
+	./cleanup.sh
+	```
