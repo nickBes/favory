@@ -1,17 +1,20 @@
-import React, {useState} from 'react'
-import {useRouter} from 'next/router'
+import React, { useState } from 'react'
+import { useRouter } from 'next/router'
 import Error from '@/components/error/error'
-import {GetServerSideProps} from 'next'
+import { GetServerSideProps } from 'next'
 import Navbar from '@/components/navbar/navbar'
 import getRawBody from 'raw-body'
 import qs from 'querystring'
-import {SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits} from '@/server/selector'
+import { SelectedLaptop, SelectionRequestParameters, select, getCategoryNames, getPriceLimits } from '@/server/selector'
 import LaptopCard from '@/components/results/laptopCard'
 import hasExceededRateLimit from '@/server/rateLimit'
 import styles from '@/styles/results.module.scss'
-import Cookies from 'js-cookie'
+import { match } from 'ts-pattern'
 
-type ClickedPopup = 'true' | 'false'
+// type ClickedPopup = 'true' | 'false'
+
+// a mapping of laptop name to laptop value for algorith purposes
+type LaptopMap = { [name: string] : SelectedLaptop }
 
 type ResultsPageInvalidFieldError = {
 	type: "invalidField",
@@ -63,9 +66,33 @@ type ResultsPageProps =
 	| ResultsPagePropsSuccess
 	| ResultsPagePropsFailure
 
+
+// returns a laptop array with placements instead of percentages
+function laptopsWithPlacements (data : ResultSuccessData) : SelectedLaptop[]{
+	let map : LaptopMap = {}
+	let laptopsCopy = [...data.laptops]
+	data.categories.forEach(category => {
+		// sort the scores for each category descendingly
+		laptopsCopy.sort((first, second) => {
+			return second.scoresInCategories[category] - first.scoresInCategories[category]
+		})
+		// assign the category score for each laptop to be the index
+		// in the sorted array
+		laptopsCopy.forEach((laptop, index) => {
+			if (map[laptop.name]) {
+				map[laptop.name].scoresInCategories[category] = index + 1
+			} else {
+				// one liner for re-setting category scores
+				map[laptop.name] = {...laptop, scoresInCategories: {[category] : index + 1}}
+			}
+		})
+	})
+
+	return Object.values(map).sort((first, second) => second.score - first.score)
+}
+	
 const Results: React.FC<ResultsPageProps> = (pageProps) => {
 	const router = useRouter()
-
 	// using useState here because we need access to the window.localStorage property, and we only 
 	// have access to it inside callbacks to useState and useEffect
 	const [resultData, _] = useState<ResultSuccessData | null>(() => {
@@ -94,43 +121,56 @@ const Results: React.FC<ResultsPageProps> = (pageProps) => {
 			// if the laptops were loaded from the selector, cache them
 			window.localStorage.setItem('resultData', JSON.stringify(pageProps.data))
 
-			return pageProps.data;
+			// parse laptop data && return
+			return pageProps.data
 		}
 	});
 
-	if (pageProps.success) {
-		if (!resultData) {
-			// if no laptops were be found, return an empty element just to let the redirect happen.
-			return (<></>);
-		}
-		const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
-		const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
-		return (
-			<>
-				<Navbar path={router.pathname}></Navbar>
-				<section className={styles.laptopCardWrapper}>
-					{showPopup ? <div  className={styles.ratingCard}>
-										<figure>
-											<h1>נשמח אם תענו על הסקר&nbsp;
-												<a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
-													href='https://docs.google.com/forms/d/e/1FAIpQLSeOFRwkxqDLHSrSqW0qFpobOPEsl4qnsswWHocAtnljVW-Efg/viewform?usp=sf_link'>הזה
-												</a>
-											</h1>
-										</figure>
-									</div> : ''}
-					{resultData.laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData.categories, ...value}}></LaptopCard>)}
+	return match(pageProps)
+		.with({success: true}, () => {
+			if (!resultData) {
+				// no laptops were be found, return an empty element just to let the redirect happen.
+				return (<></>)
+			}
+			let laptops = laptopsWithPlacements(resultData)
+
+			// not using the popup, see #228
+			// const clickedPopup = Cookies.get('clickedPopup') as ClickedPopup | undefined
+			// const showPopup = clickedPopup == 'false' || typeof clickedPopup === 'undefined'
+			const bestLaptop = laptops.shift()
+			return (
+				<>
+					<Navbar path={router.pathname}></Navbar>
+					<section className={styles.laptopCardWrapper}>
+						<div className={styles.infoTitle}>
+							<h1>המחשב הנייד שבחרנו</h1>
+							<p>גללו למטה למחשבים דומים</p>
+						</div>
+						{/* {showPopup ? <div  className={styles.ratingCard}>
+											<figure>
+												<h1>נשמח אם תענו על הסקר&nbsp;
+													<a onClick={() => Cookies.set('clickedPopup', 'true', {path:'/results'})} 
+														href='https://docs.google.com/forms/d/e/1FAIpQLSeOFRwkxqDLHSrSqW0qFpobOPEsl4qnsswWHocAtnljVW-Efg/viewform?usp=sf_link'>הזה
+													</a>
+												</h1>
+											</figure>
+										</div> : ''} */}
+						{/* Will render only if bestLaptop exists */}
+						{bestLaptop ? <LaptopCard open {...{categories: resultData.categories, ...bestLaptop}}></LaptopCard> : ''}
+						{laptops.map((value, index) => <LaptopCard key={index} {...{categories: resultData.categories, ...value}}></LaptopCard>)}
+					</section>
+				</>
+			)
+		})
+		.with({success: false}, (pgProps) => {
+			// somehow include information about the error
+			return (
+				<section>
+					<Navbar path={router.pathname}></Navbar>
+					<Error message={getErrorMessage(pgProps.error)}></Error>
 				</section>
-			</>
-		)
-	} else {
-		// somehow include information about the error
-		return (
-			<section>
-				<Navbar path={router.pathname}></Navbar>
-				<Error message={getErrorMessage(pageProps.error)}></Error>
-			</section>
-		)
-	}
+			)
+		}).run()
 }
 
 export default Results
@@ -165,7 +205,6 @@ function getErrorMessage(error: ResultsPageError): string {
 		return "";
 	}
 }
-
 
 // extracts the selection request from the query
 async function extractSelectionRequestFromQuery(query: qs.ParsedUrlQuery): Promise<SelectionRequestExtractionResult> {

@@ -26,15 +26,19 @@ export type SelectorRequest =
 	}
 
 
-type CategoryScoreMap = { [category: string]: number }
+type CategoryScoreMap = {[category: string]: number}
 
 export type SelectedLaptop = {
 	name: string,
 	url: string,
+	cpu: string,
+	gpu: string,
 	price: number,
 	score: number,
-    scoresInCategories: CategoryScoreMap,
+	scoresInCategories: CategoryScoreMap,
 	imageUrls?: string[],
+	ramGigabytes: number,
+	weightGrams: number,
 }
 
 type SelectorResponse<T> = {
@@ -101,35 +105,35 @@ function createConnectionToSelector() {
 }
 
 // reconnects the production mode socket to the selector server in case of a communication error
-function reconnect(){
-	setTimeout(async ()=>{
+function reconnect() {
+	setTimeout(async () => {
 		await notifyEventsOnSocketError()
 		await setupSocket()
 	}, RECONNECTION_TIMEOUT)
 }
 
 // sets handlers for the the sockets events (connect, data, etc)
-function setSocketEvents(){
-    // only set the reconnection events when in production mode, since in dev mode it keeps 
-    // the socket alive after recompile, which prevents the server from accepting the socket
-    // of the new recompiled version, and it forces you to completely rerun the app, and it
-    // is very annoying
-    if (env == "production"){
-        socket.on('close', reconnect)
-        socket.on('error', ()=>socket.destroy())
-        socket.on('timeout', ()=>socket.destroy())
-    }else{
-        socket.on('error', notifyEventsOnSocketError);
-        socket.on('timeout', notifyEventsOnSocketError);
-    }
-    socket.on('connect', async ()=>{
-        await isConnected.set(true);
-        onConnectedEvent.set();
-    })
-    socket.on('data', async (data)=>{
-        await socketData.set(data)
-        onDataEvent.set();
-    })
+function setSocketEvents() {
+	// only set the reconnection events when in production mode, since in dev mode it keeps 
+	// the socket alive after recompile, which prevents the server from accepting the socket
+	// of the new recompiled version, and it forces you to completely rerun the app, and it
+	// is very annoying
+	if (env == "production") {
+		socket.on('close', reconnect)
+		socket.on('error', () => socket.destroy())
+		socket.on('timeout', () => socket.destroy())
+	} else {
+		socket.on('error', notifyEventsOnSocketError);
+		socket.on('timeout', notifyEventsOnSocketError);
+	}
+	socket.on('connect', async () => {
+		await isConnected.set(true);
+		onConnectedEvent.set();
+	})
+	socket.on('data', async (data) => {
+		await socketData.set(data)
+		onDataEvent.set();
+	})
 }
 
 // notifies the onConnected and onData events to prevent a deadlock
@@ -139,22 +143,22 @@ function setSocketEvents(){
 // `sendRequestaAndGetResponseContent` function, and is currently using
 // the mutex while waiting for the `onData` event, the reconnection
 // will cause a deadlock since it will also try to lock the mutex
-async function notifyEventsOnSocketError(){
-    if (await isConnected.get()){
-        // an error has occured while trying to receive data,
-        // set the onDataEvent to wake the waiting function up,
-        // and set the data to undefined to let the waiting 
-        // function know that an error has occured.
-        await socketData.set(undefined)
-        onDataEvent.set()
-    }else{
-        // an error has occured while trying to connect to the
-        // selector. set the onConnectedEvent to wake the waiting 
-        // function up, and set the isConnected flag to false to let
-        // the waiting function know that an error has occured.
-        await isConnected.set(false)
-        onConnectedEvent.set()
-    }
+async function notifyEventsOnSocketError() {
+	if (await isConnected.get()) {
+		// an error has occured while trying to receive data,
+		// set the onDataEvent to wake the waiting function up,
+		// and set the data to undefined to let the waiting 
+		// function know that an error has occured.
+		await socketData.set(undefined)
+		onDataEvent.set()
+	} else {
+		// an error has occured while trying to connect to the
+		// selector. set the onConnectedEvent to wake the waiting 
+		// function up, and set the isConnected flag to false to let
+		// the waiting function know that an error has occured.
+		await isConnected.set(false)
+		onConnectedEvent.set()
+	}
 }
 
 
@@ -176,71 +180,71 @@ async function setupSocket() {
 
 // sends a request object to the selector server, receives his response, and deserializes it
 // into the R type (where R stands for the response content type).
-async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): Promise<R>{
-    let response: SelectorResponse<R> | undefined;
-    // in development we create a socket for each request, but we only setup the socket
-    // inside of mutex.runExclusive, so we can't check if we're connected at this point.
-    if(env == "production"){
-        // if we're not yet connected, wait until we are
-        // note that this is done outside the mutex to prevent a deadlock, since waiting
-        // for the connected event while the mutex is locked, will block the reconnection process,
-        // since reconnection requires locking the mutex for accessing the socket.
-        if(!await isConnected.get()){
-            await onConnectedEvent.wait();
-        }
-    }
+async function sendRequestaAndGetResponseContent<R>(request: SelectorRequest): Promise<R> {
+	let response: SelectorResponse<R> | undefined;
+	// in development we create a socket for each request, but we only setup the socket
+	// inside of mutex.runExclusive, so we can't check if we're connected at this point.
+	if (env == "production") {
+		// if we're not yet connected, wait until we are
+		// note that this is done outside the mutex to prevent a deadlock, since waiting
+		// for the connected event while the mutex is locked, will block the reconnection process,
+		// since reconnection requires locking the mutex for accessing the socket.
+		if (!await isConnected.get()) {
+			await onConnectedEvent.wait();
+		}
+	}
 
 
-    await mutex.runExclusive(async () => {
-        // in development mode, create a new socket for each selection request, and then close
-        // it when we're done. This is neccessary since when nextjs recompiles our project
-        // it doesn't close the socket from the previous version of the webapp, and thus it blocks
-        // the server from accepting the new socket of the new webapp. So instead we use a new socket
-        // for each selection request, so we can make sure it is closed when we're done selecting.
-        // for more info see #25.
-        if (env == "development"){
-            setupSocketWithoutLocking();
-            await onConnectedEvent.wait();
-        }
+	await mutex.runExclusive(async () => {
+		// in development mode, create a new socket for each selection request, and then close
+		// it when we're done. This is neccessary since when nextjs recompiles our project
+		// it doesn't close the socket from the previous version of the webapp, and thus it blocks
+		// the server from accepting the new socket of the new webapp. So instead we use a new socket
+		// for each selection request, so we can make sure it is closed when we're done selecting.
+		// for more info see #25.
+		if (env == "development") {
+			setupSocketWithoutLocking();
+			await onConnectedEvent.wait();
+		}
 
-        // make sure we reset the on data event before sending,
-        // so that we won't accidentally reset it after receiving the mesage
-        onDataEvent.reset();
+		// make sure we reset the on data event before sending,
+		// so that we won't accidentally reset it after receiving the mesage
+		onDataEvent.reset();
 
-        // send the message
-        socket.write(JSON.stringify(request))
+		// send the message
+		socket.write(JSON.stringify(request))
 
-        // wait for data
-        await onDataEvent.wait();
-        
-        // decode the data
-        let responseString = (await socketData.get())?.toString();
-        if(responseString == undefined){
+		// wait for data
+		await onDataEvent.wait();
+
+		// decode the data
+		let responseString = (await socketData.get())?.toString();
+		if (responseString == undefined) {
 			// if the onDataEvent was set but no data was recevied then it means
 			// that a socket error occured and we should retry once reconnected
 			return await sendRequestaAndGetResponseContent(request)
-        }
+		}
 
-        // parse the data
-        response = JSON.parse(responseString)
-        
-        // if we're in development mode, we close the socket when we're done,
-        // since in development mode a new socket is created for each selection request.
-        // for more information about this see #25.
-        if (env == "development"){
-            socket.destroy();
-        }
-    })
+		// parse the data
+		response = JSON.parse(responseString)
+
+		// if we're in development mode, we close the socket when we're done,
+		// since in development mode a new socket is created for each selection request.
+		// for more information about this see #25.
+		if (env == "development") {
+			socket.destroy();
+		}
+	})
 
 	// the response is undefined if a socket error has occured,
 	// so we should retry to perform the request
-    if(response === undefined){
+	if (response === undefined) {
 		return await sendRequestaAndGetResponseContent(request)
-    }
-    if(!response.success || response.content === null){
-        throw new Error('the selector returned a failure response')
-    }
-    return response.content;
+	}
+	if (!response.success || response.content === null) {
+		throw new Error('the selector returned a failure response')
+	}
+	return response.content;
 }
 
 // sends the selection request to the selector and returns the selection results
@@ -283,10 +287,10 @@ export async function getCategoryNames(): Promise<string[]> {
 
 // returns the cached price limits, which were fetched from the selector using
 // the `fetchCategoryNamesAndPriceLimits` function.
-export async function getPriceLimits(): Promise<PriceLimits>{
-    let cachedData = await getCachedCategoryNamesAndPriceLimits();
-    return {
-        max: cachedData.maxPrice,
-        min: cachedData.minPrice
-    }
+export async function getPriceLimits(): Promise<PriceLimits> {
+	let cachedData = await getCachedCategoryNamesAndPriceLimits();
+	return {
+		max: cachedData.maxPrice,
+		min: cachedData.minPrice
+	}
 }
