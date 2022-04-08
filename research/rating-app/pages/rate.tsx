@@ -1,12 +1,8 @@
 import React, { useState } from "react"
-import { ReactSortable } from "react-sortablejs"
+import Sortable, { Laptop } from "@/components/sortable"
+import Button from "@/components/utils/button"
 
-interface Laptop {
-    id: number
-    name: string
-}
-
-const count = 20
+const count = 5
 let laptops : Laptop[] = []
 
 for (let i = 0; i < count; i++) {
@@ -19,11 +15,10 @@ for (let i = 0; i < count; i++) {
 const RatingPage : React.FC = () => {
     const [laptopList, setLaptopList] = useState(laptops)
     return (
-        <ReactSortable className="flex flex-col" list={laptopList} setList={setLaptopList} animation={200} ghostClass="bg-rose-500">
-            {laptopList.map(laptop => (
-                <div className="border-2 border-indigo-500" key={laptop.id}>{laptop.name}</div>
-            ))}
-        </ReactSortable>
+        <main className="container mx-auto flex flex-col items-center gap-6 p-4">
+            <Sortable laptopList={laptopList} setLaptops={setLaptopList}/>
+            <Button onClick={() => console.log(laptopList)}>Submit</Button>
+        </main>
     )
 }
 
