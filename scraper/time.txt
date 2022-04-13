@@ -1,0 +1,2 @@
+35 seconds for 358 laptops with 10 tasks for pages, and 10 tasks per page, in release build
+for the same task, it takes python 90 seconds.
