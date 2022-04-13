@@ -9,6 +9,8 @@ export interface Laptop {
 
 interface SortableProps {
     laptopList : Laptop[]
+    // use state callback required by ReactSortable
+    // to update the laptops when re-arranged by the user
     setLaptops : (newState : Laptop[]) => void
 }
 
