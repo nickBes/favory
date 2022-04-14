@@ -7,7 +7,8 @@ const postRating : NextApiHandler = (req, res) => {
                 .with(P.array(P.number), (laptopIDs) => {
                     // should return new laptop id's but don't
                     // have a functionality for that
-                    return res.status(200).json(laptopIDs)
+                    // now we return a shuffeled array of IDs
+                    return res.status(200).json(laptopIDs.sort(() => 0.5 - Math.random()))
                 })
                 .run()
     }
