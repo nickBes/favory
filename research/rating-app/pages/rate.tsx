@@ -30,7 +30,7 @@ const RatingPage : React.FC = () => {
         if (nextLaptopIds) {
             // parsing laptop id's into a laptop array.
             // this is temporary untill our server is made
-            // so we have real laptop data
+            // before we have real laptop data
             setLaptopList(nextLaptopIds.map(id => {
                 return {
                     id: id,
