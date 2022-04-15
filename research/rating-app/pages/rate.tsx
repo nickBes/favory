@@ -24,8 +24,7 @@ const RatingPage : React.FC = () => {
         // post the array of ids and manage cases
         let nextLaptopIds = await axios.post("/api/post-rating", laptopIds)
                                 .then(response => response.data as number[])
-                                .catch(error => console.error(error))
-
+        
         
         if (nextLaptopIds) {
             // parsing laptop id's into a laptop array.
