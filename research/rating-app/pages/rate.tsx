@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import Sortable, { Laptop } from "@/components/sortable"
 import Button from "@/components/utils/button"
 import axios from "axios"
+import { withPageAuthRequired } from "@auth0/nextjs-auth0"
 
 const count = 5
 let laptops : Laptop[] = []
@@ -48,4 +49,4 @@ const RatingPage : React.FC = () => {
     )
 }
 
-export default RatingPage
+export default withPageAuthRequired(RatingPage)
