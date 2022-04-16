@@ -4,6 +4,7 @@ import Button from "@/components/utils/button"
 import axios from "axios"
 import {GetServerSideProps} from "next"
 import fetchLaptops from "fetchLaptops"
+import {withPageAuthRequired} from "@auth0/nextjs-auth0"
 
 interface RatingPageProps {
     initialLaptops: Laptop[]
@@ -34,12 +35,15 @@ const RatingPage: React.FC<RatingPageProps> = ({initialLaptops}) => {
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async (_) => {
-    return {
-        props: {
-            initialLaptops: fetchLaptops()
+export const getServerSideProps = withPageAuthRequired({
+    returnTo: '/api/auth/login',
+    async getServerSideProps(_) {
+        return {
+            props: {
+                initialLaptops: fetchLaptops()
+            }
         }
     }
-}
+})
 
 export default RatingPage

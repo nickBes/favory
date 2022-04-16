@@ -1,4 +1,5 @@
 import fetchLaptops from "fetchLaptops"
+import { withApiAuthRequired } from "@auth0/nextjs-auth0"
 import { NextApiHandler } from "next"
 import { match, P } from "ts-pattern"
 
@@ -14,4 +15,4 @@ const postRating : NextApiHandler = (req, res) => {
     return res.status(404).json("Not right endpoint.")
 }
 
-export default postRating
+export default withApiAuthRequired(postRating)
