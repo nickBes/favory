@@ -1,0 +1,10 @@
+digraph {
+    0 [ label = "LaptopId(2)" ]
+    1 [ label = "LaptopId(1)" ]
+    2 [ label = "LaptopId(3)" ]
+    3 [ label = "LaptopId(4)" ]
+    1 -> 3 [ ]
+    1 -> 2 [ ]
+    1 -> 0 [ ]
+    3 -> 0 [ ]
+}
