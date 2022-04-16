@@ -1,51 +1,45 @@
-import React, { useState } from "react"
-import Sortable, { Laptop } from "@/components/sortable"
+import React, {useEffect, useState} from "react"
+import Sortable, {Laptop} from "@/components/sortable"
 import Button from "@/components/utils/button"
 import axios from "axios"
+import {GetServerSideProps} from "next"
+import fetchLaptops from "fetchLaptops"
 
-const count = 5
-let laptops : Laptop[] = []
-
-for (let i = 0; i < count; i++) {
-    laptops.push({
-        id: i,
-        name: `laptop ${i}`
-    })
+interface RatingPageProps {
+    initialLaptops: Laptop[]
 }
 
-
-
-const RatingPage : React.FC = () => {
-    const [laptopList, setLaptopList] = useState(laptops)
+const RatingPage: React.FC<RatingPageProps> = ({initialLaptops}) => {
+    const [laptopList, setLaptopList] = useState(initialLaptops)
 
     const postRatingAndGetNext = async () => {
         // parse into array of ids
         const laptopIds = laptopList.map(laptop => laptop.id)
         // post the array of ids and manage cases
-        let nextLaptopIds = await axios.post("/api/post-rating", laptopIds)
-                                .then(response => response.data as number[])
-        
-        
-        if (nextLaptopIds) {
-            // parsing laptop id's into a laptop array.
-            // this is temporary untill our server is made
-            // before we have real laptop data
-            setLaptopList(nextLaptopIds.map(id => {
-                return {
-                    id: id,
-                    name: `laptop ${id}`
-                }
-            }))
+        let nextLaptops = await axios.post("/api/post-rating", laptopIds)
+            .then(response => response.data as Laptop[])
+
+
+        if (nextLaptops) {
+            setLaptopList(nextLaptops)
         }
     }
 
 
     return (
         <main className="container mx-auto flex flex-col items-center gap-6 p-4">
-            <Sortable laptopList={laptopList} setLaptops={setLaptopList}/>
+            <Sortable laptopList={laptopList} setLaptops={setLaptopList} />
             <Button onClick={postRatingAndGetNext}>Submit</Button>
         </main>
     )
+}
+
+export const getServerSideProps: GetServerSideProps = async (_) => {
+    return {
+        props: {
+            initialLaptops: fetchLaptops()
+        }
+    }
 }
 
 export default RatingPage
