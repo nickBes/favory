@@ -1,10 +1,7 @@
+use anyhow::Context;
 use scraper::{Html, Selector};
 
-use crate::{
-    error::*,
-    paginated_scraper::{PaginatedLaptopsScraper, PaginatedLaptopsScraperConfig},
-    LaptopsProcessor, LaptopsScraper, ScrapedLaptop, ScraperClient,
-};
+use crate::{paginated_scraper::{PaginatedLaptopsScraper, PaginatedLaptopsScraperConfig}, ScrapedLaptop, ScraperClient};
 
 #[derive(Debug, Clone)]
 pub struct BugLaptopsScraper;
@@ -18,6 +15,7 @@ impl PaginatedLaptopsScraper for BugLaptopsScraper {
             tasks_per_page: 12,
         }
     }
+
     fn find_pages_amount(&mut self, first_page: &Html) -> anyhow::Result<usize> {
         lazy_static::lazy_static! {
             static ref PAGE_LINKS_SELECTOR: Selector = Selector::parse(".pagination > .num").unwrap();
@@ -53,8 +51,8 @@ impl PaginatedLaptopsScraper for BugLaptopsScraper {
         })
     }
 
-    async fn load_page(&mut self, page_number: usize, client: &ScraperClient) -> Result<Html> {
+    async fn load_page(&mut self, page_number: usize, client: &ScraperClient) -> anyhow::Result<Html> {
         let url = format!("https://www.bug.co.il/laptops/?page={}", page_number);
-        Ok(client.get(url).await?)
+        Ok(client.get(url).await.context("http error")?)
     }
 }

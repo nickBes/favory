@@ -1,11 +1,11 @@
 use std::sync::{atomic::AtomicUsize, Arc, Mutex};
 
-use futures::{stream::FuturesUnordered, StreamExt};
+use anyhow::Context;
 use log::warn;
 use scraper::Html;
 use tokio::task::JoinHandle;
 
-use crate::{error::*, LaptopsProcessor, LaptopsScraper, ScrapedLaptop, ScraperClient};
+use crate::{LaptopsProcessor, LaptopsScraper, ScrapedLaptop, ScraperClient};
 
 #[async_trait::async_trait]
 pub trait PaginatedLaptopsScraper: Clone + Send + 'static {
@@ -13,7 +13,11 @@ pub trait PaginatedLaptopsScraper: Clone + Send + 'static {
     fn find_pages_amount(&mut self, first_page: &Html) -> anyhow::Result<usize>;
     fn extract_laptop_urls(&mut self, page: Html) -> anyhow::Result<Vec<String>>;
     fn scrape_laptop_page(&mut self, page: Html) -> anyhow::Result<ScrapedLaptop>;
-    async fn load_page(&mut self, page_number: usize, client: &ScraperClient) -> Result<Html>;
+    async fn load_page(
+        &mut self,
+        page_number: usize,
+        client: &ScraperClient,
+    ) -> anyhow::Result<Html>;
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -29,7 +33,7 @@ impl<T: PaginatedLaptopsScraper> LaptopsScraper for T {
         &mut self,
         client: ScraperClient,
         laptops_processor: impl LaptopsProcessor,
-    ) -> Result<()> {
+    ) -> anyhow::Result<()> {
         let config = self.config();
         let ctx = PaginatedLaptopsScraperCtx {
             scraper: self.clone(),
@@ -43,21 +47,21 @@ impl<T: PaginatedLaptopsScraper> LaptopsScraper for T {
             // load the first page so that we can find the total amount of pages
             let first_page = self
                 .load_page(config.first_page_number, &ctx.client)
-                .await?;
+                .await
+                .context("failed to load page")?;
 
-            let pages_amount = match self.find_pages_amount(&first_page) {
-                Ok(pages_amount) => pages_amount,
-                Err(err) => {
-                    error!("failed to find pages amount: ")
-                },
-            };
+            let pages_amount = self
+                .find_pages_amount(&first_page)
+                .context("failed to find pages amount")?;
 
             if pages_amount == 0 {
                 return Ok(());
             }
 
             // scrape the first page already, to avoid loading it twice.
-            let first_page_laptop_urls = self.extract_laptop_urls(first_page)?;
+            let first_page_laptop_urls = self
+                .extract_laptop_urls(first_page)
+                .context("failed to extract laptop urls from page")?;
 
             (pages_amount, first_page_laptop_urls)
         };
@@ -97,7 +101,7 @@ async fn scrape_page<T: PaginatedLaptopsScraper, P: LaptopsProcessor>(
     mut ctx: PaginatedLaptopsScraperCtx<T, P>,
     cur_page_number_counter: Arc<AtomicUsize>,
     last_page_number: usize,
-) -> Result<()> {
+) -> anyhow::Result<()> {
     let mut tasks = Vec::new();
     loop {
         let next_page_number =
@@ -106,8 +110,15 @@ async fn scrape_page<T: PaginatedLaptopsScraper, P: LaptopsProcessor>(
             break;
         }
 
-        let page = ctx.scraper.load_page(next_page_number, &ctx.client).await?;
-        let laptop_urls = ctx.scraper.extract_laptop_urls(page)?;
+        let page = ctx
+            .scraper
+            .load_page(next_page_number, &ctx.client)
+            .await
+            .context("failed to load page")?;
+        let laptop_urls = ctx
+            .scraper
+            .extract_laptop_urls(page)
+            .context("failed to extract laptop urls")?;
         start_scraping_laptop_urls(laptop_urls, ctx.clone(), &mut tasks);
     }
 
@@ -123,15 +134,18 @@ async fn scrape_page<T: PaginatedLaptopsScraper, P: LaptopsProcessor>(
 fn start_scraping_laptop_urls<T: PaginatedLaptopsScraper, P: LaptopsProcessor>(
     laptop_urls: Vec<String>,
     ctx: PaginatedLaptopsScraperCtx<T, P>,
-    tasks: &mut Vec<JoinHandle<Result<()>>>,
+    tasks: &mut Vec<JoinHandle<anyhow::Result<()>>>,
 ) {
     if ctx.config.tasks_per_page >= laptop_urls.len() {
         for laptop_url in laptop_urls {
             let mut ctx = ctx.clone();
             let task = tokio::spawn(async move {
-                let page = ctx.client.get(&laptop_url).await?;
+                let page = ctx.client.get(&laptop_url).await.context("http error")?;
                 match ctx.scraper.scrape_laptop_page(page) {
-                    Ok(laptop) => ctx.laptops_processor.process_laptop(laptop)?,
+                    Ok(laptop) => ctx
+                        .laptops_processor
+                        .process_laptop(laptop)
+                        .context("failed to process laptop")?,
                     Err(err) => {
                         warn!(
                             "error while scraping laptop page, page url: {}, error: {:?}",
@@ -159,9 +173,9 @@ fn start_scraping_laptop_urls<T: PaginatedLaptopsScraper, P: LaptopsProcessor>(
                     };
                     match next_laptop_url {
                         Some(next_laptop_url) => {
-                            let page = ctx.client.get(&next_laptop_url).await?;
+                            let page = ctx.client.get(&next_laptop_url).await.context("http error")?;
                             match ctx.scraper.scrape_laptop_page(page) {
-                                Ok(laptop) => ctx.laptops_processor.process_laptop(laptop)?,
+                                Ok(laptop) => ctx.laptops_processor.process_laptop(laptop).context("failed to process laptop")?,
                                 Err(err) => {
                                     warn!(
                                         "error while scraping laptop page, page url: {}, error: {:?}",

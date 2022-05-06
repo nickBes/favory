@@ -1,11 +1,10 @@
 mod bug;
-mod error;
 mod paginated_scraper;
 
 use std::sync::{atomic::AtomicUsize, Arc};
 
+use anyhow::Context;
 use bug::BugLaptopsScraper;
-use error::*;
 use reqwest::{header::USER_AGENT, IntoUrl};
 use scraper::Html;
 
@@ -16,12 +15,12 @@ pub trait LaptopsScraper {
         &mut self,
         client: ScraperClient,
         laptops_processor: impl LaptopsProcessor,
-    ) -> Result<()>;
+    ) -> anyhow::Result<()>;
 }
 
 pub trait LaptopsProcessor: Clone + Send + 'static {
     /// Process a new laptop.
-    fn process_laptop(&mut self, laptop_info: ScrapedLaptop) -> Result<()>;
+    fn process_laptop(&mut self, laptop_info: ScrapedLaptop) -> anyhow::Result<()>;
 }
 
 /// Information about a scraped laptop that each scraper should extract.
@@ -37,7 +36,7 @@ pub struct LaptopsPrinter {
 }
 
 impl LaptopsProcessor for LaptopsPrinter {
-    fn process_laptop(&mut self, laptop_info: ScrapedLaptop) -> Result<()> {
+    fn process_laptop(&mut self, laptop_info: ScrapedLaptop) -> anyhow::Result<()> {
         let amount = self
             .laptops_amount
             .fetch_add(1, std::sync::atomic::Ordering::Relaxed);
@@ -60,16 +59,18 @@ impl ScraperClient {
             client: reqwest::Client::new(),
         }
     }
-    pub async fn get(&self, url: impl IntoUrl) -> Result<Html> {
+    pub async fn get(&self, url: impl IntoUrl) -> anyhow::Result<Html> {
         const FAKE_CHROME_USER_AGENT:&str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.81 Safari/537.36";
         let response_bytes = self
             .client
             .get(url)
             .header(USER_AGENT, FAKE_CHROME_USER_AGENT)
             .send()
-            .await?
+            .await
+            .context("failed to send http request")?
             .bytes()
-            .await?;
+            .await
+            .context("failed to receive http response")?;
         Ok(Html::parse_document(&String::from_utf8_lossy(
             &response_bytes,
         )))
