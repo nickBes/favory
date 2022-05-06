@@ -74,8 +74,6 @@ impl Graph {
 
     // adds a connection representing the given majority as long as it does not create a cycle.
     pub fn add_connection(&mut self, majority: Majority) {
-        println!("inserting: {:#?}", majority);
-        println!("before insertion: {:#?}", self);
         self.save_vis("before");
         // check if this connection will create a cycle
         if let Some(winner_node) = self.nodes.get(&majority.winner) {
@@ -166,7 +164,7 @@ struct UnorderedPair {
     /// the lower laptop id
     _low: LaptopId,
 
-    // the higher laptop id
+    /// the higher laptop id
     _high: LaptopId,
 }
 
