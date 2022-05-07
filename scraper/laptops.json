@@ -1,0 +1,7241 @@
+[
+  {
+    "model": "4T9M2EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "AMD Radeon RX 6600M 8GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "82LU0024IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1260P",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "K413EA-EB1703W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "K413EQ-EB494W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "K513EQ-L1535W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K413EP-EB422W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX330 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "FX506HM-HN019W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K513EA-L11997W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K513EA-L11072W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82LU002EIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1260P",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "K513EA-L12247W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K513EQ-L1546W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K3500PA-L1041W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-11300H",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K513EA-L12248W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X415EA-EK618W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X515EA-EJ1818W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K513EQ-L1536W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K513EQ-L1547W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z14V000EC",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "K3500PA-L1042W",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-11300H",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82L700J6IV",
+    "manufacturer": "Lenovo",
+    "cpu": "AMD Ryzen 7 5800U",
+    "gpu": "NVIDIA GeForce MX450 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1410
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415EA-EB520W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z14Y000E7",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "24Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "UX5400EG-KN166T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415EA-EB521W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X515EA-BQ869W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "FX507ZC-HN003W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-12700H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "FX707ZE-HX015W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-12700H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 17.3
+  },
+  {
+    "model": "X515EA-BQ946W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X515EA-BQ1208W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X415EA-EB538W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "K3400PH-KM036T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce GTX 1650 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415EA-EB1137W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415EA-EK662W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z14V000DY",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "Z14V000E9",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "32Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "X415EA-EB570W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z14X0006T",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "32Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "M3500QC-L1346W",
+    "manufacturer": "Asus",
+    "cpu": "AMD Ryzen 5 5600H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "H7600HM-L2077X",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 2000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.0
+  },
+  {
+    "model": "G733ZW-LL130X",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i9-12900H",
+    "gpu": "NVIDIA GeForce RTX 3070 Ti 8GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2900
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 2000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 17.3
+  },
+  {
+    "model": "UP5401EA-KN105W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "UX5400EG-KN224T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z14W000BZ",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "4A434EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-11300H",
+    "gpu": "NVIDIA GeForce GTX 1650 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2230
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "V5402-1210",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1410
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "K413EA-EB362W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "TP470EZ-EC101W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ MAX 4GB LPDDR4X",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15G000MK",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "N5410-6432",
+    "manufacturer": "Dell",
+    "cpu": "Intel Core i5-1155G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N3511-3211",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1700
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "V3500-5336",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1980
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "4A435EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2230
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "N3511-5426",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1700
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX5400EA-KU227W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "3N7W4EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1240
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "Z14Z000BZ",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "N3511-5468",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1700
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX5400EA-KN122T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "M515UA-BQ383",
+    "manufacturer": "Asus",
+    "cpu": "AMD Ryzen 5 5500U",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "N3511-3117",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1700
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X513EA-BQ1703W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "N5410-7571",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1195G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4P4C0EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 5 5600H",
+    "gpu": "NVIDIA GeForce GTX 1650 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2460
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "FX506HE-HN004W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "4G1H9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1820
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "498A1EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-11400H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2460
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "82L0003SIV",
+    "manufacturer": "Lenovo",
+    "cpu": "AMD Ryzen 7 5800U",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415EA-EB578W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N3511-7111",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1700
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82LU001XIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1260P",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X515EA-BQ954W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "G3500-5762",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-10300H",
+    "gpu": "NVIDIA GeForce GTX 1650 4GB GDDR6",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 2500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X515EA-BQ950W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX5400EA-KN126T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "K413EA-EB1589W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X515EA-BQ877W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "4G1J0EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1820
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "E210MA-GJ003TS",
+    "manufacturer": "Asus",
+    "cpu": "Intel Celeron N4020",
+    "gpu": "Intel® UHD Graphics 600",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 1050
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 64000
+      },
+      "kind": "eMMC"
+    },
+    "screen_size": 11.6
+  },
+  {
+    "model": "308A5EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1690
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "307Z2EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1460
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "308F3EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1460
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82BG004PIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1185G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1440
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "307Y0EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1610
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "3X8Q4EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7 Processor",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1790
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MGN63HB/Z124HBKIT",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "7Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "308A7EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1690
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82H800D2IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82H800CHIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Pentium Gold 7505",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "307Y6EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1340
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.5
+  },
+  {
+    "model": "82KU00F9IV",
+    "manufacturer": "Lenovo",
+    "cpu": "AMD Ryzen 5 5500U",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X515JA-BR401T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i3-1005G1",
+    "gpu": "Intel UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "81YU005TIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-10875H",
+    "gpu": "NVIDIA GeForce RTX 2070 Max-Q 8GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2250
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "30C40EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X515EA-BQ1186W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "VM-RD09-12483",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X515EA-BQ1185W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "FX516PC-HN024T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "VM-RD09-13056",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "FX516PC-HN005T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "15-ek1000nj",
+    "manufacturer": "HP",
+    "cpu": "‎Intel Core i7–10870H",
+    "gpu": "NVIDIA GeForce RTX 3070 8GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2450
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX425EA-KI861W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1170
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z14Y000E6",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "Z15J000MJ",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "X415JA-EK002T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1005G1",
+    "gpu": "Intel UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415EA-EB538T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "3N7W3EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1240
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "X515EP-BQ226T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX330 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX334FL-A4032T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-8265U",
+    "gpu": "NVIDIA GeForce MX250‎ 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1220
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "X515EP-BQ255T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX330 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "307W9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1270
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82FE0171IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82FE00HHIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1390
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "M3401QA-KM054W",
+    "manufacturer": "Asus",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1450
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "30C38EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX350‎ 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "3C6X3EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce GTX 1650 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1980
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MRQP2HB/A - Z0VP",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 1.3GHz",
+    "gpu": "Intel HD Graphics 615",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 920000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 12.0
+  },
+  {
+    "model": "Z14Y000DX",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "8PL15EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1035G1",
+    "gpu": "NVIDIA GeForce MX130‎ 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "S330FL-EY007T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-8565U",
+    "gpu": "NVIDIA GeForce MX250‎ 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "X515EP-BQ227T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX330 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX5401EA-KN146W",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MRQN2HB/A - Z0VN",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core m3 1.2GHz",
+    "gpu": "Intel HD Graphics 615",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 920000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 12.0
+  },
+  {
+    "model": "Z15G000N0",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "MWP72HB/A - Z0Y8",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 2.0GHz",
+    "gpu": "Intel Iris Plus Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "UP5401EA-KN024T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15J000MY",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "82FG009KIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 1660
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82FE00HFIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1390
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415EA-EB570T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X409FA-EK588T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-10110U",
+    "gpu": "Intel HD Graphics 520",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82JF003SIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.0
+  },
+  {
+    "model": "MV992HB/A - Z0WS",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 2.4GHz",
+    "gpu": "Intel Iris Plus Graphics 655",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "X407UA-BV609T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-7020U",
+    "gpu": "Intel HD Graphics 620",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1128000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4T9K9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3070 8GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "MK183HB/A Z14V",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "7KB50EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-9750H",
+    "gpu": "NVIDIA GeForce RTX 2070 8GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2630
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15J000NL",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "24Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "X409FA-EK585T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-10110U",
+    "gpu": "Intel HD Graphics 520",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4G1H3EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i3-1125G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1850
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MK193HB/A Z14W",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "82H700YQIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1410
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MKGQ3HB/A Z15H",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "4Z827EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1520
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15G000MX",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "4G1J8EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1820
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15G000ML",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "Z14W-32-2TB-HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 2000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "82H900KNIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 17.3
+  },
+  {
+    "model": "X513EA-BQ004W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z11D0005L",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "81Q9004JIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Core i5-1035G4",
+    "gpu": "Intel Iris Plus Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1350
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "307Z7EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15J000MV",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "Z15J000NA",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "Z1500006T",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "32Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "X515EA-BQ863W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "M9E89EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Atom Z3736F",
+    "gpu": "Intel® HD Graphics",
+    "memory": {
+      "megabytes": 2000
+    },
+    "weight": {
+      "grams": 580000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 64000
+      },
+      "kind": "eMMC"
+    },
+    "screen_size": 10.1
+  },
+  {
+    "model": "UX363EA-HP555W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82FE0170IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82K2004NIV",
+    "manufacturer": "Lenovo",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2250
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15J000MH",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "82FE006WIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "GX501VS-GZ070T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i7-7700HQ",
+    "gpu": "NVIDIA GeForce GTX 1070",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2240
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "K413EA-EB580W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z11F0004X",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "G533ZX-LN086W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i9-12900H",
+    "gpu": "NVIDIA GeForce RTX 3080Ti 16GB GDDR6",
+    "memory": {
+      "megabytes": 64000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 2000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MNQG2HB/A - Z0TW",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 2.9 GHz",
+    "gpu": "Intel Iris Graphics 550",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "G533ZS-HF030W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i9-12900H",
+    "gpu": "NVIDIA GeForce RTX 3080 8GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82FG01HRIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1660
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82LU0028IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1240P",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82LU0027IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1240P",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82K6004FIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3070 8GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.0
+  },
+  {
+    "model": "3N3D0EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i3-1125G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1240
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "Z14V000E7",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "498A2EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2480
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "82LU0026IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1260P",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MNYJ2HB/A - Z0U0",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 1.3GHz",
+    "gpu": "Intel HD Graphics 615",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 920000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 12.0
+  },
+  {
+    "model": "UX482EG-HY263T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1620
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82BH006AIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1430
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "307Z6EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "307Z5EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7 Processor",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82K100JUIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2250
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "N5410-7734",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1195G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N3511-5230",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1700
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "7KB23EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-9750H",
+    "gpu": "NVIDIA GeForce RTX 2080 8GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2630
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "M3401QC-KM022W",
+    "manufacturer": "Asus",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1450
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z14W000C7",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "4L8Z7EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-11400H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2180
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "M3401QA-KM053W",
+    "manufacturer": "Asus",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1450
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X407UA-BV610T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-7020U",
+    "gpu": "Intel HD Graphics 620",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1128000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15G000NP",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "24Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "N5410-6512",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1155G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82FE0061IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "LT-RD33-13086",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1520
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N5410-5419",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1155G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N5410-7784",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1195G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z11F-16-HB",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "VM-RD09-13057",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MPXW2HB/A - Z0UN",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 3.1GHz",
+    "gpu": "Intel Iris Plus Graphics 650",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "LT-RD33-13083",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1520
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82H801RNIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "M3500QC-L1345W",
+    "manufacturer": "Asus",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15G000N6",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "308A3EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1690
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82HS00YQIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "30C44EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce GTX 1650 Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1490
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "LT-RD33-13080",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1520
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z11C0004X",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82H800CUIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "N7600PC-L2042W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1950
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.0
+  },
+  {
+    "model": "Z15J000N6",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "82FE005TIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82H900MCIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 17.3
+  },
+  {
+    "model": "FX516PE-HN023T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "81VT0017IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Celeron N4020",
+    "gpu": "Intel® UHD Graphics 600",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 1200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 64000
+      },
+      "kind": "eMMC"
+    },
+    "screen_size": 11.6
+  },
+  {
+    "model": "3Y360EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1790
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82D1002WIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "VM-RD09-12025",
+    "manufacturer": "Dell",
+    "cpu": "Intel Core i3-1005G1",
+    "gpu": "Intel UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82H900KLIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 17.3
+  },
+  {
+    "model": "3N3D1EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1790
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15H-32-HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "4G1J7EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1820
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15G000NY",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "32Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "4L8U9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1820
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15J000MU",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "4L8V1EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 5 5500U",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1860
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MLVP2HB/A - Z0T2",
+    "manufacturer": "Apple",
+    "cpu": "Dual core Intel i5 2.9 GHz up to 3.3 GHz",
+    "gpu": "Intel Iris Graphics 550",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "4A6C0EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2460
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "VM-RD09-13055",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z127-HB-KIT",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "7Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82HS00UQIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15G000MW",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "82FG00FJIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1660
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "VM-RD09-12482",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X515EA-BQ1184W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "N5410-5531",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1155G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "3N3D2EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1790
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "VM-RD09-12983",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82HS00YLIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MPXY2HB/A - Z0UQ",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 3.1GHz",
+    "gpu": "Intel Iris Plus Graphics 650",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.0
+  },
+  {
+    "model": "VM-RD09-12481",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82H700YUIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1410
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4L8V2EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 7 5700U",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1860
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MWP82HB/A - Z0Y9",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 2.0GHz",
+    "gpu": "Intel Iris Plus Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "K3500PH-L1078T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce GTX 1650 Max-Q 4GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "G513QY-HF001W",
+    "manufacturer": "Asus",
+    "cpu": "AMD Ryzen 9 5900HX",
+    "gpu": "AMD Radeon RX 6800M 12GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15J000MS",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "3N7W2EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1240
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82HS00TGIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "E203MA-FD100TS",
+    "manufacturer": "Asus",
+    "cpu": "Intel Celeron N4020",
+    "gpu": "Intel UHD Graphics 600",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 990
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 64000
+      },
+      "kind": "eMMC"
+    },
+    "screen_size": 11.6
+  },
+  {
+    "model": "82HT007LIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "E210MA-GJ001TS",
+    "manufacturer": "Asus",
+    "cpu": "Intel Celeron N4020",
+    "gpu": "Intel UHD Graphics 600",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 1050
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 64000
+      },
+      "kind": "eMMC"
+    },
+    "screen_size": 11.6
+  },
+  {
+    "model": "MYD92HB/A",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "X515EP-BQ256T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX330 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z1270004A",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "7Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82jd007biv",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.0
+  },
+  {
+    "model": "2S576EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i7-1065G7",
+    "gpu": "NVIDIA GeForce MX330 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z128-HB-KIT",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "7Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "UX363EA-EM073T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Plus Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82BH00J6IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1430
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "UX363EA-EM082T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "MKGP3HB/A Z15G-HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "82BH00JBIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1430
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X515EA-BQ862T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82ND00BRIV",
+    "manufacturer": "Lenovo",
+    "cpu": "AMD Ryzen 7 5700U",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1320
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "4T9L3EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "82H801S0IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "5U126EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1790
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82FE0172IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X507UA-EJ953T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-7020U",
+    "gpu": "Intel HD Graphics 520",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1680
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1128000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "4G1H6EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1820
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z14Z-32-HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "4G1H7EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1820
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82jd006wiv",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.0
+  },
+  {
+    "model": "30C41EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i7-1165G7",
+    "gpu": "NVIDIA GeForce GTX 1650 Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1490
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82BH00J9IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1430
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4L8Z9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i9-11900H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2180
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX425EA-BM293T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i3-1115G4",
+    "gpu": "Intel UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1170
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z15J000MX",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "32Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "Z15H000C9",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "24Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "5B9R9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MKGR3HB/A Z15J - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "Z15K000C7",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "E210MA-GJ002TS",
+    "manufacturer": "Asus",
+    "cpu": "Intel Celeron N4020",
+    "gpu": "Intel UHD Graphics 600",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 1050
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 64000
+      },
+      "kind": "eMMC"
+    },
+    "screen_size": 11.6
+  },
+  {
+    "model": "FX516PC-HN031T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X415EA-EB572W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X515EA-BQ961W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X415EA-EB573W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "UX430UA-GV384T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-8550U",
+    "gpu": "Intel® UHD Graphics 620",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1250
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "498A6EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2460
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "K3500PA-L1059W",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-11300H",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "4Z7Y9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15G000MU",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 8Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "82NH005HIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z125-HB-KIT",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "307Y9EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1460
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "UX425EA-KI837W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1170
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82HS00TLIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1500
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "E210MA-GJ106TS",
+    "manufacturer": "Asus",
+    "cpu": "Intel Celeron N4020",
+    "gpu": "Intel® UHD Graphics 600",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 1050
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 64000
+      },
+      "kind": "eMMC"
+    },
+    "screen_size": 11.6
+  },
+  {
+    "model": "Z12B-HB-KIT",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "UX425EA-KI860W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1170
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N5406-8103",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1700
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4T9L1EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3070 8GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "187K1EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i3-1005G1",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1470
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "FX516PE-HN020T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "82H801SBIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX425EA-KI838W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1170
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "UX363EA-HP186T",
+    "manufacturer": "Asus",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "N5402-7330",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX330 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4T9L7EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "82H90015IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 17.3
+  },
+  {
+    "model": "29A02EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 3 3250U",
+    "gpu": "AMD Radeon Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1690
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "50P37EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1920
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.5
+  },
+  {
+    "model": "307X3EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "4T9L0EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "X515EA-BQ862W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX425EA-KI886W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1170
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "FX516PC-HN002T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-11300H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 2000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "3A670EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1035G4 Processor",
+    "gpu": "Intel Iris Plus Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82HL003TIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel Pentium Gold 7505",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "VM-RD09-13091",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MKGQ3HB/A Z15H - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "82NH001HIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-11300H",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1380
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82BJ00CLIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1900
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "G5510-8530",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-10870H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MGNA3HB/A",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "7Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "MYDC2HB/A",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "N5410-5423",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1155G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N5410-5514",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i5-1155G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MKGT3HB/A Z15K - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "MYD82HB/A",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "MYDA2HB/A",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "MGN73HB/A",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "7Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "UX482EG-HY264T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1620
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N5410-7814",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1195G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "X415JA-EK023T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i3-1005G1",
+    "gpu": "Intel UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MV9A2HB/A Z0WU",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 2.4GHz",
+    "gpu": "Intel Iris Plus Graphics 655",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "MK1E3HB/A Z14Y - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "MK1H3HB/A Z150 - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "32Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "Z14Z000C7",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "82K2004AIV",
+    "manufacturer": "Lenovo",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2250
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "N7400PC-KM010W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1450
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4T9L9EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 7 5800H",
+    "gpu": "NVIDIA GeForce RTX 3070 8GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "T3300KA-LQ029W",
+    "manufacturer": "Asus",
+    "cpu": "Intel Pentium Silver N6000",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 780000
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "UX435EA-A5041T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1190
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "MPXV2HB/A Z0UM",
+    "manufacturer": "Apple",
+    "cpu": "Intel Core i5 3.1GHz",
+    "gpu": "Intel Iris Plus Graphics 650",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "MK183HB/A Z14V - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "82FE00J2IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1390
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82h801rgiv",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "5B9R8EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR5",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1750
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z11C-16-1TB-HB",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "307X6EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1410
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82HL003VIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 4000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MK1F3HB/A Z14Z - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "K3500PA-L1067W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-11300H",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MK1A3HB/A Z14X - HB",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "32Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "4T9K8EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11800H",
+    "gpu": "NVIDIA GeForce RTX 3060 6GB GDDR6",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.1
+  },
+  {
+    "model": "82BJ008MIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1900
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "Z15G000N4",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "14Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "UX435EA-A5006T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1190
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "307X7EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "NVIDIA GeForce MX350 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1410
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "307X5EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1410
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "4M154EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1320
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "307X2EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1300
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "82HT009EIV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "NVIDIA GeForce MX450‎ 2GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1800
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "UX425EA-KI862W",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1170
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "307X0EA",
+    "manufacturer": "HP",
+    "cpu": "Intel Core i5-1135G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1270
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "4A436EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-11370H",
+    "gpu": "NVIDIA GeForce RTX 3050Ti 4GB GDDR6",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 2230
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "4M155EA",
+    "manufacturer": "HP",
+    "cpu": "Intel® Core™ i7-1165G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1320
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "Z15G000NF",
+    "manufacturer": "Apple",
+    "cpu": "M1 Pro 10Core",
+    "gpu": "16Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 1000000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "Z15G000MY",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "24Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.2
+  },
+  {
+    "model": "Z12A-HB-KIT",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "7Core GPU",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1290
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "2P2E1EA",
+    "manufacturer": "HP",
+    "cpu": "AMD Ryzen 5 3450U",
+    "gpu": "AMD Radeon Vega 8",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1740
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "X415JF-EK002T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-1035G1",
+    "gpu": "NVIDIA GeForce MX130‎ 2GB GDDR5",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1600
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "N5410-7748",
+    "manufacturer": "Dell",
+    "cpu": "Intel® Core™ i7-1195G7",
+    "gpu": "Intel Iris Xᵉ Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1650
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "82HL0046IV",
+    "manufacturer": "Lenovo",
+    "cpu": "Intel® Core™ i3-1115G4",
+    "gpu": "Intel® UHD Graphics",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 2200
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 15.6
+  },
+  {
+    "model": "MR9V2HB/A Z0VA",
+    "manufacturer": "Apple",
+    "cpu": "Intel® Core™ i5",
+    "gpu": "Intel Iris Plus Graphics 655",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1370
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  },
+  {
+    "model": "Z14V000E8",
+    "manufacturer": "Apple",
+    "cpu": "M1 Max 10Core",
+    "gpu": "24Core GPU",
+    "memory": {
+      "megabytes": 32000
+    },
+    "weight": {
+      "grams": 2100
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 16.2
+  },
+  {
+    "model": "X440FA-FQ3029T",
+    "manufacturer": "Asus",
+    "cpu": "Intel® Core™ i5-10210U",
+    "gpu": "Intel® UHD Graphics 620",
+    "memory": {
+      "megabytes": 8000
+    },
+    "weight": {
+      "grams": 1670
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 256000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 14.0
+  },
+  {
+    "model": "Z11C-16-HB",
+    "manufacturer": "Apple",
+    "cpu": "M1",
+    "gpu": "8Core GPU",
+    "memory": {
+      "megabytes": 16000
+    },
+    "weight": {
+      "grams": 1400
+    },
+    "hard_drive": {
+      "capacity": {
+        "megabytes": 512000
+      },
+      "kind": "SSD"
+    },
+    "screen_size": 13.3
+  }
+]
