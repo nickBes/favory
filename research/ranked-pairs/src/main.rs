@@ -40,7 +40,7 @@ impl From<Majority> for PairHash {
 }
 
 type MajorityScore = u64;
-#[derive(Eq, PartialEq, Debug)]
+#[derive(Eq, PartialEq, Debug, Clone, Copy)]
 struct Majority {
     winner: LaptopId,
     loser: LaptopId,
@@ -68,7 +68,7 @@ impl RankedPairsEngine {
     // a preference of the previous item over the later
     pub fn vote(&mut self, vote: &Vote) {
         for (winner, losser) in vote.iter().tuple_combinations() {
-            self.add_pair(&Pair(*winner, *losser))
+            self.add_pair(&Pair(*winner, *losser));
         }
     }
 
@@ -78,42 +78,75 @@ impl RankedPairsEngine {
 
     fn increase_majority_score(&mut self, index: usize) {
         self.sorted_majorities[index].score += 1;
-        let current_majority = &self.sorted_majorities[index];
+        let current_majority = self.sorted_majorities[index];
+        // this method wouldn't be called if the vec was empty, hence we can unwrap
+        let top_majority = self.sorted_majorities.first().unwrap();
 
-        // look for the farthest closest that its score is smaller by one
-        // and then swap
+        if top_majority.score < current_majority.score {
+            // then the new score is bigger than the maximal score after adding 1,
+            // which means that maximal score equals to the previous score
+            // and we can just switch places between the maximal and the current majority
+            // without affecting the order
+
+            // update the indexes of the majorities that will move
+            self.majority_indexes.insert(top_majority.into(), index);
+            self.majority_indexes.insert(current_majority.into(), 0);
+
+            // swap
+            self.sorted_majorities.swap(0, index);
+        }
+
+        // look for the closest majority that its score is bigger or the same
+        // and then swap with the previous
         let swap_index = self.sorted_majorities[0..index]
                                         .iter()
-                                        .rposition(|m2| m2.score < current_majority.score);
-
+                                        .rposition(|m2| m2.score >= current_majority.score);
+                                
         if let Some(i) = swap_index {
-            // adding one because the index we found is for the bigger majority
-            let to_swap_majority = &self.sorted_majorities[i];
+            // adding one because the index we found is for the bigger majority,
+            // and we need to swap for the one before
+            let to_swap_index = i + 1;
+            let to_swap_majority = &self.sorted_majorities[to_swap_index];
 
             // update the majority indexes map
             self.majority_indexes.insert(to_swap_majority.into(), index);
-            self.majority_indexes.insert(current_majority.into(), i);
+            self.majority_indexes.insert(current_majority.into(), to_swap_index);
 
-            self.sorted_majorities.swap(i, index);
+            self.sorted_majorities.swap(to_swap_index, index);
         }
     }
 
     fn decrease_majority_score(&mut self, index: usize) {
         self.sorted_majorities[index].score -= 1;
         let current_majority = &self.sorted_majorities[index];
+        // this method wouldn't be called if the vec was empty, hence we can unwrap
+        let last_majority = self.sorted_majorities.last().unwrap();
 
         if current_majority.score == 0 {
             // then the majority score is below the minimum
             self.majority_indexes.remove(&self.sorted_majorities
-                                                                .swap_remove(index)
-                                                                .into());
+                                                .swap_remove(index)
+                                                .into());
             
+        } else if last_majority.score > current_majority.score {
+            // the new score is smaller than the minimal after removing one,
+            // which means that the previous score equals to the minimal,
+            // and we can swap between them without affecting the order
+
+            let to_swap_index = self.majority_indexes.len() - 1;
+            // update the majority indexes
+            self.majority_indexes.insert(last_majority.into(), index);
+            self.majority_indexes.insert(current_majority.into(), to_swap_index);
+
+            // swap
+            self.sorted_majorities.swap(to_swap_index, index);
+
         } else {
             // look for the closest majority which score is the same
             // and then swap
             let swap_index = self.sorted_majorities[index + 1..self.sorted_majorities.len()]
-                                        .iter()
-                                        .position(|m2| m2.score == current_majority.score);
+                                                .iter()
+                                                .position(|m2| m2.score <= current_majority.score);
             
             if let Some(i) = swap_index {
                 let to_swap_majority = &self.sorted_majorities[i];
@@ -154,19 +187,17 @@ impl RankedPairsEngine {
 fn main() {
     let mut engine = RankedPairsEngine::new();
     let votings: Vec<Vote> = vec![
+        vec![1, 2],
+        vec![1, 2],
         vec![0, 1],
         vec![0, 1],
         vec![4, 1],
         vec![4, 1],
-        vec![1, 2]
     ];
     for vote in votings {
         engine.vote(&vote);
     }
-    engine.print_majorities();
 
-    engine.vote(&vec![1,0]);
-
+    engine.vote(&vec![2,1]);
     engine.print_majorities();
-    println!("Hello, world!");
 }
