@@ -3,8 +3,19 @@ use itertools::Itertools;
 
 type LaptopId = u64;
 type Vote = Vec<LaptopId>;
+type LaptopScore = usize;
 // the first item is the winner, second item is the loser
 struct Pair(LaptopId, LaptopId);
+
+// directed acyclic graph of laptops
+struct LaptopDag {
+    scores: HashMap<LaptopId, LaptopScore>,
+    adjacency_list: HashMap<LaptopId, Vec<LaptopId>>
+}
+
+impl LaptopDag {
+    pub fn new() -> Self { LaptopDag {adjacency_list: HashMap::new(), scores: HashMap::new()} }
+}
 
 // hashed representation of a pair, so order of the pair items
 // wouldn't matter in the pairs hashmap
@@ -53,15 +64,16 @@ impl From<&Pair> for Majority {
 
 struct RankedPairsEngine {
     sorted_majorities: Vec<Majority>,
-    majority_indexes: HashMap<PairHash, usize>
+    majority_indexes: HashMap<PairHash, usize>,
+    laptop_dag: LaptopDag
 }
 
 impl RankedPairsEngine {
     pub fn new() -> Self {
         Self {
-            // map: HashMap::new(),
             sorted_majorities: Vec::new(),
-            majority_indexes: HashMap::new()
+            majority_indexes: HashMap::new(),
+            laptop_dag: LaptopDag::new()
         }
     }
     // adds pairs from each combinations that describes
@@ -94,25 +106,25 @@ impl RankedPairsEngine {
 
             // swap
             self.sorted_majorities.swap(0, index);
-        }
+        } else {
+            // look for the closest majority that its score is bigger or the same
+            // and then swap with the previous
+            let swap_index = self.sorted_majorities[0..index]
+                                            .iter()
+                                            .rposition(|m2| m2.score >= current_majority.score);
+                                    
+            if let Some(i) = swap_index {
+                // adding one because the index we found is for the bigger majority,
+                // and we need to swap for the one before
+                let to_swap_index = i + 1;
+                let to_swap_majority = &self.sorted_majorities[to_swap_index];
 
-        // look for the closest majority that its score is bigger or the same
-        // and then swap with the previous
-        let swap_index = self.sorted_majorities[0..index]
-                                        .iter()
-                                        .rposition(|m2| m2.score >= current_majority.score);
-                                
-        if let Some(i) = swap_index {
-            // adding one because the index we found is for the bigger majority,
-            // and we need to swap for the one before
-            let to_swap_index = i + 1;
-            let to_swap_majority = &self.sorted_majorities[to_swap_index];
+                // update the majority indexes map
+                self.majority_indexes.insert(to_swap_majority.into(), index);
+                self.majority_indexes.insert(current_majority.into(), to_swap_index);
 
-            // update the majority indexes map
-            self.majority_indexes.insert(to_swap_majority.into(), index);
-            self.majority_indexes.insert(current_majority.into(), to_swap_index);
-
-            self.sorted_majorities.swap(to_swap_index, index);
+                self.sorted_majorities.swap(to_swap_index, index);
+            }
         }
     }
 
