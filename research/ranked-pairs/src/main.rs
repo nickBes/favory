@@ -62,10 +62,17 @@ impl From<&Pair> for Majority {
     fn from(pair: &Pair) -> Self { Majority { winner: pair.0, loser: pair.1, score: 1 } }
 }
 
+struct Lose {
+    loser: LaptopId,
+    weight: LaptopScore
+}
+
 struct RankedPairsEngine {
     sorted_majorities: Vec<Majority>,
     majority_indexes: HashMap<PairHash, usize>,
-    laptop_dag: LaptopDag
+    // laptop directed acyclic graph
+    laptop_dag: HashMap<LaptopId, Vec<Lose>>,
+    scores: HashMap<LaptopId, LaptopScore>
 }
 
 impl RankedPairsEngine {
@@ -73,7 +80,8 @@ impl RankedPairsEngine {
         Self {
             sorted_majorities: Vec::new(),
             majority_indexes: HashMap::new(),
-            laptop_dag: LaptopDag::new()
+            laptop_dag: HashMap::new(),
+            scores: HashMap::new()
         }
     }
     // adds pairs from each combinations that describes
@@ -86,6 +94,47 @@ impl RankedPairsEngine {
 
     pub fn print_majorities(&self) {
         println!("{:?}", self.sorted_majorities);
+    }
+
+    fn add_to_dag(&mut self, majority: Majority) -> bool {
+
+        todo!()
+    }
+
+    fn will_cycle_unchecked(&self, winner: &LaptopId, loser: &LaptopId) -> bool {
+        if *winner == *loser {
+            return true
+        }
+        self.laptop_dag.get(loser)
+                        .unwrap()
+                        .iter()
+                        .any(|lose| {
+                            self.will_cycle_unchecked(winner, &lose.loser)
+                        }) 
+    }
+
+    fn will_cycle(&self, winner: &LaptopId, loser: &LaptopId) -> bool {
+        // a cycle exists if there's a directed path from the loser node
+        // to the winner node
+        match self.laptop_dag.get(loser) {
+            Some(loses) => {
+                if let Some(_) = self.laptop_dag.get(winner) {
+                    // loser and winner nodes exist, find a directed path between them
+                    return loses.iter()
+                                .any(|lose| {
+                                    // the current nodes exist in the graph as we already checked that
+                                    // hence we can use a different method without checks
+                                    self.will_cycle_unchecked(winner, &lose.loser)
+                                })
+                }
+                // winner node doesn't exist hence there won't be a cycle
+                false
+            },
+            _ => {
+                // loser node doesn't exist hence there won't be a cycle
+                false
+            }
+        }
     }
 
     fn increase_majority_score(&mut self, index: usize) {
