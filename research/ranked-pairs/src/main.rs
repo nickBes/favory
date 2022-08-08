@@ -51,7 +51,7 @@ impl From<Majority> for PairHash {
 }
 
 type MajorityScore = u64;
-#[derive(Eq, PartialEq, Debug, Clone, Copy)]
+#[derive(Eq, PartialEq, Debug)]
 struct Majority {
     winner: LaptopId,
     loser: LaptopId,
@@ -137,87 +137,87 @@ impl RankedPairsEngine {
         }
     }
 
+    fn swap_majorities(&mut self, m1: usize, m2: usize) {
+        // by checking that the indexes are different we're making sure
+        // we are not doing extensive operations just to keep a majority
+        // in the same place
+        if m1 != m2 {
+            // update majority index map
+            self.majority_indexes.insert((&self.sorted_majorities[m1]).into(), m2);
+            self.majority_indexes.insert((&self.sorted_majorities[m2]).into(), m1);
+
+            // swap
+            self.sorted_majorities.swap(m1, m2);
+        }
+    }
+
     fn increase_majority_score(&mut self, index: usize) {
         self.sorted_majorities[index].score += 1;
-        let current_majority = self.sorted_majorities[index];
+        let current_majority_score = self.sorted_majorities[index].score;
         // this method wouldn't be called if the vec was empty, hence we can unwrap
-        let top_majority = self.sorted_majorities.first().unwrap();
+        let top_majority_score = self.sorted_majorities.first().unwrap().score;
 
-        if top_majority.score < current_majority.score {
+        // checking if the new score is the maximal so we won't
+        // have to loop through the array till the first majority
+        if current_majority_score < top_majority_score {
             // then the new score is bigger than the maximal score after adding 1,
             // which means that maximal score equals to the previous score
             // and we can just switch places between the maximal and the current majority
             // without affecting the order
 
             // update the indexes of the majorities that will move
-            self.majority_indexes.insert(top_majority.into(), index);
-            self.majority_indexes.insert(current_majority.into(), 0);
-
-            // swap
-            self.sorted_majorities.swap(0, index);
+            self.swap_majorities(index, 0);
         } else {
             // look for the closest majority that its score is bigger or the same
             // and then swap with the previous
             let swap_index = self.sorted_majorities[0..index]
                                             .iter()
-                                            .rposition(|m2| m2.score >= current_majority.score);
+                                            .rposition(|m2| m2.score >= current_majority_score);
                                     
             if let Some(i) = swap_index {
                 // adding one because the index we found is for the bigger majority,
                 // and we need to swap for the one before
                 let to_swap_index = i + 1;
-                let to_swap_majority = &self.sorted_majorities[to_swap_index];
 
-                // update the majority indexes map
-                self.majority_indexes.insert(to_swap_majority.into(), index);
-                self.majority_indexes.insert(current_majority.into(), to_swap_index);
-
-                self.sorted_majorities.swap(to_swap_index, index);
+                self.swap_majorities(index, to_swap_index);
             }
         }
     }
 
+
     fn decrease_majority_score(&mut self, index: usize) {
         self.sorted_majorities[index].score -= 1;
-        let current_majority = &self.sorted_majorities[index];
+        let current_majority_score = self.sorted_majorities[index].score;
         // this method wouldn't be called if the vec was empty, hence we can unwrap
-        let last_majority = self.sorted_majorities.last().unwrap();
+        let last_majority_score = self.sorted_majorities.last().unwrap().score;
 
-        if current_majority.score == 0 {
+        if current_majority_score == 0 {
             // then the majority score is below the minimum
             self.majority_indexes.remove(&self.sorted_majorities
                                                 .swap_remove(index)
                                                 .into());
             
-        } else if last_majority.score > current_majority.score {
+        // checking if the new score is the minimal so we won't have to loop
+        // from the current index to the last one
+        } else if last_majority_score > current_majority_score {
             // the new score is smaller than the minimal after removing one,
             // which means that the previous score equals to the minimal,
             // and we can swap between them without affecting the order
 
             let to_swap_index = self.majority_indexes.len() - 1;
-            // update the majority indexes
-            self.majority_indexes.insert(last_majority.into(), index);
-            self.majority_indexes.insert(current_majority.into(), to_swap_index);
-
-            // swap
-            self.sorted_majorities.swap(to_swap_index, index);
+            self.swap_majorities(to_swap_index, index);
 
         } else {
             // look for the closest majority which score is the same
             // and then swap
             let swap_index = self.sorted_majorities[index + 1..self.sorted_majorities.len()]
                                                 .iter()
-                                                .position(|m2| m2.score <= current_majority.score);
+                                                .position(|m2| m2.score <= current_majority_score);
             
             if let Some(i) = swap_index {
-                let to_swap_majority = &self.sorted_majorities[i];
-
-                // update the majority indexes map
-                // update the majority indexes map
-                self.majority_indexes.insert(to_swap_majority.into(), index);
-                self.majority_indexes.insert(current_majority.into(), i);
-
-                self.sorted_majorities.swap(i, index);
+                // substracting one as we want to place the current majority above the smaller majority
+                let to_swap_index = i - 1;
+                self.swap_majorities(to_swap_index, index);
             }
         }
     }
