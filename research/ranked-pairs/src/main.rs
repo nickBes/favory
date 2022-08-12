@@ -1,25 +1,17 @@
-use std::{collections::HashMap, vec};
+use std::{collections::{HashMap, HashSet}, vec, cmp, fs};
 use itertools::Itertools;
+use serde::Serialize;
 
-type LaptopId = u64;
+type LaptopId = usize;
 type Vote = Vec<LaptopId>;
 type LaptopScore = usize;
 // the first item is the winner, second item is the loser
+#[derive(Clone, Copy)]
 struct Pair(LaptopId, LaptopId);
-
-// directed acyclic graph of laptops
-struct LaptopDag {
-    scores: HashMap<LaptopId, LaptopScore>,
-    adjacency_list: HashMap<LaptopId, Vec<LaptopId>>
-}
-
-impl LaptopDag {
-    pub fn new() -> Self { LaptopDag {adjacency_list: HashMap::new(), scores: HashMap::new()} }
-}
 
 // hashed representation of a pair, so order of the pair items
 // wouldn't matter in the pairs hashmap
-#[derive(PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy)]
 struct PairHash {
     /// the lower laptop id
     _low: LaptopId,
@@ -38,12 +30,8 @@ impl PairHash {
     }
 }
 
-impl From<&Pair> for PairHash {
-    fn from(pair: &Pair) -> Self { PairHash::new(pair.0, pair.1) }
-}
-
-impl From<&Majority> for PairHash {
-    fn from(majority: &Majority) -> Self { PairHash::new(majority.loser, majority.winner) }
+impl From<Pair> for PairHash {
+    fn from(pair: Pair) -> Self { PairHash::new(pair.0, pair.1) }
 }
 
 impl From<Majority> for PairHash {
@@ -51,15 +39,33 @@ impl From<Majority> for PairHash {
 }
 
 type MajorityScore = u64;
-#[derive(Eq, PartialEq, Debug)]
+#[derive(Eq, PartialEq, Debug, Clone, Copy)]
 struct Majority {
     winner: LaptopId,
     loser: LaptopId,
     score: MajorityScore
 }
 
-impl From<&Pair> for Majority {
-    fn from(pair: &Pair) -> Self { Majority { winner: pair.0, loser: pair.1, score: 1 } }
+impl From<Pair> for Majority {
+    fn from(pair: Pair) -> Self { Majority { winner: pair.0, loser: pair.1, score: 1 } }
+}
+
+#[derive(Serialize)]
+struct VizNode {
+    id: LaptopId
+}
+
+#[derive(Serialize)]
+struct VizLink {
+    source: LaptopId,
+    target: LaptopId,
+    weight: LaptopScore
+}
+
+#[derive(Serialize)]
+struct viz_data {
+    nodes: Vec<VizNode>,
+    links: Vec<VizLink>
 }
 
 struct Lose {
@@ -84,11 +90,12 @@ impl RankedPairsEngine {
             scores: HashMap::new()
         }
     }
+
     // adds pairs from each combinations that describes
     // a preference of the previous item over the later
     pub fn vote(&mut self, vote: &Vote) {
         for (winner, losser) in vote.iter().tuple_combinations() {
-            self.add_pair(&Pair(*winner, *losser));
+            self.add_pair(Pair(*winner, *losser));
         }
     }
 
@@ -96,35 +103,62 @@ impl RankedPairsEngine {
         println!("{:?}", self.sorted_majorities);
     }
 
-    fn add_to_dag(&mut self, majority: Majority) -> bool {
+    pub fn save_json(&self) {
+        let mut viz_data = viz_data {nodes: Vec::new(), links: Vec::new()};
+        let mut non_repetetive_ids: HashSet<LaptopId> = HashSet::new();
+        // save edges
+        for (laptop_id, loses) in &self.laptop_dag {
+            for lose in loses {
+                viz_data.links.push(VizLink {source: *laptop_id, target: lose.loser, weight: lose.weight});
+                non_repetetive_ids.insert(*laptop_id);
+                non_repetetive_ids.insert(lose.loser);
+            }
+        }
+        // save nodes
+        for &id in &non_repetetive_ids {
+            viz_data.nodes.push(VizNode {id});
+        }
 
-        todo!()
+        // saves the viz data into json file
+        let file = fs::File::create("./viz/public/data.json").unwrap();
+        serde_json::to_writer_pretty(file, &viz_data).unwrap();
     }
 
-    fn will_cycle_unchecked(&self, winner: &LaptopId, loser: &LaptopId) -> bool {
-        if *winner == *loser {
+    fn add_to_dag(&mut self, winner: LaptopId, loser: LaptopId, weight: LaptopScore) {
+        match self.laptop_dag.get_mut(&winner) {
+            Some(loses) => {
+                loses.push(Lose {loser, weight});
+            },
+            _ => {
+                self.laptop_dag.insert(winner, vec![Lose {loser, weight}]);
+            }
+        }
+    }
+
+    fn will_cycle_unchecked(&self, winner: LaptopId, loser: LaptopId) -> bool {
+        if winner == loser {
             return true
         }
-        self.laptop_dag.get(loser)
+        self.laptop_dag.get(&loser)
                         .unwrap()
                         .iter()
                         .any(|lose| {
-                            self.will_cycle_unchecked(winner, &lose.loser)
+                            self.will_cycle_unchecked(winner, lose.loser)
                         }) 
     }
 
-    fn will_cycle(&self, winner: &LaptopId, loser: &LaptopId) -> bool {
+    fn will_cycle(&self, winner: LaptopId, loser: LaptopId) -> bool {
         // a cycle exists if there's a directed path from the loser node
         // to the winner node
-        match self.laptop_dag.get(loser) {
+        match self.laptop_dag.get(&loser) {
             Some(loses) => {
-                if let Some(_) = self.laptop_dag.get(winner) {
+                if let Some(_) = self.laptop_dag.get(&winner) {
                     // loser and winner nodes exist, find a directed path between them
                     return loses.iter()
                                 .any(|lose| {
                                     // the current nodes exist in the graph as we already checked that
                                     // hence we can use a different method without checks
-                                    self.will_cycle_unchecked(winner, &lose.loser)
+                                    self.will_cycle_unchecked(winner, lose.loser)
                                 })
                 }
                 // winner node doesn't exist hence there won't be a cycle
@@ -143,11 +177,25 @@ impl RankedPairsEngine {
         // in the same place
         if m1 != m2 {
             // update majority index map
-            self.majority_indexes.insert((&self.sorted_majorities[m1]).into(), m2);
-            self.majority_indexes.insert((&self.sorted_majorities[m2]).into(), m1);
+            self.majority_indexes.insert(self.sorted_majorities[m1].into(), m2);
+            self.majority_indexes.insert(self.sorted_majorities[m2].into(), m1);
 
             // swap
             self.sorted_majorities.swap(m1, m2);
+
+            let minimal_index = cmp::min(m1, m2);
+            // remove all edges so we can add them again after checking for cycles
+            self.sorted_majorities[minimal_index..].iter()
+                                                    .for_each(|majority| {
+                                                        // after adding a majority to the sorted majority vec we're also adding 
+                                                        // an edge to the dag. Hence, we can unwrap
+                                                        let loses = self.laptop_dag.get_mut(&majority.winner).unwrap();
+                                                        let to_remove_index = loses.iter()
+                                                                                            .position(|lose| lose.loser == majority.loser)
+                                                                                            .unwrap();
+                                                        
+                                                        loses.swap_remove(to_remove_index);
+                                                    });
         }
     }
 
@@ -222,7 +270,7 @@ impl RankedPairsEngine {
         }
     }
 
-    fn add_pair(&mut self, pair: &Pair) {
+    fn add_pair(&mut self, pair: Pair) {
         let hash: PairHash = pair.into();
 
         match self.majority_indexes.get(&hash) {
@@ -240,6 +288,10 @@ impl RankedPairsEngine {
             _ => { // adding a new pair down to the sorted majorities, as it has the minimal value
                 self.majority_indexes.insert(hash, self.sorted_majorities.len());
                 self.sorted_majorities.push(pair.into());
+
+                if !self.will_cycle(pair.0, pair.1) {
+                    self.add_to_dag(pair.0, pair.1, 1);
+                }
             }
         }
     }
@@ -259,6 +311,5 @@ fn main() {
         engine.vote(&vote);
     }
 
-    engine.vote(&vec![2,1]);
-    engine.print_majorities();
+    engine.save_json();
 }
