@@ -133,6 +133,10 @@ impl RankedPairsEngine {
                 self.laptop_dag.insert(winner, vec![Lose {loser, weight}]);
             }
         }
+
+        if let None = self.laptop_dag.get(&loser) {
+            self.laptop_dag.insert(loser, vec![]);
+        }
     }
 
     fn will_cycle_unchecked(&self, winner: LaptopId, loser: LaptopId) -> bool {
@@ -162,10 +166,12 @@ impl RankedPairsEngine {
                                 })
                 }
                 // winner node doesn't exist hence there won't be a cycle
+                println!("Winner {} doesn't exists.", winner);
                 false
             },
             _ => {
                 // loser node doesn't exist hence there won't be a cycle
+                println!("Loser {} doesn't exists.", loser);
                 false
             }
         }
@@ -301,11 +307,8 @@ fn main() {
     let mut engine = RankedPairsEngine::new();
     let votings: Vec<Vote> = vec![
         vec![1, 2],
-        vec![1, 2],
         vec![0, 1],
-        vec![0, 1],
-        vec![4, 1],
-        vec![4, 1],
+        vec![2, 0],
     ];
     for vote in votings {
         engine.vote(&vote);
