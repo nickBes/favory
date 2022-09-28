@@ -162,7 +162,7 @@ impl RankedPairsEngine {
 
             // swap remove puts the last item in the place of the deleted item
             // hence we need to update the according majority
-            if let Some(last_lose) = loses.last() {
+            if let Some(&last_lose) = loses.last() {
                 // unwraping since if the edge exists in the graph, it most surely exists in the sorted majority vec
                 let last_lose_majority_index = self
                     .majority_indexes
@@ -171,6 +171,16 @@ impl RankedPairsEngine {
 
                 self.sorted_majorities[*last_lose_majority_index].loser_index_in_dag = Some(index);
                 loses.swap_remove(index);
+
+                // if the loser doesn't lose anymore remove it so it won't be counted in cycle checks
+                let loser_loses_at_all = self
+                    .sorted_majorities
+                    .iter()
+                    .any(|m2| return m2.loser == majority.loser && m2.loser_index_in_dag.is_some());
+
+                if !loser_loses_at_all {
+                    self.laptop_dag.remove(&majority.loser);
+                }
             } else {
                 // if the last lose is none it means that the array is empty and
                 // we can remove the winner from the dag if nobody follows it
