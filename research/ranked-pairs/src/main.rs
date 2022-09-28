@@ -51,7 +51,7 @@ struct Majority {
     winner: LaptopId,
     loser: LaptopId,
     score: MajorityScore,
-    cycles: bool,
+    loser_index_in_dag: Option<usize>,
 }
 
 #[derive(Serialize)]
@@ -67,12 +67,12 @@ struct VizLink {
 }
 
 #[derive(Serialize)]
-struct viz_data {
+struct VizData {
     nodes: Vec<VizNode>,
     links: Vec<VizLink>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 struct Lose {
     loser: LaptopId,
     weight: MajorityScore,
@@ -109,7 +109,7 @@ impl RankedPairsEngine {
     }
 
     pub fn save_json(&self) {
-        let mut viz_data = viz_data {
+        let mut viz_data = VizData {
             nodes: Vec::new(),
             links: Vec::new(),
         };
@@ -137,62 +137,72 @@ impl RankedPairsEngine {
     }
 
     fn increase_weight_in_dag(&mut self, majority: Majority) {
-        if !majority.cycles {
+        if let Some(index) = majority.loser_index_in_dag {
+            // we're unwraping because the every majority that has a loser index
+            // should exists in the laptop dag
             let loses = self.laptop_dag.get_mut(&majority.winner).unwrap();
-            let index = loses
-                .iter()
-                .position(|lose| lose.loser == majority.loser)
-                .unwrap();
-
             loses[index].weight += 1;
         }
     }
 
     fn decrease_weight_in_dag(&mut self, majority: Majority) {
-        if !majority.cycles {
+        if let Some(index) = majority.loser_index_in_dag {
+            // we're unwraping because the every majority that has a loser index
+            // should exists in the laptop dag
             let loses = self.laptop_dag.get_mut(&majority.winner).unwrap();
-            let index = loses
-                .iter()
-                .position(|lose| lose.loser == majority.loser)
-                .unwrap();
-
             loses[index].weight -= 1;
         }
     }
 
     fn remove_from_dag(&mut self, majority: Majority) {
-        // after adding a majority to the sorted majority vec we're also adding
-        // an edge to the dag. Hence, we can unwrap.
-        let loses = self.laptop_dag.get_mut(&majority.winner).unwrap();
-        let to_remove_index = loses
-            .iter()
-            .position(|lose| lose.loser == majority.loser)
-            .unwrap();
+        if let Some(index) = majority.loser_index_in_dag {
+            // after adding a majority to the sorted majority vec we're also adding
+            // an edge to the dag. Hence, we can unwrap.
+            let loses = self.laptop_dag.get_mut(&majority.winner).unwrap();
 
-        loses.swap_remove(to_remove_index);
+            // swap remove puts the last item in the place of the deleted item
+            // hence we need to update the according majority
+            if let Some(last_lose) = loses.last() {
+                // unwraping since if the edge exists in the graph, it most surely exists in the sorted majority vec
+                let last_lose_majority_index = self
+                    .majority_indexes
+                    .get(&PairHash::new(majority.winner, last_lose.loser))
+                    .unwrap();
 
-        if loses.len() == 0 {
-            // if the winner node is empty we need to remove if from the dag
-            // for valid cycle checks
-            self.laptop_dag.remove(&majority.winner);
+                self.sorted_majorities[*last_lose_majority_index].loser_index_in_dag = Some(index);
+                loses.swap_remove(index);
+            } else {
+                // if the last lose is none it means that the array is empty and
+                // we can remove the winner from the dag if nobody follows it
+                let winner_loses_once = self.sorted_majorities.iter().any(|m2| {
+                    return m2.loser == majority.winner && m2.loser_index_in_dag.is_some();
+                });
+                if !winner_loses_once {
+                    self.laptop_dag.remove(&majority.winner);
+                }
+            }
         }
     }
 
-    fn add_to_dag(&mut self, winner: LaptopId, loser: LaptopId, weight: MajorityScore) {
-        match self.laptop_dag.get_mut(&winner) {
-            Some(loses) => {
-                loses.push(Lose { loser, weight });
-            }
-            _ => {
-                self.laptop_dag.insert(winner, vec![Lose { loser, weight }]);
-            }
-        }
-
+    // adding a majority as an edge in the laptop dag, while returning the index of the loser
+    // in the loses vec, so updating weights will be in constant time
+    fn add_to_dag(&mut self, winner: LaptopId, loser: LaptopId, weight: MajorityScore) -> usize {
         // during our cycle check between a loser and a winner, we need to know
         // whether the loser exists to continue, so we have to create a node in the graph for the loser
         // even if it doesn't follow anything
         if let None = self.laptop_dag.get(&loser) {
             self.laptop_dag.insert(loser, vec![]);
+        }
+
+        match self.laptop_dag.get_mut(&winner) {
+            Some(loses) => {
+                loses.push(Lose { loser, weight });
+                return loses.len() - 1;
+            }
+            _ => {
+                self.laptop_dag.insert(winner, vec![Lose { loser, weight }]);
+                return 0;
+            }
         }
     }
 
@@ -279,34 +289,32 @@ impl RankedPairsEngine {
 
         // look for the closest majority that its score is bigger or the same
         // and then swap with the previous
-        let swap_index = self.sorted_majorities[0..index]
+        let to_swap_index = self.sorted_majorities[0..index]
             .iter()
-            .rposition(|m2| m2.score >= current_majority_score);
-
-        if let Some(i) = swap_index {
+            .rposition(|m2| m2.score >= current_majority_score)
             // adding one because the index we found is for the bigger majority,
-            // and we need to swap for the one before
-            let to_swap_index = i + 1;
+            // and we need to swap for the one before. 0 is default because if an index
+            // wasn't found it's the majority with the maximal score
+            .map_or(0, |i| i + 1);
 
-            if self.sorted_majorities[index].cycles {
-                // if a majority that failed a cycle check goes up, it might go above
-                // a majority that passsed a cycle check that caused it to fail,
-                // hence we need to find if its possible, and if it's we'll cycle check
-                let going_over_passing_majority = self.sorted_majorities[to_swap_index..index]
-                    .iter()
-                    .any(|majority| !majority.cycles);
+        if self.sorted_majorities[index].loser_index_in_dag.is_none() {
+            // if a majority that failed a cycle check goes up, it might go above
+            // a majority that passsed a cycle check that caused it to fail,
+            // hence we need to find if its possible, and if it's we'll cycle check
+            let going_over_passing_majority = self.sorted_majorities[to_swap_index..index]
+                .iter()
+                .any(|majority| majority.loser_index_in_dag.is_some());
 
-                self.swap_majorities(index, to_swap_index, going_over_passing_majority);
-                if !going_over_passing_majority {
-                    self.increase_weight_in_dag(self.sorted_majorities[to_swap_index]);
-                }
-            } else {
-                // a majority that passed cycle check wouldn't require a cycle check again
-                // when going up, as it's still will be above the majorities that might've
-                // failed cause of this majority
-                self.swap_majorities(index, to_swap_index, false);
+            self.swap_majorities(index, to_swap_index, going_over_passing_majority);
+            if !going_over_passing_majority {
                 self.increase_weight_in_dag(self.sorted_majorities[to_swap_index]);
             }
+        } else {
+            // a majority that passed cycle check wouldn't require a cycle check again
+            // when going up, as it's still will be above the majorities that might've
+            // failed cause of this majority
+            self.swap_majorities(index, to_swap_index, false);
+            self.increase_weight_in_dag(self.sorted_majorities[to_swap_index]);
         }
     }
 
@@ -328,36 +336,34 @@ impl RankedPairsEngine {
         } else {
             // look for the closest majority which score is the same
             // and then swap
-            let swap_index = self.sorted_majorities[index + 1..sm_length]
+            let to_swap_index = self.sorted_majorities[index + 1..sm_length]
                 .iter()
-                .position(|m2| m2.score <= current_majority_score);
+                .position(|m2| m2.score <= current_majority_score)
+                // adding up index + 1 because the offset of indexes isn't included when iterating
+                // over the slice. the default is the last index because. if it didn't find an index
+                // then it's the minimal score
+                .map_or(sm_length - 1, |i| i + index + 1);
 
-            if let Some(i) = swap_index {
-                // substracting one as we want to place the current majority above the smaller majority
-                let to_swap_index = i + index + 1;
+            if self.sorted_majorities[index].loser_index_in_dag.is_none() {
+                // when a majority that didn't pass a cycle check goes down
+                // it wouldn't pass a cycle check again as the previous majorities
+                // that caused it to fail the cycle check don't chenge. moreover,
+                // the majorities below aren't affected by a majority that didn't pass a
+                // cycle check. hence, we don't need to do a cycle check at all
+                self.swap_majorities(to_swap_index, index, false);
+                self.decrease_weight_in_dag(self.sorted_majorities[to_swap_index]);
+            } else {
+                // when a majority that passed a cycle check goes down
+                // it might've went bellow a majority that failed a cycle check
+                // because of the current. hence, we gonna check it and if so we gonna
+                // check for cycles again
+                let majority_went_bellow_failed = self.sorted_majorities[index + 1..to_swap_index]
+                    .iter()
+                    .any(|majority| majority.loser_index_in_dag.is_none());
 
-                if self.sorted_majorities[index].cycles {
-                    // when a majority that didn't pass a cycle check goes down
-                    // it wouldn't pass a cycle check again as the previous majorities
-                    // that caused it to fail the cycle check don't chenge. moreover,
-                    // the majorities below aren't affected by a majority that didn't pass a
-                    // cycle check. hence, we don't need to do a cycle check at all
-                    self.swap_majorities(to_swap_index, index, false);
+                self.swap_majorities(index, to_swap_index, majority_went_bellow_failed);
+                if !majority_went_bellow_failed {
                     self.decrease_weight_in_dag(self.sorted_majorities[to_swap_index]);
-                } else {
-                    // when a majority that passed a cycle check goes down
-                    // it might've went bellow a majority that failed a cycle check
-                    // because of the current. hence, we gonna check it and if so we gonna
-                    // check for cycles again
-                    let majority_went_bellow_failed = self.sorted_majorities
-                        [index + 1..to_swap_index]
-                        .iter()
-                        .any(|majority| majority.cycles);
-
-                    self.swap_majorities(index, to_swap_index, majority_went_bellow_failed);
-                    if !majority_went_bellow_failed {
-                        self.decrease_weight_in_dag(self.sorted_majorities[to_swap_index]);
-                    }
                 }
             }
         }
@@ -384,15 +390,22 @@ impl RankedPairsEngine {
                     .insert(hash, self.sorted_majorities.len());
 
                 let cycles = self.will_cycle(pair.0, pair.1);
-                self.sorted_majorities.push(Majority {
-                    winner: pair.0,
-                    loser: pair.1,
-                    score: 1,
-                    cycles,
-                });
 
                 if !cycles {
-                    self.add_to_dag(pair.0, pair.1, 1);
+                    let loser_index = self.add_to_dag(pair.0, pair.1, 1);
+                    self.sorted_majorities.push(Majority {
+                        winner: pair.0,
+                        loser: pair.1,
+                        score: 1,
+                        loser_index_in_dag: Some(loser_index),
+                    });
+                } else {
+                    self.sorted_majorities.push(Majority {
+                        winner: pair.0,
+                        loser: pair.1,
+                        score: 1,
+                        loser_index_in_dag: None,
+                    });
                 }
             }
         }
@@ -401,19 +414,11 @@ impl RankedPairsEngine {
 
 fn main() {
     let mut engine = RankedPairsEngine::new();
-    let votings: Vec<Vote> = vec![
-        vec![0, 1],
-        vec![0, 1],
-        vec![0, 2],
-        vec![0, 2],
-        vec![1, 2],
-        vec![1, 2],
-        vec![2, 1],
-        vec![2, 0],
-    ];
+    let votings: Vec<Vote> = vec![vec![0, 1, 2], vec![2, 1, 3], vec![1, 2, 3, 4]];
     for vote in votings {
         engine.vote(&vote);
     }
 
     engine.save_json();
+    engine.print_majorities();
 }
