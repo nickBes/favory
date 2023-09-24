@@ -1,4 +1,6 @@
-table! {
+// @generated automatically by Diesel CLI.
+
+diesel::table! {
     benchmark (id) {
         id -> Int8,
         score -> Float4,
@@ -7,7 +9,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     benchmark_score_in_category (id) {
         id -> Int4,
         score -> Float4,
@@ -16,14 +18,14 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     category (id) {
         id -> Int4,
         name -> Text,
     }
 }
 
-table! {
+diesel::table! {
     global_benchmark (id) {
         id -> Int4,
         name -> Text,
@@ -33,7 +35,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     laptop (id) {
         id -> Int4,
         name -> Text,
@@ -44,7 +46,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     laptop_image (id) {
         id -> Int4,
         laptop_id -> Int4,
@@ -52,7 +54,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     laptop_score_in_category (id) {
         id -> Int4,
         score -> Float4,
@@ -61,7 +63,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     laptop_specs (id) {
         id -> Int4,
         laptop_id -> Int4,
@@ -70,7 +72,7 @@ table! {
     }
 }
 
-table! {
+diesel::table! {
     price_limits (id) {
         id -> Int4,
         max_price -> Float4,
@@ -78,16 +80,16 @@ table! {
     }
 }
 
-joinable!(benchmark -> global_benchmark (global_benchmark_id));
-joinable!(benchmark -> laptop (laptop_id));
-joinable!(benchmark_score_in_category -> category (category_id));
-joinable!(benchmark_score_in_category -> global_benchmark (global_benchmark_id));
-joinable!(laptop_image -> laptop (laptop_id));
-joinable!(laptop_score_in_category -> category (category_id));
-joinable!(laptop_score_in_category -> laptop (laptop_id));
-joinable!(laptop_specs -> laptop (laptop_id));
+diesel::joinable!(benchmark -> global_benchmark (global_benchmark_id));
+diesel::joinable!(benchmark -> laptop (laptop_id));
+diesel::joinable!(benchmark_score_in_category -> category (category_id));
+diesel::joinable!(benchmark_score_in_category -> global_benchmark (global_benchmark_id));
+diesel::joinable!(laptop_image -> laptop (laptop_id));
+diesel::joinable!(laptop_score_in_category -> category (category_id));
+diesel::joinable!(laptop_score_in_category -> laptop (laptop_id));
+diesel::joinable!(laptop_specs -> laptop (laptop_id));
 
-allow_tables_to_appear_in_same_query!(
+diesel::allow_tables_to_appear_in_same_query!(
     benchmark,
     benchmark_score_in_category,
     category,
