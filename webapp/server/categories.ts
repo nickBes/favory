@@ -7,6 +7,7 @@ import gamingIcon from '@/public/categories/gaming.png'
 import gamingIconWhite from '@/public/categories/gaming-white.png'
 import studyIcon from '@/public/categories/study.png'
 import studyIconWhite from '@/public/categories/study-white.png'
+import { StaticImageData } from 'next/image'
 
 export interface CategoryData {
     title : string,

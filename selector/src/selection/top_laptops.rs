@@ -1,4 +1,7 @@
-use std::collections::HashMap;
+use std::{
+    cmp::Reverse,
+    collections::{BinaryHeap, HashMap},
+};
 
 use super::{
     scores_in_categories_of_laptops::{
@@ -16,19 +19,48 @@ struct TopLaptopsEntry {
     scores_in_categories: ScoresInCategoriesOfLaptop,
 }
 
+impl PartialEq for TopLaptopsEntry {
+    fn eq(&self, other: &Self) -> bool {
+        self.score == other.score
+    }
+}
+
+impl Eq for TopLaptopsEntry {}
+
+impl PartialOrd for TopLaptopsEntry {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        if self.score == other.score {
+            return self
+                .price
+                .partial_cmp(&other.price)
+                .map(|ord| ord.reverse());
+        }
+        self.score.partial_cmp(&other.score)
+    }
+}
+
+impl Ord for TopLaptopsEntry {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        if self.score == other.score {
+            return self.price.total_cmp(&other.price).reverse();
+        }
+        self.score.total_cmp(&other.score)
+    }
+}
+
 /// a struct used for finding the top N laptops, given some laptops amount N
 #[derive(Debug)]
 pub struct TopLaptops {
     /// the entries in this vector are ordered from best to worst, such that
     /// the best laptop is at index 0
-    top_laptops: Vec<TopLaptopsEntry>,
+    top_laptops: BinaryHeap<Reverse<TopLaptopsEntry>>,
     amount: usize,
 }
 
 impl TopLaptops {
     pub fn new(amount: usize) -> Self {
         Self {
-            top_laptops: Vec::with_capacity(amount),
+            top_laptops: BinaryHeap::with_capacity(amount),
             amount,
         }
     }
@@ -42,111 +74,26 @@ impl TopLaptops {
         for laptop_with_scores in scores_in_categories_of_laptops.iter() {
             let total_score = laptop_with_scores.calculate_total_score(user_category_scores)?;
             let price = laptop_prices.get(&laptop_with_scores.laptop_id()).unwrap();
-            self.update(
-                laptop_with_scores.laptop_id(),
-                *price,
-                total_score,
-                laptop_with_scores.scores_in_categories().clone(),
-            );
-        }
-        Ok(())
-    }
 
-    /// update the top laptops with a new laptop.
-    /// if this laptop is better than any of the laptops currently in the
-    /// list, it will be inserted before it.
-    pub fn update(
-        &mut self,
-        laptop_id: i32,
-        price: f32,
-        score: f32,
-        scores_in_categories: ScoresInCategoriesOfLaptop,
-    ) {
-        let mut was_better_than_any_of_top_laptops = false;
-        // start from the best laptop, and go down the list, each time checking if the new
-        // laptop is better than any laptop that is already in the top laptops list
-        for i in 0..self.top_laptops.len() {
-            // if the new laptop is better than some laptop in our current top laptops, insert the
-            // new laptop right before him.
-            if score > self.top_laptops[i].score
-                || (score == self.top_laptops[i].score && price < self.top_laptops[i].price)
-            {
-                self.insert_laptop_at(i, laptop_id, price, score, scores_in_categories.clone());
+            self.top_laptops.push(Reverse(TopLaptopsEntry {
+                laptop_id: laptop_with_scores.laptop_id(),
+                price: *price,
+                score: total_score,
+                scores_in_categories: laptop_with_scores.scores_in_categories().clone(),
+            }));
 
-                // the laptop was better than one of the current top laptops
-                was_better_than_any_of_top_laptops = true;
-
-                // break from the loop to make sure we don't insert the new laptop multiple times,
-                // since if it is better than the current laptop, it must be better than the laptops
-                // after it, due to the order in which the laptops in the top_laptops vector are ordered
-                break;
+            if self.top_laptops.len() > self.amount {
+                self.top_laptops.pop();
             }
         }
-
-        // if the new laptop isn't better than any of our current top laptops,
-        // but we don't yet have the required amount of laptops, add the new laptop as the last
-        // laptop, namely the worst one
-        if !was_better_than_any_of_top_laptops && self.top_laptops.len() < self.amount {
-            self.top_laptops.push(TopLaptopsEntry {
-                laptop_id,
-                price,
-                score,
-                scores_in_categories,
-            })
-        }
-    }
-
-    /// inserts a laptop at a specific index, while maintaining a correct length
-    /// for the top_laptops vector
-    fn insert_laptop_at(
-        &mut self,
-        index: usize,
-        laptop_id: i32,
-        price: f32,
-        score: f32,
-        scores_in_categories: ScoresInCategoriesOfLaptop,
-    ) {
-        // if the index is the last index in the top_laptops vector
-        // we don't need to perform any more modification to the top_laptops vector other
-        // than just updating the last entry according to the new laptop's information.
-        //
-        // note that this check is required, and if there was no check for this case, the insertion performed
-        // in case this is not true would fail, since we would be deleting the last element,
-        // and then trying to insert an element in place of it, which would case an error,
-        // since it no longer exists.
-        if index + 1 == self.amount {
-            self.top_laptops[index] = TopLaptopsEntry {
-                laptop_id,
-                price,
-                score,
-                scores_in_categories,
-            };
-            return;
-        }
-
-        // if we already filled the top_laptops vector with enough laptops, and we now want to
-        // insert a new laptop, we must delete the last laptop to not overflow the required amount
-        // of top laptops
-        if self.top_laptops.len() == self.amount {
-            self.top_laptops.pop();
-        }
-
-        self.top_laptops.insert(
-            index,
-            TopLaptopsEntry {
-                laptop_id,
-                price,
-                score,
-                scores_in_categories,
-            },
-        )
+        Ok(())
     }
 
     /// returns the laptop ids of the top laptops, in order
     pub fn laptop_ids(&self) -> Vec<i32> {
         self.top_laptops
             .iter()
-            .map(|entry| entry.laptop_id)
+            .map(|entry| entry.0.laptop_id)
             .collect()
     }
 
@@ -154,7 +101,12 @@ impl TopLaptops {
     pub fn laptop_id_to_score_map(self) -> HashMap<i32, (f32, ScoresInCategoriesOfLaptop)> {
         self.top_laptops
             .into_iter()
-            .map(|entry| (entry.laptop_id, (entry.score, entry.scores_in_categories)))
+            .map(|entry| {
+                (
+                    entry.0.laptop_id,
+                    (entry.0.score, entry.0.scores_in_categories),
+                )
+            })
             .collect()
     }
 }
