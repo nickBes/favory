@@ -13,7 +13,7 @@ import {PriceLimits, getCategoryNames, getPriceLimits} from '@/server/selector'
 import { defaultCategoryMap } from '@/server/categories'
 
 // __components__
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 import Navbar from '@/components/navbar/navbar'
 import Form from '@/components/form/form'
 import CardSelection from '@/components/form/CardSelection'

@@ -46,13 +46,20 @@ impl Select for SelectorDBConnection {
         let selected_laptop_ids = top_laptops.laptop_ids();
         let id_to_score_map = top_laptops.laptop_id_to_score_map();
         let category_id_to_name_map = self.fetch_category_names()?;
-        let mut selected_laptops = self.fetch_selected_laptops(&selected_laptop_ids, &id_to_score_map, &category_id_to_name_map)?;
+        let mut selected_laptops = self.fetch_selected_laptops(
+            &selected_laptop_ids,
+            &id_to_score_map,
+            &category_id_to_name_map,
+        )?;
 
         // since these laptops were returned from the database, they are no longer sorted by their
         // score, so we should re-sort them by score
-        selected_laptops.sort_unstable_by(|laptop1, laptop2|{
+        selected_laptops.sort_unstable_by(|laptop1, laptop2| {
             // reverse the comparison result to sort them in descending order instead of ascending
-            laptop1.score.partial_cmp(&laptop2.score).unwrap().reverse()
+            if laptop1.score == laptop2.score {
+                return laptop1.price.total_cmp(&laptop2.price);
+            }
+            laptop1.score.total_cmp(&laptop2.score).reverse()
         });
 
         Ok(selected_laptops)

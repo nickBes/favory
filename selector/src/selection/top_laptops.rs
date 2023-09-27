@@ -30,7 +30,10 @@ impl Eq for TopLaptopsEntry {}
 impl PartialOrd for TopLaptopsEntry {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
         if self.score == other.score {
-            return self.price.partial_cmp(&other.price);
+            return self
+                .price
+                .partial_cmp(&other.price)
+                .map(|ord| ord.reverse());
         }
         self.score.partial_cmp(&other.score)
     }
@@ -39,7 +42,7 @@ impl PartialOrd for TopLaptopsEntry {
 impl Ord for TopLaptopsEntry {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         if self.score == other.score {
-            return self.price.total_cmp(&other.price);
+            return self.price.total_cmp(&other.price).reverse();
         }
         self.score.total_cmp(&other.score)
     }
@@ -71,7 +74,7 @@ impl TopLaptops {
         for laptop_with_scores in scores_in_categories_of_laptops.iter() {
             let total_score = laptop_with_scores.calculate_total_score(user_category_scores)?;
             let price = laptop_prices.get(&laptop_with_scores.laptop_id()).unwrap();
-            
+
             self.top_laptops.push(Reverse(TopLaptopsEntry {
                 laptop_id: laptop_with_scores.laptop_id(),
                 price: *price,
