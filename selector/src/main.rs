@@ -41,14 +41,29 @@
 mod controllers;
 mod routes;
 
+use std::sync::Mutex;
+
 use crate::routes::laptop;
 
-use actix_web::{App, HttpServer};
+use actix_web::{web, App, HttpServer};
+use diesel::PgConnection;
+
+pub struct AppState {
+    db_connection: Mutex<PgConnection>,
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().configure(laptop::register_laptop_routes))
-        .bind(("127.0.0.1", 8080))?
-        .run()
-        .await
+    let app_state = web::Data::new(AppState {
+        db_connection: Mutex::new(db_access::get_db_connection()),
+    });
+
+    HttpServer::new(move || {
+        App::new()
+            .app_data(app_state.clone())
+            .configure(laptop::register_laptop_routes)
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
