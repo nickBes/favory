@@ -7,7 +7,6 @@
 // #[macro_use]
 // extern crate diesel;
 
-// mod errors;
 // mod fetch_data;
 // mod selection;
 // mod server;
@@ -39,7 +38,10 @@
 // }
 
 mod controllers;
+mod dtos;
+mod errors;
 mod routes;
+mod services;
 
 use std::sync::Mutex;
 

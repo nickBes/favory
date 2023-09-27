@@ -1,14 +1,18 @@
 use actix_web::{post, web, HttpResponse};
-use std::collections::HashMap;
+use serde::Deserialize;
 
-use crate::AppState;
+use crate::{dtos::CategoryWeights, AppState};
 
-type CategoryWeights = HashMap<String, f32>;
+#[derive(Deserialize)]
+pub struct SelectParams {
+    category_weights: CategoryWeights,
+    max_price: f32,
+}
 
 #[post("/select")]
 pub async fn select(
-    category_weights: web::Json<CategoryWeights>,
+    select_params: web::Json<SelectParams>,
     app_state: web::Data<AppState>,
 ) -> HttpResponse {
-    HttpResponse::Ok().body(category_weights.len().to_string())
+    HttpResponse::Ok().body(select_params.category_weights.len().to_string())
 }
