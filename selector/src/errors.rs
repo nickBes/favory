@@ -1,11 +1,13 @@
+use actix_web::ResponseError;
 use db_access::generate_error_types;
+use std::fmt::Display;
 
 #[derive(Debug, PartialEq, Eq, Clone)]
-pub enum SelectorErrorKind{
+pub enum SelectorErrorKind {
     DatabaseError,
     NoScoresProvided,
     NonExistentCategoryName(String),
-    LaptopHasNoScoreForCategory { laptop_id: i32, category_id: i32},
+    LaptopHasNoScoreForCategory { laptop_id: i32, category_id: i32 },
     FailedToCreateListener,
     FailedToAcceptClient,
     FailedToDeserializeClientRequest,
@@ -13,4 +15,16 @@ pub enum SelectorErrorKind{
     TcpStreamError,
 }
 
-generate_error_types!{selector}
+impl Display for SelectorErrorKind {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Selector error")
+    }
+}
+
+generate_error_types! {selector}
+
+impl ResponseError for SelectorErrorKind {
+    fn status_code(&self) -> actix_web::http::StatusCode {
+        actix_web::http::StatusCode::INTERNAL_SERVER_ERROR
+    }
+}

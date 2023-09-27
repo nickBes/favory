@@ -1,9 +1,12 @@
-use actix_web::{post, web, HttpResponse};
-use serde::Deserialize;
+use std::vec;
 
-use crate::{dtos::CategoryWeights, AppState};
+use actix_web::{post, web, Responder};
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+use crate::{dtos::CategoryWeights, errors::SelectorErrorKind, AppState};
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SelectParams {
     category_weights: CategoryWeights,
     max_price: f32,
@@ -13,6 +16,6 @@ pub struct SelectParams {
 pub async fn select(
     select_params: web::Json<SelectParams>,
     app_state: web::Data<AppState>,
-) -> HttpResponse {
-    HttpResponse::Ok().body(select_params.category_weights.len().to_string())
+) -> Result<impl Responder, SelectorErrorKind> {
+    Ok(web::Json(select_params))
 }
