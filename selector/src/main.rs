@@ -27,7 +27,7 @@ fn main() {
             .create(true)
             .open("log")
             .expect("failed to open log file");
-        WriteLogger::init(LevelFilter::max(), Config::default(), config_file)
+        WriteLogger::init(LevelFilter::Info, Config::default(), config_file)
             .expect("failed to initialize logger");
     }
 
