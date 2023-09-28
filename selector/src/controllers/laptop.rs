@@ -2,13 +2,14 @@ use actix_web::{post, web, Responder};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    dtos::CategoryWeights, errors::SelectorError, services::laptop::select_top_laptops, AppState,
+    dtos::CategoryWeightsByName, errors::SelectorError, services::selector::select_top_laptops,
+    AppState,
 };
 
 #[derive(Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct SelectParams {
-    category_weights: CategoryWeights,
+    category_weights: CategoryWeightsByName,
     max_price: f32,
 }
 

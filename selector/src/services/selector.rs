@@ -1,13 +1,13 @@
 use diesel::PgConnection;
 
 use crate::{
-    dtos::{CategoryWeights, SelectedLaptop},
+    dtos::{CategoryWeightsByName, SelectedLaptop},
     errors::{SelectorError, SelectorErrorKind},
 };
 
 pub async fn select_top_laptops(
     db_connection: &PgConnection,
-    category_weights: &CategoryWeights,
+    category_weights: &CategoryWeightsByName,
     max_price: f32,
 ) -> Result<Vec<SelectedLaptop>, SelectorError> {
     if category_weights.is_empty() {
