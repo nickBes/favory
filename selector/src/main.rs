@@ -43,12 +43,11 @@ mod errors;
 mod routes;
 mod services;
 
-use std::sync::Mutex;
-
 use crate::routes::laptop;
 
 use actix_web::{web, App, HttpServer};
 use diesel::PgConnection;
+use tokio::sync::Mutex;
 
 pub struct AppState {
     db_connection: Mutex<PgConnection>,

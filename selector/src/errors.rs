@@ -15,15 +15,15 @@ pub enum SelectorErrorKind {
     TcpStreamError,
 }
 
-impl Display for SelectorErrorKind {
+generate_error_types! {selector}
+
+impl Display for SelectorError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str("Selector error")
     }
 }
 
-generate_error_types! {selector}
-
-impl ResponseError for SelectorErrorKind {
+impl ResponseError for SelectorError {
     fn status_code(&self) -> actix_web::http::StatusCode {
         actix_web::http::StatusCode::INTERNAL_SERVER_ERROR
     }
